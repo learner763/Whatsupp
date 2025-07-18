@@ -122,9 +122,9 @@ function Home()
                 }   
                 icons[i].style.backgroundColor='darkgreen';
                 icons[i].style.color='white';
-                if(i==0){setpart1('flex');setpart2('none');setpart3('none');}
-                if(i==1){setpart1('none');setpart2('flex');setpart3('none');}
-                if(i==2){setpart1('none');setpart2('none');setpart3('flex');}
+                if(i==0){setpart1('flex');setpart2('none');setpart3('none');setdisp('flex');}
+                if(i==1){setpart1('none');setpart2('flex');setpart3('none');setdisp('none');}
+                if(i==2){setpart1('none');setpart2('none');setpart3('flex');setdisp('none');}
             });
         }
         
@@ -140,7 +140,7 @@ function Home()
         {
             connect_buttons[i].addEventListener('click',()=>{
                 profile_name.innerHTML=connect_people[i].innerHTML;
-                setdisp("block");
+                setdisp("flex");
                 connect_msg.style.display='none';
                 setpart2('none');
                 setpart3('none');
@@ -175,13 +175,13 @@ function Home()
                     <div className='part1' style={{display:part1}}>
                         <label style={{alignSelf:'center'}} id="connect_msg"><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
                         <label style={{display:disp}} id="profile_name"></label>
-                        <label style={{ alignSelf:'center',display:disp}}>
+                        
+                    </div>
+                    <div className='msg_div' style={{display:disp}}>
                             <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...' ></textarea>
                             <button id="Send_Button" style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
                             <button id="File_Button" style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-file"></i>File</button>
-                        </label>
                     </div>
-                    
                     <div className='part2' style={{display:part2}} >
                         <i style={{alignSelf:'center'}} class='fas fa-user'></i>
                         <label>Username</label>
@@ -202,14 +202,11 @@ function Home()
                             <option style={{color:"white"}} value="white">White</option>
                             <option style={{color:"black"}} value="black">Black</option>
                             <option style={{color:"red"}} value="red">Red</option>
-                            <option style={{color:"yellowgreen"}} value="yellowgreen">YellowGreen</option>
-                            <option style={{color:"blue"}} value="blue">Blue</option>
+                            <option style={{color:"gold"}} value="gold">Gold</option>
+                            <option style={{color:"blueviolet"}} value="blueviolet">BlueViolet</option>
                             <option style={{color:"lime"}} value="lime">Lime</option>
-                            <option style={{color:"goldenrod"}} value="goldenrod">Goldenrod</option>
-                            <option style={{color:"purple"}} value="purple">Purple</option>
                             <option style={{color:"orange"}} value="orange">Orange</option>
                             <option style={{color:"pink"}} value="pink">Pink</option>
-
                         </select>
                         <button onClick={()=>update_settings(pass,bgr)} id="save">Save</button>
                     </div>

@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fixed Bottom Element Inside Column</title>
+  <style>
 .home{
 display: flex;
 flex-direction: column;
@@ -68,6 +75,7 @@ background-color: darkgreen;
     border: darkgreen solid ;
     border-width: 0px 1px 0px 0px;
     flex-direction: column;
+
 }
 .home13
 {
@@ -160,7 +168,6 @@ background-color: darkgreen;
 .part1 label{
     font-weight: bold;
     font-size: 25px;
-    
 }
 
 #profile_name{
@@ -175,7 +182,41 @@ background-color: darkgreen;
 .msg_div{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     width: 100%;
     flex: .2;
+    background-color: gold;
+    position: ;
 }
+  </style>
+</head>
+<body>
+  <div class="home">
+    <div class="top">Fixed at Top</div>
+
+    <div class="home1">
+      <div class="home11">
+        <p>Column 1 Content</p>
+        <p>More Content</p>
+      </div>
+
+      <div class="home12">
+        
+
+        <div class="part1" style="background-color: lightgreen;flex-direction: column;">
+            sad
+
+           
+
+        </div>
+        <div class="msg_div" >Always at Bottom of Middle Column</div>
+
+      </div>
+
+      <div class="home13">
+        <p>Column 3 Content</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
