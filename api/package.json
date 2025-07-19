@@ -15,8 +15,10 @@
     "connect-history-api-fallback": "^2.0.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "http": "^0.0.1-security",
     "path": "^0.12.7",
     "pg": "^8.14.1",
-    "pkg": "^5.8.1"
+    "pkg": "^5.8.1",
+    "socket.io": "^4.8.1"
   }
 }

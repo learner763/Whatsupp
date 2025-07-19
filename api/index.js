@@ -3,22 +3,18 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
 import cors from 'cors';
-
+import {createServer} from 'http';
+import {Server} from 'socket.io';
 const app = express();
-app.use(cors(
-    {
-        origin: ['https://react-express-ten.vercel.app/'],
-        methods: ['GET', 'POST'],
-        credentials: true
-    }
-))
+
 // Resolve __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Serve static files from the React app's build folder
 const buildPath = path.join(__dirname, '../build');
 app.use(express.static(buildPath));
-
+const server=createServer(app);
+const io=new Server(server)
 // Configure CORS
 
 
@@ -145,8 +141,29 @@ app.post("/forpass", (req, res) => {
         else res.json(results.rows);
     });
 });
+app.post('/save_msg',(req,res)=>
+{
+    const {from,to,message}=req.body;
+    console.log(from)
+    console.log(message)
+
+    console.log(to)
+
+    pool.query(`update public.chats set "${to}"= $1 where chat_with=$2;`,[message,from])
+})
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+let socket_ids={}
+io.on("connection",socket=>
+{
+    const socketId = socket.id;
+    const userId=socket.handshake.auth.username;
+    socket_ids[userId]=socketId
+    socket.on("message",({from,to,message}) =>
+    {
+        io.to(socket_ids[to]).emit(message,({from,to,message}));
+    });
+})

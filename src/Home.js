@@ -3,6 +3,7 @@ import './Home.css';
 import axios from 'axios'; 
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import {io} from 'socket.io-client';
 function Home()
 {
     const [info, setinfo] = useState([]);
@@ -17,6 +18,7 @@ function Home()
     const [pass,setpass]=useState('')
     const [bgr,setbg]=useState('white')
     const [disp,setdisp]=useState("none")
+    const [receiver_index,update_index]=useState("")
 
     let w=-1;
     function update_info(up_user,up_name,up_bio)
@@ -127,8 +129,47 @@ function Home()
                 if(i==2){setpart1('none');setpart2('none');setpart3('flex');setdisp('none');}
             });
         }
-        
+        let Send_button=document.getElementById("Send_Button");
+        let message =document.getElementById("message");
+        Send_button.addEventListener("click",function()
+        {
+            socket.emit("message",{
+                from:username,
+                to:{receiver_index},
+                message_text:message.value
+
+            })
+            insert_msg(username,{receiver_index},message.value);
+            console.log(receiver_index)
+            message.value=""
+        })
     }, []);
+    const socket=io('/',{
+        auth:{username}
+    })
+    function setreceiver(index)
+    {
+        fetch("/accounts")
+        .then(response => response.json())
+        .then(data => 
+        {
+            update_index(data[index].email)
+            console.log(receiver_index);            
+        })
+    } 
+    function insert_msg(from,to,msg)
+    {
+        fetch('/save_msg',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ from: from, to: to, message: msg }),
+        })
+        
+        
+    }
     useEffect(() => {
         let connect_msg=document.getElementById("connect_msg");
         let profile_name=document.getElementById("profile_name");
@@ -153,6 +194,8 @@ function Home()
                 }   
                 icons[0].style.backgroundColor='darkgreen';
                 icons[0].style.color='white';
+                setreceiver(i)
+                console.log(receiver_index)
             });
         }
     }, [info]);
