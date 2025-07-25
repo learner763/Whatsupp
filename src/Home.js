@@ -129,24 +129,24 @@ function Home()
                 if(i==2){setpart1('none');setpart2('none');setpart3('flex');setdisp('none');}
             });
         }
-        let Send_button=document.getElementById("Send_Button");
-        let message =document.getElementById("message");
-        Send_button.addEventListener("click",function()
-        {
-            socket.emit("message",{
-                from:username,
-                to:{receiver_index},
-                message_text:message.value
-
-            })
-            insert_msg(username,{receiver_index},message.value);
-            console.log(receiver_index)
-            message.value=""
-        })
+        
     }, []);
     const socket=io('/',{
         auth:{username}
     })
+    function Send()
+    {
+        let message =document.getElementById("message");
+        socket.emit("message",{
+            from:username,
+            to:receiver_index,
+            message_text:message.value
+
+        })
+        insert_msg(username,receiver_index,message.value);
+        console.log(receiver_index)
+        message.value=""
+    }
     function setreceiver(index)
     {
         fetch("/accounts")
@@ -222,7 +222,7 @@ function Home()
                     </div>
                     <div className='msg_div' style={{display:disp}}>
                             <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...' ></textarea>
-                            <button id="Send_Button" style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
+                            <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
                             <button id="File_Button" style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-file"></i>File</button>
                     </div>
                     <div className='part2' style={{display:part2}} >

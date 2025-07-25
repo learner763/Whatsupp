@@ -91,7 +91,7 @@ app.post("/user_in_table", (req, res) => {
     const { username } = req.body;
     pool.query("insert into public.chats(chat_with) values($1) on conflict(chat_with) do nothing;", [username], (err, results) => {
     });
-    pool.query(`alter table public.chats add column if not exists "${username}" text;`, (err, results) => {
+    pool.query(`alter table public.chats add column if not exists "${username}" text[];`, (err, results) => {
         if (err) {console.log(err)}
         else{console.log("no error")}
     });
@@ -149,7 +149,7 @@ app.post('/save_msg',(req,res)=>
 
     console.log(to)
 
-    pool.query(`update public.chats set "${to}"= $1 where chat_with=$2;`,[message,from])
+    pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}`]])
 })
 // Start the server
 const PORT = process.env.PORT || 8080;
