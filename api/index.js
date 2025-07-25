@@ -5,6 +5,7 @@ import pkg from 'pg';
 import cors from 'cors';
 import {createServer} from 'http';
 import {Server} from 'socket.io';
+import { use } from 'react';
 const app = express();
 
 // Resolve __dirname for ES modules
@@ -87,26 +88,26 @@ app.post("/personal", (req, res) => {
     });
 });
 app.post("/user_in_table", (req, res) => {
-    console.log("fndfnfsdfhd")
     const { username } = req.body;
     pool.query("insert into public.chats(chat_with) values($1) on conflict(chat_with) do nothing;", [username], (err, results) => {
     });
     pool.query(`alter table public.chats add column if not exists "${username}" text[];`, (err, results) => {
         if (err) {console.log(err)}
-        else{console.log("no error")}
     });
 
 })
 app.post("/save_info", (req, res) => {
     const { previous,username, name,bio } = req.body;
+    console.log(previous)
+    console.log(username)
     pool.query("select * from public.users where email=$1", [username], (err, results) => {
         if (err) {}
         console.log(results.rows);
         if(results.rows.length>0)
         {
-            res.json({success:false});
             pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,previous], (err, results) => {   
             });
+            if(username!=previous){res.json({success:false});}
         }
         else{
             pool.query("update public.chats set chat_with=$1 where chat_with=$2;", [username,previous], (err, results) => {
@@ -117,16 +118,26 @@ app.post("/save_info", (req, res) => {
             });
             pool.query("update public.users set name=$1,bio=$2,email=$3 where email=$4", [name,bio,username,previous], (err, results) => {   
                 if (err) {console.log(4)}
-                else res.json({success:true}); 
+                res.json({success:true})
+
             });
+            
             
         }
     });
+    
 });
+app.post('/message_change',(req,res)=>
+{
+    const {username}=req.body;
+    pool.query("select * from public.chats where chat_with=$1;",[username],(err,results)=>
+    {
+        console.log(results.rows)
+    });
+}
+);
 app.post("/save_settings", (req, res) => {
     const { username,password, bg } = req.body;
-    
-
     pool.query("update public.users set password=$1,bg=$2 where email=$3", [password,bg,username], (err, results) => {   
         if (err) {console.log(4)}
         else res.json({success:true}); 

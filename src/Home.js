@@ -19,7 +19,6 @@ function Home()
     const [bgr,setbg]=useState('white')
     const [disp,setdisp]=useState("none")
     const [receiver_index,update_index]=useState("")
-
     let w=-1;
     function update_info(up_user,up_name,up_bio)
     {
@@ -36,13 +35,26 @@ function Home()
             if(data.success)
             {
                 localStorage.setItem("email",up_user);
+                fetch("/message_change",
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username: up_user }),
+                    }
+                )
+                .then(response => response.json());
+                
             }
             else
             {
                 alert(`"${up_user}" already exists! Please choose another username.`); // Alert if username already exists
             }
         });
+        
     }
+    
     function update_settings(pass,bg)
     {
         fetch('/save_settings', {
@@ -55,6 +67,7 @@ function Home()
         .then(response => response.json())
         
     }
+    
     useEffect(() => {
         fetch("/accounts")
         .then(response => response.json())
