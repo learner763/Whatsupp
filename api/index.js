@@ -6,6 +6,7 @@ import cors from 'cors';
 import {createServer} from 'http';
 import {Server} from 'socket.io';
 import { use } from 'react';
+import { console } from 'inspector';
 const app = express();
 
 // Resolve __dirname for ES modules
@@ -105,9 +106,10 @@ app.post("/save_info", (req, res) => {
         console.log(results.rows);
         if(results.rows.length>0)
         {
-            pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,previous], (err, results) => {   
-            });
-            if(username!=previous){res.json({success:false});}
+            if(username==previous)
+            {pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,previous], (err, results) => {});}
+            else
+            {res.json({success:false});}
         }
         else{
             pool.query("update public.chats set chat_with=$1 where chat_with=$2;", [username,previous], (err, results) => {
@@ -129,11 +131,41 @@ app.post("/save_info", (req, res) => {
 });
 app.post('/message_change',(req,res)=>
 {
-    const {username}=req.body;
+    let chat={}
+    const {previous,username}=req.body;
     pool.query("select * from public.chats where chat_with=$1;",[username],(err,results)=>
     {
-        console.log(results.rows)
+        chat=results.rows[0]
+        console.log(chat)
+        for(let i=0;i<Object.keys(chat).length;i++)
+        {
+            if(Array.isArray(chat[Object.keys(chat)[i]]) && Object.keys(chat)[i]!="chat_with") 
+            {
+                for(let j=0;j<chat[Object.keys(chat)[i]].length;j++)
+                {
+                    if(chat[Object.keys(chat)[i]][j].startsWith(`${previous}`))
+                    {
+                        chat[Object.keys(chat)[i]][j]=chat[Object.keys(chat)[i]][j].replace(`${previous}`,`${username}`);
+                    }
+                }
+            }
+        }
+        console.log(chat);
+        let users=Object.keys(chat)
+        for(let i=0;i<users.length;i++)
+            {
+                if(users[i]!="chat_with")
+                {
+                    pool.query(`update public.chats set "${users[i]}"= $1 where chat_with=$2`,[chat[users[i]],username],(err,results)=>
+                    {
+                        if(err){res.json(err)}
+                    })
+                }
+        
+            }
     });
+
+    
 }
 );
 app.post("/save_settings", (req, res) => {

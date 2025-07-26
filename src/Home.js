@@ -34,18 +34,19 @@ function Home()
         {
             if(data.success)
             {
-                localStorage.setItem("email",up_user);
                 fetch("/message_change",
                     {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ username: up_user }),
+                        body: JSON.stringify({ previous: username,username: up_user }),
                     }
                 )
-                .then(response => response.json());
-                
+                .then(response => response.json())
+                .then(data => console.log(data));
+                localStorage.setItem("email",up_user);
+
             }
             else
             {
