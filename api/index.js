@@ -2,11 +2,8 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
-import cors from 'cors';
 import {createServer} from 'http';
 import {Server} from 'socket.io';
-import { use } from 'react';
-import { console } from 'inspector';
 const app = express();
 
 // Resolve __dirname for ES modules
@@ -66,7 +63,6 @@ app.post("/login", (req, res) => {
     else if(bt=="Sign Up")
         pool.query("select * from public.users where email=$1", [email], (err, results) => {
             if (err) {}
-            console.log(results.rows);
             if(results.rows.length>0){res.json({success:false});}
             else{
                 pool.query("insert into public.users(email,password) values($1,$2)", [email,password], (err, results) => {
@@ -99,11 +95,8 @@ app.post("/user_in_table", (req, res) => {
 })
 app.post("/save_info", (req, res) => {
     const { previous,username, name,bio } = req.body;
-    console.log(previous)
-    console.log(username)
     pool.query("select * from public.users where email=$1", [username], (err, results) => {
         if (err) {}
-        console.log(results.rows);
         if(results.rows.length>0)
         {
             if(username==previous)
@@ -136,7 +129,6 @@ app.post('/message_change',(req,res)=>
     pool.query("select * from public.chats where chat_with=$1;",[username],(err,results)=>
     {
         chat=results.rows[0]
-        console.log(chat)
         for(let i=0;i<Object.keys(chat).length;i++)
         {
             if(Array.isArray(chat[Object.keys(chat)[i]]) && Object.keys(chat)[i]!="chat_with") 
@@ -150,7 +142,6 @@ app.post('/message_change',(req,res)=>
                 }
             }
         }
-        console.log(chat);
         let users=Object.keys(chat)
         for(let i=0;i<users.length;i++)
             {
@@ -177,7 +168,6 @@ app.post("/save_settings", (req, res) => {
 });
 app.post("/forpass", (req, res) => {
     const { email } = req.body;
-    console.log(email);
 
     pool.query("select * from public.users where email=$1", [email], (err, results) => {
         if (err) {}
@@ -187,26 +177,39 @@ app.post("/forpass", (req, res) => {
 app.post('/save_msg',(req,res)=>
 {
     const {from,to,message}=req.body;
-    console.log(from)
-    console.log(message)
-
-    console.log(to)
-
-    pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}`]])
+    
+    pool.query(`select "${from}" as chat from public.chats where chat_with=$1 
+                union all 
+                select "${to}" from public.chats where chat_with=$2`,[to,from],(err,results)=>
+    {
+        
+            if((results.rows[0].chat==null && results.rows[1].chat==null) || results.rows[0].chat==null || from==to)
+            {
+                pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}`]])
+            }
+            else if(results.rows[1].chat==null)
+            {
+                pool.query(`update public.chats set "${from}"= coalesce("${from}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[to,[`${from}: ${message}`]])
+            }
+        
+        
+    })
 })
+
 // Start the server
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 let socket_ids={}
-io.on("connection",socket=>
+io.on('connection',socket=>
 {
-    const socketId = socket.id;
-    const userId=socket.handshake.auth.username;
-    socket_ids[userId]=socketId
-    socket.on("message",({from,to,message}) =>
+    socket_ids[socket.handshake.auth.username]=socket.id;
+    console.log(socket_ids)
+    socket.on('message',({from,to,message_text}) =>
     {
-        io.to(socket_ids[to]).emit(message,({from,to,message}));
+        console.log(socket_ids[from]);
+        io.emit('message',({from,to,message_text}));
+        console.log(socket_ids[from]);
     });
 })

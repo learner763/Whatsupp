@@ -22,3 +22,4 @@ let formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().p
 console.log("Full Date:", fullDate); // Example: "Tue Oct 31 2023"
 console.log("Day of the Week:", dayName); // Example: "Tuesday"
 console.log("Time:", minutes); // Example: "14:30:45"
+console.log(now.getDate()+now.getMonth())

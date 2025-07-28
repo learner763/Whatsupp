@@ -19,6 +19,7 @@ function Home()
     const [bgr,setbg]=useState('white')
     const [disp,setdisp]=useState("none")
     const [receiver_index,update_index]=useState("")
+    const [receiver,update_receiver]=useState(0);
     let w=-1;
     function update_info(up_user,up_name,up_bio)
     {
@@ -68,7 +69,9 @@ function Home()
         .then(response => response.json())
         
     }
-    
+    const socket=io('/',{
+        auth:{username}
+    })
     useEffect(() => {
         fetch("/accounts")
         .then(response => response.json())
@@ -97,8 +100,6 @@ function Home()
                         setup_bio(data[i].bio);
                         setpass(data[i].password);
                         setbg(data[i].bg);
-                        console.log(data[i].bg)
-                        console.log(bgr)
                         
                     }
                 }
@@ -143,34 +144,28 @@ function Home()
                 if(i==2){setpart1('none');setpart2('none');setpart3('flex');setdisp('none');}
             });
         }
-        
+        socket.on('message',({from,to,message_text})=>
+        {
+            console.log(`${socket.auth.username} message received ${socket.id}`);
+            
+        });
+        return ()=>socket.off('message');
     }, []);
-    const socket=io('/',{
-        auth:{username}
-    })
+    
     function Send()
     {
         let message =document.getElementById("message");
-        socket.emit("message",{
-            from:username,
-            to:receiver_index,
-            message_text:message.value
-
-        })
-        insert_msg(username,receiver_index,message.value);
-        console.log(receiver_index)
-        message.value=""
-    }
-    function setreceiver(index)
-    {
         fetch("/accounts")
         .then(response => response.json())
         .then(data => 
         {
-            update_index(data[index].email)
-            console.log(receiver_index);            
+            insert_msg(username,data[receiver].email,message.value);
+            message.value=""
         })
-    } 
+        
+    }
+    
+    
     function insert_msg(from,to,msg)
     {
         fetch('/save_msg',
@@ -181,8 +176,13 @@ function Home()
             },
             body: JSON.stringify({ from: from, to: to, message: msg }),
         })
-        
-        
+        .then(response => response.json())
+        .then(data=>console.log(data))
+        socket.emit('message',{
+            from:from,
+            to:to,
+            message_text:msg
+        })
     }
     useEffect(() => {
         let connect_msg=document.getElementById("connect_msg");
@@ -208,8 +208,7 @@ function Home()
                 }   
                 icons[0].style.backgroundColor='darkgreen';
                 icons[0].style.color='white';
-                setreceiver(i)
-                console.log(receiver_index)
+                update_receiver(i)
             });
         }
     }, [info]);
@@ -272,7 +271,6 @@ function Home()
                 <div className='home13' >
                     <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:'darkgreen'}}><i id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
                     {info.map((a, index) => {
-                        console.log(up_name);
                         if (index < info.length / 2) {
                             w = w + 1; // Increment w before returning
                             return (
