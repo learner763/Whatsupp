@@ -7,7 +7,7 @@ import {io} from 'socket.io-client';
 function Home()
 {
     const [info, setinfo] = useState([]);
-    let username = localStorage.getItem("email");
+    const [username, change_username] = useState(localStorage.getItem("email"));
     const nav2=useNavigate();
     const [up_user,setup_user]=useState('');
     const [up_name,setup_name]=useState('');
@@ -18,9 +18,29 @@ function Home()
     const [pass,setpass]=useState('')
     const [bgr,setbg]=useState('white')
     const [disp,setdisp]=useState("none")
-    const [receiver_index,update_index]=useState("")
     const [receiver,update_receiver]=useState(0);
+    const [messages,setmessages]=useState({});
+    const [sent,set_sent]=useState(0);
     let w=-1;
+
+    function retrieve_messages()
+    {
+        fetch('/get_messages',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: username }),
+            })
+            .then(response => response.json())
+            .then(data => 
+                {
+                    console.log(data);
+                    setmessages(data);
+                })
+        
+    }
     function update_info(up_user,up_name,up_bio)
     {
         fetch('/save_info', {
@@ -47,7 +67,7 @@ function Home()
                 .then(response => response.json())
                 .then(data => console.log(data));
                 localStorage.setItem("email",up_user);
-
+                change_username(localStorage.getItem("email")); // Update the username in local storage
             }
             else
             {
@@ -72,7 +92,12 @@ function Home()
     const socket=io('/',{
         auth:{username}
     })
+    useEffect(()=>{
+        console.log("uet")
+        retrieve_messages();
+    },[username,sent]);    
     useEffect(() => {
+        retrieve_messages();
         fetch("/accounts")
         .then(response => response.json())
         .then(data => 
@@ -82,6 +107,7 @@ function Home()
                 {
                     if(data[i].email===username)
                     {
+                        console.log("milgia")
                         fetch("/user_in_table",{    
                             method: 'POST',
                             headers: {
@@ -100,7 +126,7 @@ function Home()
                         setup_bio(data[i].bio);
                         setpass(data[i].password);
                         setbg(data[i].bg);
-                        
+                        console.log("djsnbdsjb")
                     }
                 }
                 for(let i=0;i<data.length;i++)
@@ -109,7 +135,7 @@ function Home()
                     accounts.push(data[i].bio);
                 }
                 setinfo(accounts);
-
+                console.log("hi")
             }
         );
         let icons=document.querySelectorAll(".home11 label");
@@ -139,7 +165,7 @@ function Home()
                 }   
                 icons[i].style.backgroundColor='darkgreen';
                 icons[i].style.color='white';
-                if(i==0){setpart1('flex');setpart2('none');setpart3('none');setdisp('flex');}
+                if(i==0){setpart1('flex');setpart2('none');setpart3('none');setdisp('none');}
                 if(i==1){setpart1('none');setpart2('flex');setpart3('none');setdisp('none');}
                 if(i==2){setpart1('none');setpart2('none');setpart3('flex');setdisp('none');}
             });
@@ -177,12 +203,16 @@ function Home()
             body: JSON.stringify({ from: from, to: to, message: msg }),
         })
         .then(response => response.json())
-        .then(data=>console.log(data))
-        socket.emit('message',{
-            from:from,
-            to:to,
-            message_text:msg
-        })
+        .then(data=>
+            {   
+                console.log(data)
+                socket.emit('message',{
+                    from:from,
+                    to:to,
+                    message_text:msg
+                })
+                set_sent(prev=> 1+prev); 
+            })
     }
     useEffect(() => {
         let connect_msg=document.getElementById("connect_msg");
@@ -256,10 +286,7 @@ function Home()
                         <label>Background Theme</label>
                         <select value={bgr} style={{ alignSelf:'end'}} onChange={(e)=>setbg(e.target.value)} >
                             <option style={{color:"white"}} value="white">White</option>
-                            <option style={{color:"black"}} value="black">Black</option>
-                            <option style={{color:"red"}} value="red">Red</option>
                             <option style={{color:"gold"}} value="gold">Gold</option>
-                            <option style={{color:"blueviolet"}} value="blueviolet">BlueViolet</option>
                             <option style={{color:"lime"}} value="lime">Lime</option>
                             <option style={{color:"orange"}} value="orange">Orange</option>
                             <option style={{color:"pink"}} value="pink">Pink</option>

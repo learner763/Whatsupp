@@ -93,8 +93,41 @@ app.post("/user_in_table", (req, res) => {
     });
 
 })
+app.post('/get_messages',(req,res)=>
+{
+    let messages={}
+    const {username}=req.body;
+    console.log(username)
+    pool.query(`select "${username}",chat_with from public.chats `, (err, results) => {
+        pool.query(`select * from public.chats where chat_with=$1`,[username], (err, results2) => {
+            console.log(results)
+            let a_list=results.rows
+            for(let i=0;i<a_list.length;i++)
+            {
+                if(Array.isArray(a_list[i][username]))
+                {
+                    messages[a_list[i]['chat_with']]=a_list[i][username];
+                }
+            }
+            let a_list2=results2.rows[0]
+
+            for(let i=0;i<Object.keys(a_list2).length;i++)
+            {
+                if(Array.isArray(a_list2[Object.keys(a_list2)[i]]) && Object.keys(a_list2)[i]!="chat_with")
+                {
+                    messages[Object.keys(a_list2)[i]]=a_list2[Object.keys(a_list2)[i]];
+                }
+            }
+            console.log(messages)
+            res.json(messages);
+
+        })
+    })
+        
+})
 app.post("/save_info", (req, res) => {
     const { previous,username, name,bio } = req.body;
+
     pool.query("select * from public.users where email=$1", [username], (err, results) => {
         if (err) {}
         if(results.rows.length>0)
@@ -109,7 +142,6 @@ app.post("/save_info", (req, res) => {
             });
             pool.query(`alter table public.chats rename column "${previous}" to "${username}";`, (err, results) => {
                 if (err) {console.log(err)}
-                else{console.log("no error")}
             });
             pool.query("update public.users set name=$1,bio=$2,email=$3 where email=$4", [name,bio,username,previous], (err, results) => {   
                 if (err) {console.log(4)}
@@ -194,6 +226,7 @@ app.post('/save_msg',(req,res)=>
         
         
     })
+    res.json({success:true});
 })
 
 // Start the server
@@ -205,11 +238,9 @@ let socket_ids={}
 io.on('connection',socket=>
 {
     socket_ids[socket.handshake.auth.username]=socket.id;
-    console.log(socket_ids)
     socket.on('message',({from,to,message_text}) =>
     {
-        console.log(socket_ids[from]);
+        console.log("bhdfsbhfdsb")
         io.emit('message',({from,to,message_text}));
-        console.log(socket_ids[from]);
     });
 })
