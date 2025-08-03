@@ -19,8 +19,9 @@ function Home()
     const [bgr,setbg]=useState('white')
     const [disp,setdisp]=useState("none")
     const [receiver,update_receiver]=useState(0);
-    const [messages,setmessages]=useState({});
+    const [messages,setmessages]=useState([]);
     const [sent,set_sent]=useState(0);
+    const [disp_1,set_disp_1]=useState("none");
     let w=-1;
 
     function retrieve_messages()
@@ -37,6 +38,13 @@ function Home()
             .then(data => 
                 {
                     console.log(data);
+                    let whole_chat=[]
+                    if(data=={}){set_disp_1("flex")}
+                    else{set_disp_1("none")}
+                    for(let i=0;i<Object.keys(data).length;i++)
+                    {
+                        whole_chat.push(data[Object.keys(data)[i]])
+                    }
                     setmessages(data);
                 })
         
@@ -107,7 +115,6 @@ function Home()
                 {
                     if(data[i].email===username)
                     {
-                        console.log("milgia")
                         fetch("/user_in_table",{    
                             method: 'POST',
                             headers: {
@@ -117,16 +124,13 @@ function Home()
                             }
                         )
                         .then(response => response.json())
-                        .then(data => {
-                            console.log("jsdbjdsb")
-                        })
+                        .then(data => {})
                         
                         setup_user(data[i].email);
                         setup_name(data[i].name);
                         setup_bio(data[i].bio);
                         setpass(data[i].password);
                         setbg(data[i].bg);
-                        console.log("djsnbdsjb")
                     }
                 }
                 for(let i=0;i<data.length;i++)
@@ -135,7 +139,6 @@ function Home()
                     accounts.push(data[i].bio);
                 }
                 setinfo(accounts);
-                console.log("hi")
             }
         );
         let icons=document.querySelectorAll(".home11 label");
@@ -259,14 +262,14 @@ function Home()
                 <div className='home12'>
 
                     <div className='part1' style={{display:part1}}>
-                        <label style={{alignSelf:'center'}} id="connect_msg"><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
+                        <label style={{alignSelf:'center',display:disp_1}} id="connect_msg"><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
                         <label style={{display:disp}} id="profile_name"></label>
                         
                     </div>
                     <div className='msg_div' style={{display:disp}}>
-                            <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...' ></textarea>
-                            <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
-                            <button id="File_Button" style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-file"></i>File</button>
+                        <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...' ></textarea>
+                        <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
+                        <button id="File_Button" style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-file"></i>File</button>
                     </div>
                     <div className='part2' style={{display:part2}} >
                         <i style={{alignSelf:'center'}} class='fas fa-user'></i>

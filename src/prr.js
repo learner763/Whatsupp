@@ -1,4 +1,3 @@
-let r={}
-let rr={3:4}
-r=rr
+let r='kkk j klj'
+r=r.slice(r.lastIndexOf(' '),r.length)
 console.log(r)

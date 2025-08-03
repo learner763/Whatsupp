@@ -96,11 +96,10 @@ app.post("/user_in_table", (req, res) => {
 app.post('/get_messages',(req,res)=>
 {
     let messages={}
+    let frontend_messages=[]
     const {username}=req.body;
-    console.log(username)
     pool.query(`select "${username}",chat_with from public.chats `, (err, results) => {
         pool.query(`select * from public.chats where chat_with=$1`,[username], (err, results2) => {
-            console.log(results)
             let a_list=results.rows
             for(let i=0;i<a_list.length;i++)
             {
@@ -118,9 +117,47 @@ app.post('/get_messages',(req,res)=>
                     messages[Object.keys(a_list2)[i]]=a_list2[Object.keys(a_list2)[i]];
                 }
             }
-            console.log(messages)
-            res.json(messages);
+            for(let i=0;i<Object.keys(messages).length;i++)
+            {
+                let sent_received=[]
+                frontend_messages.push(Object.keys(messages)[i])
+                for(let j=0;j<messages[Object.keys(messages)[i]].length;j++)
+                {
+                    if(messages[Object.keys(messages)[i]][j].startsWith(`${username}`))
+                    {
+                        sent_received.push(messages[Object.keys(messages)[i]][j].replace(`${username}`,'Sent'))
+                    }
+                    if([Object.keys(messages)[i]]!=username)
+                    {
+                        if(messages[Object.keys(messages)[i]][j].startsWith(`${Object.keys(messages)[i]}`))
+                        {
+                            sent_received.push(messages[Object.keys(messages)[i]][j].replace(`${Object.keys(messages)[i]}`,'Received'))
+                        }
+                    }
+                }
+                frontend_messages.push(sent_received);
+            }
+            for(let j=0;j<(frontend_messages.length-2)/2;j++)
+            {
+                for(let i=1;i<frontend_messages.length-2;i+=2)
+                {
+                    if(new Date(frontend_messages[i+2][frontend_messages[i+2].length-1].slice(frontend_messages[i+2][frontend_messages[i+2].length-1].lastIndexOf(' ')+1,frontend_messages[i+2][frontend_messages[i+2].length-1].length).replaceAll('-',' '))
+                    >new Date(frontend_messages[i][frontend_messages[i].length-1].slice(frontend_messages[i][frontend_messages[i].length-1].lastIndexOf(' ')+1,frontend_messages[i][frontend_messages[i].length-1].length).replaceAll('-',' ')))
+                    {
+                        let temp=frontend_messages[i]
+                        frontend_messages[i]=frontend_messages[i+2]
+                        frontend_messages[i+2]=temp;
+                        temp=frontend_messages[i-1]
+                        frontend_messages[i-1]=frontend_messages[i+1]
+                        frontend_messages[i+1]=temp;
 
+                    }
+                    
+                }
+            }
+            console.log(frontend_messages)
+
+            res.json(messages);
         })
     })
         
@@ -217,11 +254,11 @@ app.post('/save_msg',(req,res)=>
         
             if((results.rows[0].chat==null && results.rows[1].chat==null) || results.rows[0].chat==null || from==to)
             {
-                pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}`]])
+                pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}     ${new Date().toDateString().replaceAll(" ",'-')}-${new Date().getHours()<13?new Date().getHours():new Date().getHours()-12}:${new Date().getMinutes()}:${new Date().getSeconds()}-${new Date().getHours()<12?"AM":"PM"}`]])
             }
             else if(results.rows[1].chat==null)
             {
-                pool.query(`update public.chats set "${from}"= coalesce("${from}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[to,[`${from}: ${message}`]])
+                pool.query(`update public.chats set "${from}"= coalesce("${from}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[to,[`${from}: ${message}     ${new Date().toDateString().replaceAll(" ",'-')}-${new Date().getHours()<13?new Date().getHours():new Date().getHours()-12}:${new Date().getMinutes()}:${new Date().getSeconds()}-${new Date().getHours()<12?"AM":"PM"}`]])
             }
         
         
@@ -240,7 +277,6 @@ io.on('connection',socket=>
     socket_ids[socket.handshake.auth.username]=socket.id;
     socket.on('message',({from,to,message_text}) =>
     {
-        console.log("bhdfsbhfdsb")
         io.emit('message',({from,to,message_text}));
     });
 })
