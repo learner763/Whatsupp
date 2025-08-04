@@ -51,7 +51,20 @@ function App() {
               setdisp("none");
               settext("");
               localStorage.setItem("email",email);
-              nav('/profile');
+
+              fetch("/user_in_table",{    
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: email })
+                }
+              )
+              .then(response => response.json())
+              .then(data => 
+              {
+                nav('/profile');
+              })
 
             }
           }

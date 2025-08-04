@@ -91,6 +91,7 @@ app.post("/user_in_table", (req, res) => {
     pool.query(`alter table public.chats add column if not exists "${username}" text[];`, (err, results) => {
         if (err) {console.log(err)}
     });
+    res.json({success:true});
 
 })
 app.post('/get_messages',(req,res)=>
@@ -157,7 +158,7 @@ app.post('/get_messages',(req,res)=>
             }
             console.log(frontend_messages)
 
-            res.json(messages);
+            res.json(frontend_messages);
         })
     })
         

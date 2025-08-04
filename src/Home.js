@@ -105,7 +105,7 @@ function Home()
         retrieve_messages();
     },[username,sent]);    
     useEffect(() => {
-        retrieve_messages();
+        retrieve_messages()
         fetch("/accounts")
         .then(response => response.json())
         .then(data => 
@@ -124,7 +124,10 @@ function Home()
                             }
                         )
                         .then(response => response.json())
-                        .then(data => {})
+                        .then(data => 
+                            {
+                                console.log(data);
+                            })
                         
                         setup_user(data[i].email);
                         setup_name(data[i].name);
