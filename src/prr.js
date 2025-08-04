@@ -1,3 +1,2 @@
-let r='kkk j klj'
-r=r.slice(r.lastIndexOf(' '),r.length)
-console.log(r)
+let r=[]
+console.log(r.length==0)

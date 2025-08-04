@@ -38,13 +38,13 @@ function Home()
             .then(data => 
                 {
                     console.log(data);
-                    let whole_chat=[]
-                    if(data=={}){set_disp_1("flex")}
-                    else{set_disp_1("none")}
-                    for(let i=0;i<Object.keys(data).length;i++)
+                    if(data.length==0)
                     {
-                        whole_chat.push(data[Object.keys(data)[i]])
+                        console.log("bhdsf")
+                        set_disp_1("flex")
                     }
+                    else{set_disp_1("none")}
+                    
                     setmessages(data);
                 })
         
