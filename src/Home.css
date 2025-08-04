@@ -157,6 +157,11 @@ background-color: darkgreen;
     overflow-y: scroll;
     flex: .7;
 }
+.chats{
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
 .part1 label{
     font-weight: bold;
     font-size: 25px;

@@ -22,6 +22,8 @@ function Home()
     const [messages,setmessages]=useState([]);
     const [sent,set_sent]=useState(0);
     const [disp_1,set_disp_1]=useState("none");
+    const [disp_chat,set_disp_chat]=useState("none");
+
     let w=-1;
 
     function retrieve_messages()
@@ -42,10 +44,20 @@ function Home()
                     {
                         console.log("bhdsf")
                         set_disp_1("flex")
+                        set_disp_chat('none')
                     }
-                    else{set_disp_1("none")}
-                    
-                    setmessages(data);
+                    else
+                    {
+                        set_disp_1("none")
+                        set_disp_chat("flex")
+                    }
+                    let frontend_messages=[]
+                    for(let i=0;i<data.length;i+=2)
+                    {
+                        frontend_messages.push([data[i],data[i+1]])
+                    }
+                    console.log(frontend_messages)
+                    setmessages(frontend_messages);
                 })
         
     }
@@ -268,6 +280,18 @@ function Home()
                         <label style={{alignSelf:'center',display:disp_1}} id="connect_msg"><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
                         <label style={{display:disp}} id="profile_name"></label>
                         
+                    </div>
+                    <div className='chats' style={{display:disp_chat}}>
+                        {messages.map((value,index)=>
+                            {
+                                return(
+                                    <div key={index} style={{display:'flex',flexDirection:'column'}} >
+                                        <span><i className='fas fa-user'></i> {value[0]}</span>
+                                        <span>{value[1][value[1].length-1]}</span>
+                                    </div>
+                                );
+                            })
+                        }
                     </div>
                     <div className='msg_div' style={{display:disp}}>
                         <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...' ></textarea>
