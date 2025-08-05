@@ -162,17 +162,20 @@ background-color: darkgreen;
     flex-direction: column;
     overflow-y: scroll;
 }
-.part1 label{
+.part1 label,.chats label{
     font-weight: bold;
     font-size: 25px;
-    
+    align-self: center;
+    justify-self: center;
+    color: darkgreen;
 }
 
 #profile_name{
     background-color: lightgreen;
     color: darkgreen;
     width: 100%;
-    text-align: center;
+    
+    
 }
 #refresh_people{
     cursor: pointer;
@@ -185,7 +188,7 @@ background-color: darkgreen;
     flex: .2;
 }
 .chat_bar{
-    border: black solid;
+    border: darkgreen solid;
     border-width: 0px 0px 1px 0px;
     flex: .1;
     justify-content: center;
@@ -211,5 +214,7 @@ background-color: darkgreen;
     overflow-x: hidden;
 }
 #connect_msg{
-    color: darkgreen;
+    border: solid darkgreen;
+    border-width: 0px 0px 1px 0px;
+    width: 100%;
 }

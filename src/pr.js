@@ -1,4 +1,2 @@
-let y=[]
-let r="fg"
-y.push(r.replace('f','g'))
-console.log(y)
+let r=new Date.UTC()
+console.log(`Current date and time: ${r}`)

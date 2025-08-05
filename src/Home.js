@@ -12,7 +12,6 @@ function Home()
     const [up_user,setup_user]=useState('');
     const [up_name,setup_name]=useState('');
     const [up_bio,setup_bio]=useState('');
-    const [part1,setpart1]=useState('flex');
     const [part2,setpart2]=useState('none');
     const [part3,setpart3]=useState('none');
     const [pass,setpass]=useState('')
@@ -21,8 +20,7 @@ function Home()
     const [receiver,update_receiver]=useState(0);
     const [messages,setmessages]=useState([]);
     const [sent,set_sent]=useState(0);
-    const [disp_1,set_disp_1]=useState("none");
-    const [disp_chat,set_disp_chat]=useState("none");
+    const [disp_chat,set_disp_chat]=useState("flex");
 
     let w=-1;
 
@@ -40,22 +38,6 @@ function Home()
             .then(data => 
                 {
                     console.log(data);
-                    if(data.length==0)
-                    {
-                        console.log("bhdsf")
-                        set_disp_1("flex")
-                        set_disp_chat('none')
-                    }
-                    else
-                    {
-                        set_disp_1("none")
-                        set_disp_chat("flex")
-                    }
-                    if(disp=='flex' || part2=='flex')
-                    {
-                        set_disp_chat('none');
-                    }
-                    else{}
                     let frontend_messages=[]
                     for(let i=0;i<data.length;i+=2)
                     {
@@ -118,9 +100,9 @@ function Home()
         auth:{username}
     })
     useEffect(()=>{
-        console.log("uet")
         retrieve_messages();
     },[username,sent]);    
+    
     useEffect(() => {
         retrieve_messages()
         fetch("/accounts")
@@ -189,9 +171,9 @@ function Home()
                 }   
                 icons[i].style.backgroundColor='darkgreen';
                 icons[i].style.color='white';
-                if(i==0){setpart1('flex');setpart2('none');setpart3('none');setdisp('none');set_disp_chat('flex')}
-                if(i==1){setpart1('none');setpart2('flex');setpart3('none');setdisp('none');set_disp_chat('none')}
-                if(i==2){setpart1('none');setpart2('none');setpart3('flex');setdisp('none');set_disp_chat('none')}
+                if(i==0){setpart2('none');setpart3('none');setdisp('none');set_disp_chat('flex')}
+                if(i==1){setpart2('flex');setpart3('none');setdisp('none');set_disp_chat('none')}
+                if(i==2){setpart2('none');setpart3('flex');setdisp('none');set_disp_chat('none')}
             });
         }
         socket.on('message',({from,to,message_text})=>
@@ -248,12 +230,10 @@ function Home()
         for(let i=0;i<connect_buttons.length;i++)
         {
             connect_buttons[i].addEventListener('click',()=>{
-                profile_name.innerHTML+=connect_people[i].innerHTML;
+                profile_name.innerHTML=connect_people[i].innerHTML;
                 setdisp("flex");
-                connect_msg.style.display='none';
                 setpart2('none');
                 setpart3('none');
-                setpart1('flex');
                 set_disp_chat('none');
                 let icons=document.querySelectorAll(".home11 label");
                 for(let j=0;j<icons.length;j++)
@@ -283,12 +263,12 @@ function Home()
                 </div>
                 <div className='home12'>
 
-                    <div className='part1' style={{display:part1}}>
-                        <label style={{display:disp_1}} id="connect_msg"><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
+                    <div className='part1'>
                         <label style={{display:disp}} id="profile_name"><i className='fas fa-user'></i></label>
-                        
                     </div>
-                    <div className='chats' style={{display:disp_chat,border:'black solid 1px 1px 1px 1px'}}>
+                    <div className='chats' style={{display:disp_chat}}>
+                        <label id="connect_msg"><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
+
                         {messages.map((value,index)=>
                             {
                                 return(
