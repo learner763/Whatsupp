@@ -68,6 +68,7 @@ background-color: darkgreen;
     border: darkgreen solid ;
     border-width: 0px 1px 0px 0px;
     flex-direction: column;
+    overflow-x: hidden;
 }
 .home13
 {
@@ -152,9 +153,8 @@ background-color: darkgreen;
 .part1{
     display: flex;
     flex-direction: column;
-    justify-content: start;
-    align-items: start;
     overflow-y: scroll;
+    align-items: center;
     flex: .7;
 }
 .chats{
@@ -183,4 +183,33 @@ background-color: darkgreen;
     align-items: center;
     width: 100%;
     flex: .2;
+}
+.chat_bar{
+    border: black solid;
+    border-width: 0px 0px 1px 0px;
+    flex: .1;
+    justify-content: center;
+    align-items: start;
+    cursor: pointer;
+}
+.chat_bar span:first-of-type{
+    font-weight: bold;
+    font-size: 25px;
+    color: darkgreen;
+}
+.chat_bar span{
+    overflow-x: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: inline-block;
+}
+.chat_bar span:nth-of-type(2){
+    font-weight: normal;
+    font-size: 20px;
+    color: black;
+    overflow-x: hidden;
+}
+#connect_msg{
+    color: darkgreen;
 }

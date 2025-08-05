@@ -3,7 +3,7 @@ import './Home.css';
 import axios from 'axios'; 
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import {io} from 'socket.io-client';
+import {connect, io} from 'socket.io-client';
 function Home()
 {
     const [info, setinfo] = useState([]);
@@ -51,6 +51,11 @@ function Home()
                         set_disp_1("none")
                         set_disp_chat("flex")
                     }
+                    if(disp=='flex' || part2=='flex')
+                    {
+                        set_disp_chat('none');
+                    }
+                    else{}
                     let frontend_messages=[]
                     for(let i=0;i<data.length;i+=2)
                     {
@@ -156,6 +161,7 @@ function Home()
                 setinfo(accounts);
             }
         );
+        let connect_msg=document.getElementById("connect_msg");
         let icons=document.querySelectorAll(".home11 label");
         let refresh_people=document.getElementById("refresh_people");
         refresh_people.addEventListener("click",function()
@@ -183,9 +189,9 @@ function Home()
                 }   
                 icons[i].style.backgroundColor='darkgreen';
                 icons[i].style.color='white';
-                if(i==0){setpart1('flex');setpart2('none');setpart3('none');setdisp('none');}
-                if(i==1){setpart1('none');setpart2('flex');setpart3('none');setdisp('none');}
-                if(i==2){setpart1('none');setpart2('none');setpart3('flex');setdisp('none');}
+                if(i==0){setpart1('flex');setpart2('none');setpart3('none');setdisp('none');set_disp_chat('flex')}
+                if(i==1){setpart1('none');setpart2('flex');setpart3('none');setdisp('none');set_disp_chat('none')}
+                if(i==2){setpart1('none');setpart2('none');setpart3('flex');setdisp('none');set_disp_chat('none')}
             });
         }
         socket.on('message',({from,to,message_text})=>
@@ -242,12 +248,13 @@ function Home()
         for(let i=0;i<connect_buttons.length;i++)
         {
             connect_buttons[i].addEventListener('click',()=>{
-                profile_name.innerHTML=connect_people[i].innerHTML;
+                profile_name.innerHTML+=connect_people[i].innerHTML;
                 setdisp("flex");
                 connect_msg.style.display='none';
                 setpart2('none');
                 setpart3('none');
                 setpart1('flex');
+                set_disp_chat('none');
                 let icons=document.querySelectorAll(".home11 label");
                 for(let j=0;j<icons.length;j++)
                 {
@@ -277,15 +284,15 @@ function Home()
                 <div className='home12'>
 
                     <div className='part1' style={{display:part1}}>
-                        <label style={{alignSelf:'center',display:disp_1}} id="connect_msg"><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
-                        <label style={{display:disp}} id="profile_name"></label>
+                        <label style={{display:disp_1}} id="connect_msg"><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
+                        <label style={{display:disp}} id="profile_name"><i className='fas fa-user'></i></label>
                         
                     </div>
-                    <div className='chats' style={{display:disp_chat}}>
+                    <div className='chats' style={{display:disp_chat,border:'black solid 1px 1px 1px 1px'}}>
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div key={index} style={{display:'flex',flexDirection:'column'}} >
+                                    <div className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <span><i className='fas fa-user'></i> {value[0]}</span>
                                         <span>{value[1][value[1].length-1]}</span>
                                     </div>
