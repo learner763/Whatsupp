@@ -21,7 +21,7 @@ function Home()
     const [messages,setmessages]=useState([]);
     const [sent,set_sent]=useState(0);
     const [disp_chat,set_disp_chat]=useState("flex");
-
+    const [indices,set_indices]=useState([]);
     let w=-1;
 
     function retrieve_messages()
@@ -99,9 +99,37 @@ function Home()
     const socket=io('/',{
         auth:{username}
     })
+    useEffect(() => {
+        fetch("/accounts")
+        .then(response => response.json())
+        .then(data => 
+            {
+                let accounts=[] 
+                for(let i=0;i<data.length;i++)
+                {
+                    if(data[i].email===username)
+                    {
+                        fetch("/user_in_table",{    
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ username: data[i].email })
+                            }
+                        )
+                        .then(response => response.json())
+                        .then(data => 
+                            {
+                                console.log(data);
+                                retrieve_messages();
+                            })
+                        }
+                    }
+                })
+    },[username]);
     useEffect(()=>{
         retrieve_messages();
-    },[username,sent]);    
+    },[sent]);    
     
     useEffect(() => {
         retrieve_messages()
@@ -135,11 +163,14 @@ function Home()
                         setbg(data[i].bg);
                     }
                 }
+                let ind=[]
                 for(let i=0;i<data.length;i++)
                 {
                     accounts.push(data[i].name);
                     accounts.push(data[i].bio);
+                    ind.push(data[i].index)
                 }
+                set_indices(ind);
                 setinfo(accounts);
             }
         );
@@ -191,8 +222,15 @@ function Home()
         .then(response => response.json())
         .then(data => 
         {
-            insert_msg(username,data[receiver].email,message.value);
-            message.value=""
+            for(let i=0;i<data.length;i++)
+            {
+                if(data[i].index==receiver)
+                {
+                    insert_msg(username,data[i].email,message.value);
+                    message.value=""
+                    return;
+                }
+            }
         })
         
     }
@@ -243,7 +281,8 @@ function Home()
                 }   
                 icons[0].style.backgroundColor='darkgreen';
                 icons[0].style.color='white';
-                update_receiver(i)
+                update_receiver(connect_buttons[i].getAttribute('data-indexid'));
+                console.log(connect_buttons[i].getAttribute('data-indexid'))
             });
         }
     }, [info]);
@@ -318,11 +357,11 @@ function Home()
                         if (index < info.length / 2) {
                             w = w + 1; // Increment w before returning
                             return (
-                                <div className='userinfo' key={index}> 
+                                <div className='userinfo' key={index} > 
                                     <i className='fas fa-user'>{info[index + w ]=== up_name ? " You": ""}</i>                                    
-                                    <span className='connect_people'>{info[index + w ]}</span> 
+                                    <span className='connect_people' >{info[index + w ]}</span> 
                                     <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
-                                    <button className='connect_buttons' ><i className='fas fa-people-arrows'></i>Connect</button>
+                                    <button className='connect_buttons' data-indexid={indices[index]}><i className='fas fa-people-arrows'></i>Connect</button>
                                 </div>
                             );
                         }

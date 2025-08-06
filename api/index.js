@@ -24,7 +24,7 @@ app.use(express.json());
 
 // API route
 app.get('/accounts', (req, res) => {
-    pool.query('SELECT email,name,bio,password,bg FROM public.users', (err, results) => {
+    pool.query('SELECT email,name,bio,password,bg,index FROM public.users', (err, results) => {
         if (err) {}
         else res.json(results.rows);
     });
@@ -65,12 +65,26 @@ app.post("/login", (req, res) => {
             if (err) {}
             if(results.rows.length>0){res.json({success:false});}
             else{
+                
                 pool.query("insert into public.users(email,password) values($1,$2)", [email,password], (err, results) => {
                     if (err) {
                         return res.status(500).send('Database error');
                     }
-                    else res.json({success:true});
+                    else 
+                    {
+                        pool.query('select index from public.users',(err,results)=>
+                        {
+                            let array=[]
+                            for(let i=0;i<results.rows.length;i++)
+                            {
+                                array.push(results.rows[i].index)
+                            }
+                            pool.query(`update public.users set index=${Math.max(...array)+1} where email=$1`,[email])
+                        });
+                        res.json({success:true});
+                    }
                 });
+                
             }
         });
 

@@ -1,2 +1,2 @@
-let r=new Date.UTC()
-console.log(`Current date and time: ${r}`)
+let r=[null,7]
+console.log(Math.max(...r))
