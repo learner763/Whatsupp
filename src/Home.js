@@ -207,10 +207,37 @@ function Home()
                 if(i==2){setpart2('none');setpart3('flex');setdisp('none');set_disp_chat('none')}
             });
         }
-        socket.on('message',({from,to,message_text})=>
+        socket.on('message',({from,to,message_text,time})=>
         {
-            console.log(`${socket.auth.username} message received ${socket.id}`);
-            
+            if((to==username && to!=from) || to==from)
+            {
+                console.log(messages)
+                console.log(`${socket.auth.username} message received ${socket.id}`);
+                setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    let found=0
+                    for(let i=0;i<previous.length;i++)
+                    {
+                        if(previous[i][0]==from)
+                        {
+                            found=1
+                            if(to!=from){previous[i][1].push(`Received: ${message_text}     ${time}`);}
+                            if(to==from){previous[i][1].push(`Sent: ${message_text}     ${time}`);}
+                            let inter=previous[i]
+                            previous.splice(i,1)
+                            previous.unshift(inter);
+                            return previous;
+                        }
+                    }
+                    if(found==0)
+                    {
+                        previous.unshift([from,[`Received: ${message_text}     ${time}`]]);
+                        return previous;
+                    }
+                }
+                );
+            }
         });
         return ()=>socket.off('message');
     }, []);
