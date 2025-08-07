@@ -344,7 +344,8 @@ function Home()
                         <label  id="profile_name"><i className='fas fa-user'></i> </label>
                         {messages.map((value,index)=>
                         {
-                            if(selected_bar==index )
+                            console.log(selected_bar)
+                            if(selected_bar==messages[index][0])
                             {
                                 return(
                                     <div key={index} style={{display:'flex',flexDirection:'column'}} >
@@ -364,7 +365,7 @@ function Home()
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div onClick={()=>{document.getElementById('profile_name').innerHTML="<i class='fas fa-user'></i> "+info[usernames.indexOf(value[0])*2];set_selected_bar(index);set_disp_chat('none');setdisp('flex')}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
+                                    <div onClick={()=>{document.getElementById('profile_name').innerHTML="<i class='fas fa-user'></i> "+info[usernames.indexOf(value[0])*2];set_selected_bar(messages[index][0]);set_disp_chat('none');setdisp('flex');update_receiver(indices[usernames.indexOf(value[0])])}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <span><i className='fas fa-user'></i> {info[usernames.indexOf(value[0])*2]}</span>
                                         <span>{value[1][value[1].length-1]}</span>
                                     </div>
@@ -421,7 +422,7 @@ function Home()
                                                     {
                                                         if(messages[i][0]==usernames[indices.indexOf(Number(indices[index]))])
                                                         {
-                                                            return i;
+                                                            return messages[i][0];
                                                         }
                                                     }
                                                 })
