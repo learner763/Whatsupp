@@ -22,6 +22,8 @@ function Home()
     const [sent,set_sent]=useState(0);
     const [disp_chat,set_disp_chat]=useState("flex");
     const [indices,set_indices]=useState([]);
+    const [selected_bar,set_selected_bar]=useState(0);
+    const [usernames,set_usernames]=useState([]);
     let w=-1;
 
     function retrieve_messages()
@@ -74,11 +76,11 @@ function Home()
                 .then(response => response.json())
                 .then(data => console.log(data));
                 localStorage.setItem("email",up_user);
-                change_username(localStorage.getItem("email")); // Update the username in local storage
+                change_username(localStorage.getItem("email")); 
             }
             else
             {
-                alert(`"${up_user}" already exists! Please choose another username.`); // Alert if username already exists
+                alert(`"${up_user}" already exists! Please choose another username.`); 
             }
         });
         
@@ -164,12 +166,15 @@ function Home()
                     }
                 }
                 let ind=[]
+                let emails=[]
                 for(let i=0;i<data.length;i++)
                 {
                     accounts.push(data[i].name);
                     accounts.push(data[i].bio);
                     ind.push(data[i].index)
+                    emails.push(data[i].email);
                 }
+                set_usernames(emails);
                 set_indices(ind);
                 setinfo(accounts);
             }
@@ -184,11 +189,17 @@ function Home()
             .then(data => 
             {
                 let accounts=[]
+                let ind=[]
+                let emails=[]
                 for(let i=0;i<data.length;i++)
                 {
                     accounts.push(data[i].name);
                     accounts.push(data[i].bio);
+                    ind.push(data[i].index)
+                    emails.push(data[i].email);
                 }
+                set_indices(ind);
+                set_usernames(emails);
                 setinfo(accounts);
             })
         })
@@ -295,7 +306,7 @@ function Home()
         for(let i=0;i<connect_buttons.length;i++)
         {
             connect_buttons[i].addEventListener('click',()=>{
-                profile_name.innerHTML=connect_people[i].innerHTML;
+                profile_name.innerHTML="<i class='fas fa-user'></i> "+connect_people[i].innerHTML;
                 setdisp("flex");
                 setpart2('none');
                 setpart3('none');
@@ -329,8 +340,23 @@ function Home()
                 </div>
                 <div className='home12'>
 
-                    <div className='part1'>
-                        <label style={{display:disp}} id="profile_name"><i className='fas fa-user'></i></label>
+                    <div className='part1' style={{display:disp}}>
+                        <label  id="profile_name"><i className='fas fa-user'></i> </label>
+                        {messages.map((value,index)=>
+                        {
+                            if(selected_bar==index )
+                            {
+                                return(
+                                    <div key={index} style={{display:'flex',flexDirection:'column'}} >
+                                        {value[1].map((text,ind)=>
+                                        (
+                                            <span>{text}</span>
+                                        )
+                                        )}
+                                    </div>
+                                )
+                            }
+                        })}
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
                         <label id="connect_msg"><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
@@ -338,8 +364,8 @@ function Home()
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
-                                        <span><i className='fas fa-user'></i> {value[0]}</span>
+                                    <div onClick={()=>{document.getElementById('profile_name').innerHTML="<i class='fas fa-user'></i> "+info[usernames.indexOf(value[0])*2];set_selected_bar(index);set_disp_chat('none');setdisp('flex')}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
+                                        <span><i className='fas fa-user'></i> {info[usernames.indexOf(value[0])*2]}</span>
                                         <span>{value[1][value[1].length-1]}</span>
                                     </div>
                                 );
@@ -349,7 +375,6 @@ function Home()
                     <div className='msg_div' style={{display:disp}}>
                         <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...' ></textarea>
                         <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
-                        <button id="File_Button" style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-file"></i>File</button>
                     </div>
                     <div className='part2' style={{display:part2}} >
                         <i style={{alignSelf:'center'}} class='fas fa-user'></i>
@@ -388,11 +413,24 @@ function Home()
                                     <i className='fas fa-user'>{info[index + w ]=== up_name ? " You": ""}</i>                                    
                                     <span className='connect_people' >{info[index + w ]}</span> 
                                     <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
-                                    <button className='connect_buttons' data-indexid={indices[index]}><i className='fas fa-people-arrows'></i>Connect</button>
+                                    <button onClick={()=>
+                                        {
+                                            set_selected_bar(prev=>
+                                                {
+                                                    for(let i=0;i<messages.length;i++)
+                                                    {
+                                                        if(messages[i][0]==usernames[indices.indexOf(Number(indices[index]))])
+                                                        {
+                                                            return i;
+                                                        }
+                                                    }
+                                                })
+                                        }
+                                    } className='connect_buttons' data-indexid={indices[index]}><i className='fas fa-people-arrows'></i>Connect</button>
                                 </div>
                             );
                         }
-                        return null; // Return null if the condition is not met
+                        return null; 
                     })}
                 </div>
 
