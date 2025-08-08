@@ -132,7 +132,10 @@ function Home()
     useEffect(()=>{
         retrieve_messages();
     },[sent]);    
-    
+    useEffect(() => {
+        let container=document.getElementsByClassName('part1');
+        if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
+    },[messages,selected_bar])
     useEffect(() => {
         retrieve_messages()
         fetch("/accounts")
@@ -327,7 +330,7 @@ function Home()
     return(
         <div className='home'>
             <div className='top'>
-                <label>Whatsupp</label>
+                <label><i class='fas fa-phone'></i>Whatsupp</label>
                 <label><i class='fas fa-user'></i>{up_name}</label>
             </div>
             <div className='home1' style={{backgroundColor:bgr}} >
@@ -340,18 +343,19 @@ function Home()
                 </div>
                 <div className='home12'>
 
-                    <div className='part1' style={{display:disp}}>
-                        <label  id="profile_name"><i className='fas fa-user'></i> </label>
+                    <div className='part1' style={{display:disp}} >
+                        <label  id="profile_name" style={{position:'sticky',top:'0'}}><i className='fas fa-user'></i> </label>
                         {messages.map((value,index)=>
                         {
-                            console.log(selected_bar)
                             if(selected_bar==messages[index][0])
                             {
                                 return(
-                                    <div key={index} style={{display:'flex',flexDirection:'column'}} >
+                                    <div key={index} className='chat_detail' style={{display:'flex',flexDirection:'column'}} >
                                         {value[1].map((text,ind)=>
                                         (
-                                            <span>{text}</span>
+                                            text.startsWith('Sent')?
+                                            (<span style={{marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',width:'300px',padding:'5px',fontSize:'20px'}}>{text.replace('Sent: ','')}</span>):
+                                            (<span style={{marginTop:'10px',alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',width:'300px',padding:'5px',fontSize:'20px'}}>{text.replace('Received: ','')}</span>)                                               
                                         )
                                         )}
                                     </div>
