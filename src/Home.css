@@ -155,7 +155,7 @@ background-color: darkgreen;
     flex-direction: column;
     overflow-y: scroll;
     align-items: center;
-    flex: .7;
+    flex: .8;
 }
 .chats{
     display: flex;
@@ -172,9 +172,8 @@ background-color: darkgreen;
 
 #profile_name{
     background-color: lightgreen;
-    color: darkgreen;
     width: 100%;
-    
+    text-align: center;
     
 }
 #refresh_people{
@@ -185,7 +184,9 @@ background-color: darkgreen;
     justify-content: center;
     align-items: center;
     width: 100%;
-    flex: .2;
+    flex: .1;
+    cursor: pointer;
+    background-color: lightpink;
 }
 .chat_bar{
     border: darkgreen solid;
