@@ -206,6 +206,24 @@ function Home()
                 setinfo(accounts);
             })
         })
+        let phone_icons=document.querySelectorAll(".home11_pro label");
+        for(let i=0;i<phone_icons.length;i++)
+        {
+            phone_icons[i].addEventListener('click',()=>{
+            for(let j=0;j<phone_icons.length;j++)
+            {
+                console.log("fbd")
+                phone_icons[j].style.color='white';
+            }   
+            console.log(i)
+            phone_icons[i].style.color='darkgreen';
+            if(i==0){setpart2('none');setpart3('none');setdisp('none');set_disp_chat('flex');document.getElementsByClassName('home13')[0].style.display='none';document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
+            if(i==1){setpart2('flex');setpart3('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('home13')[0].style.display='none';document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
+            if(i==2){setpart2('none');setpart3('flex');setdisp('none');set_disp_chat('none');document.getElementsByClassName('home13')[0].style.display='none';document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
+            if(i==4){setpart2('none');setpart3('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('home13')[0].style.display='flex';document.getElementsByClassName('home13')[0].style.flex=1;document.getElementsByClassName('home12')[0].style.flex=0}
+            });
+        }
+
         for(let i=0;i<icons.length;i++)
         {
             icons[i].addEventListener('click',()=>{
@@ -408,6 +426,8 @@ function Home()
                     </div>
                 </div>
                 
+                
+
                 <div className='home13' >
                     <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:'darkgreen'}}><i id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
                     {info.map((a, index) => {
@@ -439,6 +459,14 @@ function Home()
                     })}
                 </div>
 
+            </div>
+
+            <div className='home11_pro' style={{display:'none'}}>
+                <label><i class='fas fa-comment-dots'></i>Chats</label>
+                <label><i class='fas fa-user'></i>Profile</label>
+                <label><i class='fas fa-cog'></i>Settings</label>
+                <label onClick={()=>nav2('/')} ><i class='fas fa-user-plus'></i>Add Account</label>
+                <label><i class='fas fa-users'></i>People</label>
             </div>
         </div>
     );

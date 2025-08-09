@@ -4,9 +4,7 @@ flex-direction: column;
 background-color: darkgreen;
 
 }
-body{
-    overflow-y: hidden;
-}
+
 .top label
 {
     font-weight: bold;
@@ -224,7 +222,46 @@ body{
 }
 @media (max-width: 850px)
 {
-    .home11,.home13{
+    .home11{
         display: none !important;
+    }
+    .home13{
+        flex:0;
+    }
+    .home11_pro{
+        display: flex !important;
+        width: 100%;
+        justify-content: space-around;
+        align-items: center;
+        justify-self: flex-end;
+        bottom: 0 !important;
+        position: fixed;
+        background-color: darkgreen;
+        height: 30px;
+        color: white;
+        font-weight: bold;
+    }
+    .home11_pro label {
+        cursor: pointer;
+    }
+    .home12{
+        height:calc(100vh - 60px)!important;
+    }
+    
+    
+}
+@media (max-width:500px) {
+    .home12{
+        height:auto !important;
+    }
+    .home11_pro{
+        height: auto;
+    }
+    .home11_pro label {
+        font-size: 0px;
+        padding: 5px;
+    }
+    .home11_pro label i{
+        font-size: 30px;
     }
 }
