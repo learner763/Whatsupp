@@ -24,6 +24,7 @@ function Home()
     const [indices,set_indices]=useState([]);
     const [selected_bar,set_selected_bar]=useState(0);
     const [usernames,set_usernames]=useState([]);
+    const [innerwidth,set_innerwidth]=useState(window.innerWidth);
     let w=-1;
 
     function retrieve_messages()
@@ -129,6 +130,17 @@ function Home()
                     }
                 })
     },[username]);
+    useEffect(() => {
+        if(window.innerWidth<=850){
+            let people=document.getElementById('people');
+            console.log(window.getComputedStyle(people).color)
+            if(window.getComputedStyle(people).color=='rgb(255, 255, 255)')
+                {console.log("no");document.getElementsByClassName('home13')[0].style.flex=0;}
+            else{console.log("yes");document.getElementsByClassName('home13')[0].style.flex=1;document.getElementsByClassName('home12')[0].style.flex=0;}
+        }
+        else{document.getElementsByClassName('home13')[0].style.flex=0.25;document.getElementsByClassName('home12')[0].style.flex=1;document.getElementsByClassName('home12')[0].style.display='flex';set_disp_chat('flex')}
+    
+    },[innerwidth])
     useEffect(()=>{
         retrieve_messages();
     },[sent]);    
@@ -138,6 +150,12 @@ function Home()
     },[messages,selected_bar])
     useEffect(() => {
         retrieve_messages()
+
+        window.addEventListener('resize',()=>
+        {
+            set_innerwidth(window.innerWidth);
+        })
+
         fetch("/accounts")
         .then(response => response.json())
         .then(data => 
@@ -214,9 +232,13 @@ function Home()
             {
                 console.log("fbd")
                 phone_icons[j].style.color='white';
+                phone_icons[j].style.backgroundColor='darkgreen';
+                
             }   
             console.log(i)
             phone_icons[i].style.color='darkgreen';
+            phone_icons[i].style.backgroundColor='white';
+            phone_icons[i].style.borderRadius='6px';
             if(i==0){setpart2('none');setpart3('none');setdisp('none');set_disp_chat('flex');document.getElementsByClassName('home13')[0].style.display='none';document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
             if(i==1){setpart2('flex');setpart3('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('home13')[0].style.display='none';document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
             if(i==2){setpart2('none');setpart3('flex');setdisp('none');set_disp_chat('none');document.getElementsByClassName('home13')[0].style.display='none';document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
@@ -328,10 +350,21 @@ function Home()
         {
             connect_buttons[i].addEventListener('click',()=>{
                 profile_name.innerHTML="<i class='fas fa-user'></i> "+connect_people[i].innerHTML;
+                
+                if(window.innerWidth<=850){document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
+                else{document.getElementsByClassName('home13')[0].style.flex=0.25;document.getElementsByClassName('home12')[0].style.flex=1}
+                
                 setdisp("flex");
                 setpart2('none');
                 setpart3('none');
                 set_disp_chat('none');
+
+                document.querySelectorAll('.home11_pro label')[0].style.color='darkgreen';
+                document.querySelectorAll('.home11_pro label')[0].style.backgroundColor='white';
+                document.querySelectorAll('.home11_pro label')[0].style.borderRadius='6px';
+                document.querySelectorAll('.home11_pro label')[4].style.color='white';
+                document.querySelectorAll('.home11_pro label')[4].style.backgroundColor='darkgreen';
+
                 let icons=document.querySelectorAll(".home11 label");
                 for(let j=0;j<icons.length;j++)
                 {
@@ -466,7 +499,7 @@ function Home()
                 <label><i class='fas fa-user'></i>Profile</label>
                 <label><i class='fas fa-cog'></i>Settings</label>
                 <label onClick={()=>nav2('/')} ><i class='fas fa-user-plus'></i>Add Account</label>
-                <label><i class='fas fa-users'></i>People</label>
+                <label id="people"><i class='fas fa-users'></i>People</label>
             </div>
         </div>
     );
