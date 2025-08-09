@@ -138,7 +138,7 @@ function Home()
                 {console.log("no");document.getElementsByClassName('home13')[0].style.flex=0;}
             else{console.log("yes");document.getElementsByClassName('home13')[0].style.flex=1;document.getElementsByClassName('home12')[0].style.flex=0;}
         }
-        else{document.getElementsByClassName('home13')[0].style.flex=0.25;document.getElementsByClassName('home12')[0].style.flex=1;document.getElementsByClassName('home12')[0].style.display='flex';set_disp_chat('flex')}
+        else{document.getElementsByClassName('home13')[0].style.display='flex';document.getElementsByClassName('home13')[0].style.flex=0.25;document.getElementsByClassName('home12')[0].style.flex=1;document.getElementsByClassName('home12')[0].style.display='flex'}
     
     },[innerwidth])
     useEffect(()=>{
