@@ -131,20 +131,106 @@ function Home()
                 })
     },[username]);
     useEffect(() => {
+        for(let i=0;i<3;i++)
+        {
+            if(getComputedStyle(document.querySelectorAll('.home11 label')[i]).color=='rgb(255, 255, 255)')
+            {
+                document.querySelectorAll('.home11_pro label')[i].style.color='darkgreen';
+                document.querySelectorAll('.home11_pro label')[i].style.backgroundColor='white';
+                document.querySelectorAll('.home11_pro label')[i].style.borderRadius='6px';
+                for(let j=0;j<3;j++)
+                {
+                    if(j!=i)
+                    {
+                        document.querySelectorAll('.home11_pro label')[j].style.color='white';
+                        document.querySelectorAll('.home11_pro label')[j].style.backgroundColor='darkgreen';
+                    }
+                }
+            }
+            else if(getComputedStyle(document.querySelectorAll('.home11_pro label')[i]).backgroundColor=='rgb(255, 255, 255)')
+            {
+                document.querySelectorAll('.home11 label')[i].style.color='white';
+                document.querySelectorAll('.home11 label')[i].style.backgroundColor='darkgreen';
+                for(let j=0;j<3;j++)
+                {
+                    if(j!=i)
+                    {
+                        document.querySelectorAll('.home11 label')[j].style.color='darkgreen';
+                        document.querySelectorAll('.home11 label')[j].style.backgroundColor='lightgreen';
+                    }
+                }
+            }
+        }
         if(window.innerWidth<=850){
             let people=document.getElementById('people');
             console.log(window.getComputedStyle(people).color)
             if(window.getComputedStyle(people).color=='rgb(255, 255, 255)')
                 {console.log("no");document.getElementsByClassName('home13')[0].style.flex=0;}
             else{console.log("yes");document.getElementsByClassName('home13')[0].style.flex=1;document.getElementsByClassName('home12')[0].style.flex=0;}
+            
+            for(let j=0;j<3;j++)
+            {
+                {
+                    document.querySelectorAll('.home11 label')[j].style.color='darkgreen';
+                    document.querySelectorAll('.home11 label')[j].style.backgroundColor='lightgreen';
+                }
+            }
+            for(let i=0;i<3;i++)
+                {
+                    if(getComputedStyle(document.querySelectorAll('.home11 label')[i]).color=='rgb(255, 255, 255)')
+                    {
+                        document.querySelectorAll('.home11_pro label')[i].style.color='darkgreen';
+                        document.querySelectorAll('.home11_pro label')[i].style.backgroundColor='white';
+                        document.querySelectorAll('.home11_pro label')[i].style.borderRadius='6px';
+                        for(let j=0;j<3;j++)
+                        {
+                            if(j!=i)
+                            {
+                                document.querySelectorAll('.home11_pro label')[j].style.color='white';
+                                document.querySelectorAll('.home11_pro label')[j].style.backgroundColor='darkgreen';
+                            }
+                        }
+                    }
+                    
+                }
         }
-        else{document.getElementsByClassName('home13')[0].style.display='flex';document.getElementsByClassName('home13')[0].style.flex=0.25;document.getElementsByClassName('home12')[0].style.flex=1;document.getElementsByClassName('home12')[0].style.display='flex'}
+        else{
+            document.getElementsByClassName('home13')[0].style.display='flex';
+            document.getElementsByClassName('home13')[0].style.flex=0.25;
+            document.getElementsByClassName('home12')[0].style.flex=1;
+            document.getElementsByClassName('home12')[0].style.display='flex';
+            for(let j=0;j<5;j++)
+            {
+                {
+                    document.querySelectorAll('.home11_pro label')[j].style.color='white';
+                    document.querySelectorAll('.home11_pro label')[j].style.backgroundColor='darkgreen';
+                }
+            }
+            for(let i=0;i<3;i++)
+                {
+                    
+                    if(getComputedStyle(document.querySelectorAll('.home11_pro label')[i]).backgroundColor=='rgb(255, 255, 255)')
+                    {
+                        document.querySelectorAll('.home11 label')[i].style.color='white';
+                        document.querySelectorAll('.home11 label')[i].style.backgroundColor='darkgreen';
+                        for(let j=0;j<3;j++)
+                        {
+                            if(j!=i)
+                            {
+                                document.querySelectorAll('.home11 label')[j].style.color='darkgreen';
+                                document.querySelectorAll('.home11 label')[j].style.backgroundColor='lightgreen';
+                            }
+                        }
+                    }
+                }
+        }
     
     },[innerwidth])
     useEffect(()=>{
         retrieve_messages();
     },[sent]);    
     useEffect(() => {
+        
         let container=document.getElementsByClassName('part1');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
     },[messages,selected_bar])

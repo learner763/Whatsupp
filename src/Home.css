@@ -224,6 +224,9 @@ background-color: darkgreen;
     color: white;
 
 }
+.home11_pro label{
+    border-radius: 6px;
+}
 @media (max-width: 850px)
 {
     .home11{
