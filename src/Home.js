@@ -104,7 +104,7 @@ function Home()
     {
         if(!username)
             return
-        const new_user= (io('/',{auth:username})); 
+        const new_user= (io('/',{auth:{username}})); 
         set_socket(new_user)
         new_user.on('connect',()=>
         {
