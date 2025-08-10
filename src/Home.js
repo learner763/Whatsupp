@@ -1,6 +1,5 @@
-import React, { use, useEffect, useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import './Home.css';
-import axios from 'axios'; 
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import {io} from 'socket.io-client';
