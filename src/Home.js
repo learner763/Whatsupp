@@ -481,7 +481,7 @@ function Home()
                 <div className='home12'>
 
                     <div className='part1' style={{display:disp}} >
-                        <label  id="profile_name" style={{position:'sticky',top:'0'}}><i className='fas fa-user'></i> </label>
+                        <label  id="profile_name" ><i className='fas fa-user'></i> </label>
                         {messages.map((value,index)=>
                         {
                             if(selected_bar==messages[index][0])
@@ -514,10 +514,7 @@ function Home()
                             })
                         }
                     </div>
-                    <div className='msg_div' style={{display:disp}}>
-                        <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...' ></textarea>
-                        <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
-                    </div>
+                    
                     <div className='part2' style={{display:part2}} >
                         <i style={{alignSelf:'center'}} class='fas fa-user'></i>
                         <label>Username</label>
@@ -578,6 +575,11 @@ function Home()
                     })}
                 </div>
 
+            </div>
+            
+            <div className='msg_div' style={{display:disp}}>
+                        <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...' ></textarea>
+                        <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
             </div>
 
             <div className='home11_pro' style={{display:'none'}}>

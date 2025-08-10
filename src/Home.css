@@ -28,7 +28,6 @@ background-color: darkgreen;
 .home1{
     display:flex;    
     background-color: white;
-    margin-top: 30px;
 }
 .home1 div{
     height: 100vh;
@@ -110,7 +109,7 @@ background-color: darkgreen;
 
 #youmayknow{
     font-size: 25px;
-    
+    padding-top: 28px;
 }
 .part2,.part3{
     display: flex;
@@ -156,10 +155,12 @@ background-color: darkgreen;
     flex-direction: column;
     overflow-y: scroll;
     align-items: center;
-    flex: .8;
+    flex: .85;
+    padding-top: 28px;
 }
 .chats{
     display: flex;
+    padding-top: 28px;
     flex-direction: column;
     overflow-y: scroll;
 }
@@ -173,9 +174,9 @@ background-color: darkgreen;
 
 #profile_name{
     background-color: lightgreen;
-    width: 100%;
+    width: 65%;
     text-align: center;
-    
+    position: fixed;
 }
 #refresh_people{
     cursor: pointer;
@@ -184,10 +185,25 @@ background-color: darkgreen;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 66.67%;
     flex: .1;
     cursor: pointer;
     background-color: lightpink;
+    position: fixed;
+    align-self: center;
+    bottom: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: lightgreen;
+}
+.msg_div textarea{
+    width: 336px;
+    height: 60px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+}
+.msg_div button{
+    font-size: 20px;
 }
 .chat_bar{
     border: darkgreen solid;
@@ -224,6 +240,10 @@ background-color: darkgreen;
     color: white;
 
 }
+.chat_detail{
+    padding-top: 28px;
+}
+
 .home11_pro label{
     border-radius: 6px;
 }
@@ -232,7 +252,6 @@ background-color: darkgreen;
     .home11{
         display: none !important;
     }
-    
     .home11_pro{
         display: flex !important;
         width: 100%;
@@ -246,21 +265,34 @@ background-color: darkgreen;
         color: white;
         font-weight: bold;
     }
+    
     .home11_pro label {
         cursor: pointer;
     }
-    .home12{
-        height:calc(100vh - 60px)!important;
-    }
     
+    #profile_name,.msg_div{
+        width: 100%;
+    }
+    .msg_div{
+        justify-self:flex-start;
+        position: fixed;
+        bottom: 30px;
+    }
+    .msg_div button{
+        font-size: 15px;
+    }
+    .msg_div textarea{
+        width: 222px;
+    }
     
 }
 @media (max-width:500px) {
-    .home12{
-        height:auto !important;
-    }
+    
     .home11_pro{
         height: auto;
+    }
+    .msg_div{
+        bottom: 40px;
     }
     .home11_pro label {
         font-size: 0px;
