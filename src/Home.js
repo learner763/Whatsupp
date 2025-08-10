@@ -114,8 +114,7 @@ function Home()
             {
                 if((to==username && to!=from) || to==from)
                 {
-                    console.log(messages)
-                    console.log(`${socket.auth.username} message received ${socket.id}`);
+                    console.log("hey")
                     setmessages(prev=>
                     {
                         let previous=[...prev]
@@ -130,6 +129,8 @@ function Home()
                                 let inter=previous[i]
                                 previous.splice(i,1)
                                 previous.unshift(inter);
+                                console.log(previous);
+
                                 return previous;
                             }
                         }
