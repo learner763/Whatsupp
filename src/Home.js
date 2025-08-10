@@ -24,6 +24,7 @@ function Home()
     const [selected_bar,set_selected_bar]=useState(0);
     const [usernames,set_usernames]=useState([]);
     const [innerwidth,set_innerwidth]=useState(window.innerWidth);
+    const [socket,set_socket]=useState(null)
     let w=-1;
 
     function retrieve_messages()
@@ -98,9 +99,16 @@ function Home()
         .then(response => response.json())
         
     }
-    const socket=io('/',{
-        auth:{username}
-    })
+
+    useEffect(()=>
+    {
+        if(!username)
+            return
+        const new_user= (io('/',{auth:username})); 
+        set_socket(new_user)
+        return()=>new_user.disconnect();
+    },[username])
+
     useEffect(() => {
         fetch("/accounts")
         .then(response => response.json())
