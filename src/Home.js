@@ -35,6 +35,27 @@ function Home()
     const [innerwidth,set_innerwidth]=useState(window.innerWidth);
     let w=-1;
 
+    function update_data()
+    {
+        fetch('/accounts')
+        .then(response => response.json())
+        .then(data=>
+        {
+            let accounts=[];
+            let ind=[]
+            let emails=[]
+            for(let i=0;i<data.length;i++)
+            {
+                accounts.push(data[i].name);
+                accounts.push(data[i].bio);
+                ind.push(data[i].index)
+                emails.push(data[i].email);
+            }
+            set_usernames(emails);
+            set_indices(ind);
+            setinfo(accounts);
+        })
+    }
     function retrieve_messages()
     {
         fetch('/get_messages',
@@ -61,6 +82,11 @@ function Home()
     }
     function update_info(up_user,up_name,up_bio)
     {
+        addDoc(collection(db,'messages'),{
+            pre:username,
+            post:up_user,
+            createdAt: serverTimestamp()
+        })
         fetch('/save_info', {
             method: 'POST',
             headers: {
@@ -110,80 +136,104 @@ function Home()
 
     useEffect(()=>
     {
+        let first_snapshot=true
         let q=query(collection(db,'messages'),orderBy('createdAt'))
         let action=onSnapshot(q,(snapshot)=>
         {
+            if(first_snapshot){first_snapshot=false;return;}
+            if(snapshot.docs[snapshot.docs.length-1].metadata.hasPendingWrites){return;}
             let msgs=snapshot.docs.map(function(doc)
             {
-                return {...doc.data()}
+                return {...doc.data(),pending: doc.metadata.hasPendingWrites}
             })
             console.log(msgs)
-            
-            if(msgs.length>0 && (msgs[msgs.length-1].from==username || msgs[msgs.length-1].to==username))
+            if(!msgs[msgs.length-1].pre)
             {
-                let to=msgs[msgs.length-1].to;
-                let from=msgs[msgs.length-1].from;
-                let message_text=msgs[msgs.length-1].text;
-                let time=`${new Date().toDateString().replaceAll(" ",'-')}-${new Date().getHours()<13?new Date().getHours():new Date().getHours()-12}:${new Date().getMinutes()}:${new Date().getSeconds()}-${new Date().getHours()<12?"AM":"PM"}`
-                
-                console.log("hey")
-                setmessages(prev=>
+                if(msgs.length>0 && (msgs[msgs.length-1].from==username || msgs[msgs.length-1].to==username))
                 {
-                    console.log(...prev)
-                    let previous=[...prev]
-                    let found=0
-                    for(let i=0;i<previous.length;i++)
+                    let to=msgs[msgs.length-1].to;
+                    let from=msgs[msgs.length-1].from;
+                    let message_text=msgs[msgs.length-1].text;
+                    let time=`${new Date().toDateString().replaceAll(" ",'-')}-${new Date().getHours()<13?new Date().getHours():new Date().getHours()-12}:${new Date().getMinutes()}:${new Date().getSeconds()}-${new Date().getHours()<12?"AM":"PM"}`
+                    
+                    console.log("hey")
+                    setmessages(prev=>
                     {
-                        if(to==from)
+                        console.log(...prev)
+                        let previous=[...prev]
+                        let found=0
+                        for(let i=0;i<previous.length;i++)
                         {
-                            if(previous[i][0]==username)
+                            if(to==from)
                             {
-                                found=1
-                                console.log('me')
-                                previous[i][1].push(`Sent: ${message_text}     ${time}`);
-                                let inter=previous[i]
-                                previous.splice(i,1)
-                                previous.unshift(inter);
-                                console.log(previous)
-                                return previous;
+                                if(previous[i][0]==username)
+                                {
+                                    found=1
+                                    console.log('me')
+                                    previous[i][1].push(`Sent: ${message_text}     ${time}`);
+                                    let inter=previous[i]
+                                    previous.splice(i,1)
+                                    previous.unshift(inter);
+                                    console.log(previous)
+                                    return previous;
+                                }
                             }
-                        }
-                        else{
-                            console.log('other')
-                            if(from==username && previous[i][0]==to)
-                            {
-                                found=1
-                                previous[i][1].push(`Sent: ${message_text}     ${time}`);
-                                let inter=previous[i]
-                                previous.splice(i,1)
-                                previous.unshift(inter);
-                                console.log(previous)
-                                return previous;
-                            }
-                            else if(to==username && previous[i][0]==from){
-                                found=1
-                                previous[i][1].push(`Received: ${message_text}     ${time}`);
-                                let inter=previous[i]
-                                previous.splice(i,1)
-                                previous.unshift(inter);
-                                console.log(previous)
-                                return previous;
+                            else{
+                                console.log('other')
+                                if(from==username && previous[i][0]==to)
+                                {
+                                    found=1
+                                    previous[i][1].push(`Sent: ${message_text}     ${time}`);
+                                    let inter=previous[i]
+                                    previous.splice(i,1)
+                                    previous.unshift(inter);
+                                    console.log(previous)
+                                    return previous;
+                                }
+                                else if(to==username && previous[i][0]==from){
+                                    found=1
+                                    previous[i][1].push(`Received: ${message_text}     ${time}`);
+                                    let inter=previous[i]
+                                    previous.splice(i,1)
+                                    previous.unshift(inter);
+                                    console.log(previous)
+                                    return previous;
+                                }
+                                
                             }
                             
                         }
+                        if(found==0)
+                        {
+                            if(to==from){previous.unshift([from,[`Sent: ${message_text}     ${time}`]]);}
+                            else if(from==username){previous.unshift([to,[`Sent: ${message_text}     ${time}`]]);}
+                            else if(to==username){
+                                update_data()
+                                previous.unshift([from,[`Received: ${message_text}     ${time}`]]);
+                            }
+                            console.log('final',previous)
+                            return previous;
+                        }
+                    }
+                    );
                         
-                    }
-                    if(found==0)
-                    {
-                        if(to==from){previous.unshift([from,[`Sent: ${message_text}     ${time}`]]);}
-                        else if(from==username){previous.unshift([to,[`Sent: ${message_text}     ${time}`]]);}
-                        else if(to==username){previous.unshift([from,[`Received: ${message_text}     ${time}`]]);}
-                        console.log('final',previous)
-                        return previous;
-                    }
                 }
-                );
-                    
+            }
+            else{
+                let pre=msgs[msgs.length-1].pre;
+                let post=msgs[msgs.length-1].post;
+                setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    for(let i=0;i<previous.length;i++)
+                    {
+                        if(previous[i][0]==pre)
+                        {
+                            previous[i][0]=post;
+                        }
+                    }
+                    return previous;
+                })
             }
         })
         return()=>
