@@ -74,7 +74,6 @@ background-color: darkgreen;
     overflow-y: scroll;
     flex: .25 ;
     flex-direction: column;
-
 }
 
 .userinfo{
@@ -86,7 +85,6 @@ background-color: darkgreen;
     border-width: 1px 0px 1px 0px;
     justify-content: center;
     align-items: start;
-    margin-bottom: 20px;
     
 }
 .userinfo button{
@@ -121,7 +119,7 @@ background-color: darkgreen;
 .part2 i, .part2 button, .part2 label, .part2 input,
 .part3 i, .part3 button, .part3 label, .part3 input,.part3 select{
     color: darkgreen;
-    margin: 30px;
+    margin: 25px;
 }
 .part2 i,.part3 i{
     font-size: 60px;
@@ -131,7 +129,7 @@ background-color: darkgreen;
     font-weight: bolder;
 }
 .part2 input,.part3 input,.part3 select{
-    font-size: 25px;
+    font-size: 21px;
     border: darkgreen solid;
     border-width: 1px 0px 1px 0px;
     border-radius: 20px;
@@ -146,7 +144,9 @@ background-color: darkgreen;
     align-self: center;
     font-size: 20px;
 }
-
+.part2{
+    padding-bottom: 40px;
+}
 .part3 select option{
     font-Weight:bold;
 }
@@ -249,6 +249,10 @@ background-color: darkgreen;
 }
 @media (max-width: 850px)
 {
+    .part2,.part3{
+        justify-self: center;
+        align-self: center;
+    }
     .home11{
         display: none !important;
     }
@@ -284,10 +288,15 @@ background-color: darkgreen;
     .msg_div textarea{
         width: 222px;
     }
-    
+    .home13{
+        padding-bottom: 40px;
+    }
 }
 @media (max-width:500px) {
     
+    .part2 input,.part3 input,.part3 select{
+        align-self: center;
+    }
     .home11_pro{
         height: auto;
     }
