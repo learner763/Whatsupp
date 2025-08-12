@@ -286,13 +286,3 @@ const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-let socket_ids={}
-io.on('connection',socket=>
-{
-    socket_ids[socket.handshake.auth.username]=socket.id;
-    socket.on('message',({from,to,message_text}) =>
-    {
-        let time=`${new Date().toDateString().replaceAll(" ",'-')}-${new Date().getHours()<13?new Date().getHours():new Date().getHours()-12}:${new Date().getMinutes()}:${new Date().getSeconds()}-${new Date().getHours()<12?"AM":"PM"}`
-        io.emit('message',({from,to,message_text,time}));
-    });
-})

@@ -2,7 +2,16 @@ import React, {  useEffect, useState } from 'react';
 import './Home.css';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import {io} from 'socket.io-client';
+import {db} from './firebase';
+import {
+    collection,
+    addDoc,
+    onSnapshot,
+    query,
+    orderBy,
+    serverTimestamp,
+    doc
+} from "firebase/firestore";
 function Home()
 {
     const [info, setinfo] = useState([]);
@@ -24,7 +33,6 @@ function Home()
     const [selected_bar,set_selected_bar]=useState(0);
     const [usernames,set_usernames]=useState([]);
     const [innerwidth,set_innerwidth]=useState(window.innerWidth);
-    const [socket,set_socket]=useState(null)
     let w=-1;
 
     function retrieve_messages()
@@ -102,83 +110,92 @@ function Home()
 
     useEffect(()=>
     {
-        if(!username)
-            return
-        const new_user= (io('/',{auth:{username},transports: ['websocket'],reconnection:true})); 
-        set_socket(new_user)
-        new_user.on('connect',()=>
+        let q=query(collection(db,'messages'),orderBy('createdAt'))
+        let action=onSnapshot(q,(snapshot)=>
         {
-            console.log(new_user.id)
-        })
-        new_user.on('message',({from,to,message_text,time})=>
+            let msgs=snapshot.docs.map(function(doc)
             {
-                if((to==username && to!=from) || to==from)
+                return {...doc.data()}
+            })
+            console.log(msgs)
+            let m=snapshot.docChanges().forEach((change)=>
+            {
+                if(change.type==='modified')console.log(change.doc.data())
+            })
+            if(msgs.length>0 && (msgs[msgs.length-1].from==username || msgs[msgs.length-1].to==username))
+            {
+                let to=msgs[msgs.length-1].to;
+                let from=msgs[msgs.length-1].from;
+                let message_text=msgs[msgs.length-1].text;
+                let time=`${new Date().toDateString().replaceAll(" ",'-')}-${new Date().getHours()<13?new Date().getHours():new Date().getHours()-12}:${new Date().getMinutes()}:${new Date().getSeconds()}-${new Date().getHours()<12?"AM":"PM"}`
+                
+                console.log("hey")
+                setmessages(prev=>
                 {
-                    console.log("hey")
-                    setmessages(prev=>
+                    console.log(...prev)
+                    let previous=[...prev]
+                    let found=0
+                    for(let i=0;i<previous.length;i++)
                     {
-                        let previous=[...prev]
-                        let found=0
-                        for(let i=0;i<previous.length;i++)
+                        if(to==from)
                         {
-                            if(previous[i][0]==from)
+                            if(previous[i][0]==username)
                             {
                                 found=1
-                                if(to!=from){previous[i][1].push(`Received: ${message_text}     ${time}`);}
-                                if(to==from){previous[i][1].push(`Sent: ${message_text}     ${time}`);}
+                                console.log('me')
+                                previous[i][1].push(`Sent: ${message_text}     ${time}`);
                                 let inter=previous[i]
                                 previous.splice(i,1)
                                 previous.unshift(inter);
-                                console.log(previous);
-
+                                console.log(previous)
                                 return previous;
                             }
                         }
-                        if(found==0)
-                        {
-                            previous.unshift([from,[`Received: ${message_text}     ${time}`]]);
-                            return previous;
-                        }
-                    }
-                    );
-                }
-            });
-            return ()=>
-                {
-                    new_user.off('message');
-                    new_user.disconnect();
-                }
-
-    },[username])
-
-    useEffect(() => {
-        fetch("/accounts")
-        .then(response => response.json())
-        .then(data => 
-            {
-                let accounts=[] 
-                for(let i=0;i<data.length;i++)
-                {
-                    if(data[i].email===username)
-                    {
-                        fetch("/user_in_table",{    
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ username: data[i].email })
-                            }
-                        )
-                        .then(response => response.json())
-                        .then(data => 
+                        else{
+                            console.log('other')
+                            if(from==username && previous[i][0]==to)
                             {
-                                console.log(data);
-                                retrieve_messages();
-                            })
+                                found=1
+                                previous[i][1].push(`Sent: ${message_text}     ${time}`);
+                                let inter=previous[i]
+                                previous.splice(i,1)
+                                previous.unshift(inter);
+                                console.log(previous)
+                                return previous;
+                            }
+                            else if(to==username && previous[i][0]==from){
+                                found=1
+                                previous[i][1].push(`Received: ${message_text}     ${time}`);
+                                let inter=previous[i]
+                                previous.splice(i,1)
+                                previous.unshift(inter);
+                                console.log(previous)
+                                return previous;
+                            }
+                            
                         }
+                        
                     }
-                })
-    },[username]);
+                    if(found==0)
+                    {
+                        if(to==from){previous.unshift([from,[`Sent: ${message_text}     ${time}`]]);}
+                        else if(from==username){previous.unshift([to,[`Sent: ${message_text}     ${time}`]]);}
+                        else if(to==username){previous.unshift([from,[`Received: ${message_text}     ${time}`]]);}
+                        console.log('final',previous)
+                        return previous;
+                    }
+                }
+                );
+                    
+            }
+        })
+        return()=>
+        {
+            action();
+        }
+    },[sent,username])
+
+    
     useEffect(() => {
         for(let i=0;i<3;i++)
         {
@@ -275,9 +292,7 @@ function Home()
         }
     
     },[innerwidth])
-    useEffect(()=>{
-        retrieve_messages();
-    },[sent]);    
+        
     useEffect(() => {
         
         let container=document.getElementsByClassName('part1');
@@ -422,6 +437,7 @@ function Home()
     
     function insert_msg(from,to,msg)
     {
+        set_selected_bar(to)
         fetch('/save_msg',
         {
             method: 'POST',
@@ -434,10 +450,11 @@ function Home()
         .then(data=>
             {   
                 console.log(data)
-                socket.emit('message',{
-                    from:from,
-                    to:to,
-                    message_text:msg
+                addDoc(collection(db,'messages'),{
+                    from: from,
+                    to: to,
+                    text: msg,
+                    createdAt: serverTimestamp()
                 })
                 set_sent(prev=> 1+prev); 
             })

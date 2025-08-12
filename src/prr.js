@@ -1,2 +1,3 @@
-let r=[]
-console.log(r.length==0)
+var l=4
+var l=6
+console.log(l)
