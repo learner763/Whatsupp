@@ -118,10 +118,7 @@ function Home()
                 return {...doc.data()}
             })
             console.log(msgs)
-            let m=snapshot.docChanges().forEach((change)=>
-            {
-                if(change.type==='modified')console.log(change.doc.data())
-            })
+            
             if(msgs.length>0 && (msgs[msgs.length-1].from==username || msgs[msgs.length-1].to==username))
             {
                 let to=msgs[msgs.length-1].to;
@@ -193,7 +190,7 @@ function Home()
         {
             action();
         }
-    },[sent,username])
+    },[sent])
 
     
     useEffect(() => {
