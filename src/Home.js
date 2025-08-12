@@ -190,7 +190,7 @@ function Home()
         {
             action();
         }
-    },[sent])
+    },[])
 
     
     useEffect(() => {
