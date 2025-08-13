@@ -1,4 +1,5 @@
-let t=[5,6,7]
-let a=1
-t.splice(1,1)
-t.in
+let username=["34",'45']
+if(username.includes('34'))
+{
+    username.re
+}

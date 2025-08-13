@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from 'react';
+import React, {  use, useEffect, useState } from 'react';
 import './Home.css';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
@@ -51,6 +51,7 @@ function Home()
                 ind.push(data[i].index)
                 emails.push(data[i].email);
             }
+            console.log(emails);
             set_usernames(emails);
             set_indices(ind);
             setinfo(accounts);
@@ -81,12 +82,7 @@ function Home()
         
     }
     function update_info(up_user,up_name,up_bio)
-    {
-        addDoc(collection(db,'messages'),{
-            pre:username,
-            post:up_user,
-            createdAt: serverTimestamp()
-        })
+    {        
         fetch('/save_info', {
             method: 'POST',
             headers: {
@@ -109,9 +105,18 @@ function Home()
                     }
                 )
                 .then(response => response.json())
-                .then(data => console.log(data));
+                .then(data => 
+                {
+                    addDoc(collection(db,'messages'),{
+                        pre:username,
+                        post:up_user,
+                        createdAt: serverTimestamp()
+                    })
+                }
+                );
                 localStorage.setItem("email",up_user);
                 change_username(localStorage.getItem("email")); 
+                update_data();
             }
             else
             {
@@ -144,13 +149,17 @@ function Home()
             if(snapshot.docs[snapshot.docs.length-1].metadata.hasPendingWrites){return;}
             let msgs=snapshot.docs.map(function(doc)
             {
-                return {...doc.data(),pending: doc.metadata.hasPendingWrites}
+                return {...doc.data()}
             })
             console.log(msgs)
             if(!msgs[msgs.length-1].pre)
             {
+                console.log('yes')
+                console.log(username)
                 if(msgs.length>0 && (msgs[msgs.length-1].from==username || msgs[msgs.length-1].to==username))
                 {
+                    console.log('again-yes')
+
                     let to=msgs[msgs.length-1].to;
                     let from=msgs[msgs.length-1].from;
                     let message_text=msgs[msgs.length-1].text;
@@ -219,19 +228,35 @@ function Home()
                         
                 }
             }
-            else{
+            else{            
                 let pre=msgs[msgs.length-1].pre;
                 let post=msgs[msgs.length-1].post;
+                console.log('nds')
                 setmessages(prev=>
                 {
+                    console.log('fenr')
                     let previous=[...prev]
+                    console.log(usernames)
                     for(let i=0;i<previous.length;i++)
                     {
                         if(previous[i][0]==pre)
                         {
+                            set_usernames(previous_array=>
+                            {
+                                let previous_one=[...previous_array]
+                                if(previous_one.includes(pre))
+                                {
+                                    previous_one.splice(previous_one.indexOf(pre),1,post)
+                                }
+                                console.log(previous_one)
+                                return previous_one
+                            })
+                            if(selected_bar==pre){set_selected_bar(post)}
                             previous[i][0]=post;
                         }
                     }
+                    console.log(usernames)
+                    console.log(previous)
                     return previous;
                 })
             }
@@ -240,7 +265,7 @@ function Home()
         {
             action();
         }
-    },[])
+    },[username])
 
     
     useEffect(() => {
