@@ -203,6 +203,12 @@ background-color: darkgreen;
 .msg_div button{
     font-size: 20px;
 }
+.chats{
+    display: flex;
+    padding-top: 28px;
+    flex-direction: column;
+    overflow-y: scroll;
+}
 .chat_bar{
     border: darkgreen solid;
     border-width: 0px 0px 1px 0px;
@@ -211,24 +217,14 @@ background-color: darkgreen;
     align-items: start;
     cursor: pointer;
 }
-.chat_bar span:first-of-type{
-    font-weight: bold;
+.chat_bar span{
     font-size: 25px;
     color: darkgreen;
-}
-.chat_bar span{
     overflow-x: hidden; 
     white-space: nowrap;
     text-overflow: ellipsis;
-    max-width: 100%;
-    display: inline-block;
 }
-.chat_bar span:nth-of-type(2){
-    font-weight: normal;
-    font-size: 20px;
-    color: black;
-    overflow-x: hidden;
-}
+
 #connect_msg{
     border: solid darkgreen;
     border-width: 0px 0px 1px 0px;
