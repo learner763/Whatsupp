@@ -10,7 +10,9 @@ import {
     query,
     orderBy,
     serverTimestamp,
-    doc
+    where,
+    getDocs,
+    updateDoc
 } from "firebase/firestore";
 function Home()
 {
@@ -35,6 +37,18 @@ function Home()
     const [innerwidth,set_innerwidth]=useState(window.innerWidth);
     let w=-1;
 
+    async function set_seen(index)
+    {
+        let entries=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("from_index","==",index));
+        console.log(usernames[indices.indexOf(index)])
+        console.log(username)
+        const snapshot=await getDocs(entries);
+        snapshot.forEach(async (doc)=>
+        {
+            await updateDoc(doc.ref,{seen:true})
+            console.log(doc.data())
+        })
+    }   
     function update_data()
     {
         fetch('/accounts')
@@ -179,7 +193,7 @@ function Home()
                                 {
                                     found=1
                                     console.log('me')
-                                    previous[i][1].push(`Sent: ${message_text}     ${time}`);
+                                    previous[i][1].push(`✔✔ ${message_text}     ${time}`);
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
@@ -192,7 +206,7 @@ function Home()
                                 if(from==username && previous[i][0]==to)
                                 {
                                     found=1
-                                    previous[i][1].push(`Sent: ${message_text}     ${time}`);
+                                    previous[i][1].push(`✔✔ ${message_text}     ${time}`);
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
@@ -201,7 +215,7 @@ function Home()
                                 }
                                 else if(to==username && previous[i][0]==from){
                                     found=1
-                                    previous[i][1].push(`Received: ${message_text}     ${time}`);
+                                    previous[i][1].push(` ${message_text}     ${time}`);
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
@@ -214,11 +228,11 @@ function Home()
                         }
                         if(found==0)
                         {
-                            if(to==from){previous.unshift([from,[`Sent: ${message_text}     ${time}`]]);}
-                            else if(from==username){previous.unshift([to,[`Sent: ${message_text}     ${time}`]]);}
+                            if(to==from){previous.unshift([from,[`✔✔ ${message_text}     ${time}`]]);}
+                            else if(from==username){previous.unshift([to,[`✔✔ ${message_text}     ${time}`]]);}
                             else if(to==username){
                                 update_data()
-                                previous.unshift([from,[`Received: ${message_text}     ${time}`]]);
+                                previous.unshift([from,[` ${message_text}     ${time}`]]);
                             }
                             console.log('final',previous)
                             return previous;
@@ -267,6 +281,81 @@ function Home()
         }
     },[username])
 
+    useEffect(()=>
+    {
+        if(username.length<1 || usernames.length<1 || indices.length<1){return;}
+        console.log(usernames)
+        console.log(indices[usernames.indexOf(username)])
+        let unseen_messages=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("seen","==",false))
+        let seen=onSnapshot(unseen_messages,(snapshot)=>
+        {
+            let msgs=snapshot.docs.map(function(doc)
+            {
+                return {...doc.data()}
+            })
+            console.log(msgs)
+            setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    for(let i=0;i<previous.length;i++)
+                    {
+                        let count=0
+                        for(let j=0;j<msgs.length;j++)
+                        {
+                            if(previous[i][0]== usernames[indices.indexOf(msgs[j].from_index)] && previous[i][0]!=username)
+                            {
+                                if(msgs[j].seen==false)
+                                {
+                                    count+=1
+                                }
+                            }
+                        }
+                        previous[i][2]=count
+                    }
+                    return previous
+                })
+        })
+
+        let tick_messages=query(collection(db,'messages'),where("from_index","==",indices[usernames.indexOf(username)]))
+        let ticked=onSnapshot(tick_messages,(snapshot)=>
+        {
+            let msgs=snapshot.docs.map(function(doc)
+            {
+                return {...doc.data()}
+            })
+            console.log(msgs)
+            setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    for(let i=0;i<previous.length;i++)
+                    {
+                        for(let j=0;j<msgs.length;j++)
+                        {
+                            if(previous[i][0]== usernames[indices.indexOf(msgs[j].to_index)] && previous[i][0]!=username)
+                            {
+                                for(let k=0;k<previous[i][1].length;k++)
+                                {
+                                    if(previous[i][1][k].slice(3,previous[i][1][k].lastIndexOf(" ")-4)==msgs[j].text)
+                                    {
+                                        if(msgs[j].seen==true)
+                                        {
+                                            previous[i][1][k]=`✔✔${previous[i][1][k]}`
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }
+                    return previous
+                })
+        })
+        return()=>
+        {
+            seen();
+            ticked();
+        }
+    },[indices,usernames,username])
     
     useEffect(() => {
         for(let i=0;i<3;i++)
@@ -488,6 +577,7 @@ function Home()
     
     function Send()
     {
+        console.log(receiver)
         let message =document.getElementById("message");
         fetch("/accounts")
         .then(response => response.json())
@@ -526,6 +616,9 @@ function Home()
                     from: from,
                     to: to,
                     text: msg,
+                    from_index:indices[usernames.indexOf(username)],
+                    to_index:indices[usernames.indexOf(to)],
+                    seen:false,
                     createdAt: serverTimestamp()
                 })
                 set_sent(prev=> 1+prev); 
@@ -566,6 +659,7 @@ function Home()
                 icons[0].style.backgroundColor='darkgreen';
                 icons[0].style.color='white';
                 update_receiver(connect_buttons[i].getAttribute('data-indexid'));
+                set_seen(connect_buttons[i].getAttribute('data-indexid'));
                 console.log(connect_buttons[i].getAttribute('data-indexid'))
             });
         }
@@ -596,9 +690,9 @@ function Home()
                                     <div key={index} className='chat_detail' style={{display:'flex',flexDirection:'column'}} >
                                         {value[1].map((text,ind)=>
                                         (
-                                            text.startsWith('Sent')?
-                                            (<span style={{marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',width:'300px',padding:'5px',fontSize:'20px'}}>{text.replace('Sent: ','')}</span>):
-                                            (<span style={{marginTop:'10px',alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',width:'300px',padding:'5px',fontSize:'20px'}}>{text.replace('Received: ','')}</span>)                                               
+                                            text.startsWith('✔✔')?
+                                            (<span style={{marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',width:'300px',padding:'5px',fontSize:'20px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.replace('✔✔✔✔',''):text.replace('✔✔','')}</span>):
+                                            (<span style={{marginTop:'10px',alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',width:'300px',padding:'5px',fontSize:'20px'}}>{text}</span>)                                               
                                         )
                                         )}
                                     </div>
@@ -612,14 +706,14 @@ function Home()
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div onClick={()=>{document.getElementById('profile_name').innerHTML="<i class='fas fa-user'></i> "+info[usernames.indexOf(value[0])*2];set_selected_bar(messages[index][0]);set_disp_chat('none');setdisp('flex');update_receiver(indices[usernames.indexOf(value[0])])}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
+                                    <div onClick={()=>{set_seen(indices[usernames.indexOf(value[0])]);document.getElementById('profile_name').innerHTML="<i class='fas fa-user'></i> "+info[usernames.indexOf(value[0])*2];set_selected_bar(messages[index][0]);set_disp_chat('none');setdisp('flex');update_receiver(indices[usernames.indexOf(value[0])])}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
                                             <span ><i className='fas fa-user'></i> {info[usernames.indexOf(value[0])*2]}</span>
-                                            <span style={{marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>{value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length).slice(4,value[1][value[1].length-1].length).replace(new Date().getFullYear()+'-',"").replace(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(':'),value[1][value[1].length-1].length-3),'')}</span>
+                                            <span style={{fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>{value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length).slice(4,value[1][value[1].length-1].length).replace(new Date().getFullYear()+'-',"").replace(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(':'),value[1][value[1].length-1].length-3),'')}</span>
                                         </div>
                                         <div style={{height:'35px'}}>
-                                            <span style={{fontWeight:'normal'}}>{value[1][value[1].length-1].slice(0,value[1][value[1].length-1].lastIndexOf(' '))}</span>
-                                            <span style={{marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}></span>
+                                            <span style={{fontWeight:'normal'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'skyblue':'lightgreen'}`}}>{value[1][value[1].length-1].startsWith('✔✔')?'✔✔':''}</span>{value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
+                                            <span style={{marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
                                         </div>
                                     </div>
                                 );

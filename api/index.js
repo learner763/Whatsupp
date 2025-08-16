@@ -140,13 +140,13 @@ app.post('/get_messages',(req,res)=>
                 {
                     if(messages[Object.keys(messages)[i]][j].startsWith(`${username}`))
                     {
-                        sent_received.push(messages[Object.keys(messages)[i]][j].replace(`${username}`,'Sent'))
+                        sent_received.push(messages[Object.keys(messages)[i]][j].replace(`${username}:`,'✔✔'))
                     }
                     if([Object.keys(messages)[i]]!=username)
                     {
                         if(messages[Object.keys(messages)[i]][j].startsWith(`${Object.keys(messages)[i]}`))
                         {
-                            sent_received.push(messages[Object.keys(messages)[i]][j].replace(`${Object.keys(messages)[i]}`,'Received'))
+                            sent_received.push(messages[Object.keys(messages)[i]][j].replace(`${Object.keys(messages)[i]}:`,''))
                         }
                     }
                 }
