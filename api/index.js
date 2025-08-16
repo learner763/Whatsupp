@@ -31,9 +31,7 @@ app.get('/accounts', (req, res) => {
 });
 
 // Catch-all route to serve React's index.html
-app.get('*', (req, res) => {
-    res.sendFile(path.join(buildPath, 'index.html'));
-});
+
 
 // PostgreSQL Connection
 const pool = new pkg.Pool({
@@ -280,7 +278,9 @@ app.post('/save_msg',(req,res)=>
     })
     res.json({success:true});
 })
-
+app.get('*', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+});
 // Start the server
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
