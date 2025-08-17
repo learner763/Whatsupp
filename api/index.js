@@ -11,6 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Serve static files from the React app's build folder
 const buildPath = path.join(__dirname, '../build');
+
 app.use(express.static(buildPath));
 const server=createServer(app);
 const io=new Server(server)
@@ -32,8 +33,12 @@ app.get('/accounts', (req, res) => {
 
 // Catch-all route to serve React's index.html
 app.get('*', (req, res) => {
-    res.sendFile(path.join(buildPath, 'index.html'));
-});
+    res.sendFile(path.resolve(buildPath, 'index.html'), {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      }
+    });
+  });
 
 // PostgreSQL Connection
 const pool = new pkg.Pool({
