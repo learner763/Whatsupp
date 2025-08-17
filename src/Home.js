@@ -3,6 +3,7 @@ import './Home.css';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import {db} from './firebase';
+import { real_time_db } from './firebase';
 import {
     collection,
     addDoc,
@@ -14,6 +15,9 @@ import {
     getDocs,
     updateDoc
 } from "firebase/firestore";
+import{
+    onDisconnect,set,ref,onValue,getDatabase,remove
+} from "firebase/database";
 function Home()
 {
     const [info, setinfo] = useState([]);
@@ -35,11 +39,12 @@ function Home()
     const [selected_bar,set_selected_bar]=useState(0);
     const [usernames,set_usernames]=useState([]);
     const [innerwidth,set_innerwidth]=useState(window.innerWidth);
+    const [status,set_status]=useState([]);
     let w=-1;
 
     async function set_seen(index)
     {
-        let entries=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("from_index","==",index));
+        let entries=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("from_index","==",index),where("seen","==",false));
         console.log(usernames[indices.indexOf(index)])
         console.log(username)
         const snapshot=await getDocs(entries);
@@ -284,6 +289,37 @@ function Home()
     useEffect(()=>
     {
         if(username.length<1 || usernames.length<1 || indices.length<1){return;}
+        let online_status=ref(real_time_db,`online_status/${indices[usernames.indexOf(username)]}`);
+        set(online_status,true)
+        onDisconnect(online_status).remove()
+        
+        let online_users=ref(real_time_db,'/online_status')
+        onValue(online_users,(snapshot)=>
+        {
+            let active_users=snapshot.val()
+            console.log(active_users)
+            let statuses=[]
+            console.log(Object.keys(active_users))
+            console.log(usernames)
+            for(let i=0;i<indices.length;i++)
+            {
+                if(Object.keys(active_users).includes(String(indices[i])))
+                {
+                    statuses.push('(Active)')
+                }
+                else{
+                    statuses.push('')
+                }
+            }
+            console.log(statuses)
+            set_status(statuses)
+        })
+
+    },[indices,usernames,username])
+
+    useEffect(()=>
+    {
+        if(username.length<1 || usernames.length<1 || indices.length<1){return;}
         console.log(usernames)
         console.log(indices[usernames.indexOf(username)])
         let unseen_messages=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("seen","==",false))
@@ -461,7 +497,6 @@ function Home()
     },[messages,selected_bar])
     useEffect(() => {
         retrieve_messages()
-
         window.addEventListener('resize',()=>
         {
             set_innerwidth(window.innerWidth);
@@ -757,7 +792,7 @@ function Home()
                             w = w + 1; // Increment w before returning
                             return (
                                 <div className='userinfo' key={index} > 
-                                    <i className='fas fa-user'>{info[index + w ]=== up_name ? " You": ""}</i>                                    
+                                    <i className='fas fa-user'>{info[index + w ]=== up_name ? ` You ${status[index]}`: `${status[index]}`}</i>                                    
                                     <span className='connect_people' >{info[index + w ]}</span> 
                                     <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
                                     <button onClick={()=>
