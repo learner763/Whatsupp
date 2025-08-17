@@ -290,8 +290,8 @@ function Home()
     {
         if(username.length<1 || usernames.length<1 || indices.length<1){return;}
         let online_status=ref(real_time_db,`online_status/${indices[usernames.indexOf(username)]}`);
-        set(online_status,true)
         onDisconnect(online_status).remove()
+        set(online_status,true)
         
         let online_users=ref(real_time_db,'/online_status')
         onValue(online_users,(snapshot)=>
@@ -669,8 +669,11 @@ function Home()
         for(let i=0;i<connect_buttons.length;i++)
         {
             connect_buttons[i].addEventListener('click',()=>{
-                profile_name.innerHTML="<i class='fas fa-user'></i> "+connect_people[i].innerHTML+" "+status[indices.indexOf(connect_buttons[i].getAttribute('data-indexid'))];
-                
+                let num=indices.indexOf(connect_buttons[i].getAttribute('data-indexid'))
+                profile_name.innerHTML="<i class='fas fa-user'></i> "+connect_people[i].innerHTML+" "+status[num];
+                console.log(connect_buttons[i].getAttribute('data-indexid'))
+                console.log(status)
+
                 if(window.innerWidth<=850){document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
                 else{document.getElementsByClassName('home13')[0].style.flex=0.25;document.getElementsByClassName('home12')[0].style.flex=1}
                 
