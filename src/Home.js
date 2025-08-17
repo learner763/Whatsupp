@@ -669,7 +669,7 @@ function Home()
         for(let i=0;i<connect_buttons.length;i++)
         {
             connect_buttons[i].addEventListener('click',()=>{
-                profile_name.innerHTML="<i class='fas fa-user'></i> "+connect_people[i].innerHTML;
+                profile_name.innerHTML="<i class='fas fa-user'></i> "+connect_people[i].innerHTML+" "+status[indices.indexOf(connect_buttons[i].getAttribute('data-indexid'))];
                 
                 if(window.innerWidth<=850){document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
                 else{document.getElementsByClassName('home13')[0].style.flex=0.25;document.getElementsByClassName('home12')[0].style.flex=1}
@@ -741,7 +741,7 @@ function Home()
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div onClick={()=>{set_seen(indices[usernames.indexOf(value[0])]);document.getElementById('profile_name').innerHTML="<i class='fas fa-user'></i> "+info[usernames.indexOf(value[0])*2];set_selected_bar(messages[index][0]);set_disp_chat('none');setdisp('flex');update_receiver(indices[usernames.indexOf(value[0])])}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
+                                    <div onClick={()=>{set_seen(indices[usernames.indexOf(value[0])]);document.getElementById('profile_name').innerHTML="<i class='fas fa-user'></i> "+info[usernames.indexOf(value[0])*2]+" "+status[usernames.indexOf(value[0])];set_selected_bar(messages[index][0]);set_disp_chat('none');setdisp('flex');update_receiver(indices[usernames.indexOf(value[0])])}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
                                             <span ><i className='fas fa-user'></i> {info[usernames.indexOf(value[0])*2]}</span>
                                             <span style={{fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>{value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length).slice(4,value[1][value[1].length-1].length).replace(new Date().getFullYear()+'-',"").replace(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(':'),value[1][value[1].length-1].length-3),'')}</span>
