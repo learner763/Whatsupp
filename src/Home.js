@@ -1,4 +1,4 @@
-import React, {  use, useEffect, useState } from 'react';
+import React, {  use, useEffect, useRef, useState } from 'react';
 import './Home.css';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
@@ -41,12 +41,13 @@ function Home()
     const [usernames,set_usernames]=useState([]);
     const [innerwidth,set_innerwidth]=useState(window.innerWidth);
     const [status,set_status]=useState([]);
+    const current_timeout=useRef(null)
+    const [receiving_one,set_receiver]=useState('')
     let w=-1;
 
     async function set_seen(index)
     {
         let entries=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("from_index","==",index),where("seen","==",false));
-        console.log(usernames[indices.indexOf(index)])
         console.log(username)
         const snapshot=await getDocs(entries);
         snapshot.forEach(async (doc)=>
@@ -157,6 +158,26 @@ function Home()
         })
         .then(response => response.json())
         
+    }
+
+    function typing_status()
+    {
+        let online_status=ref(real_time_db,`online_status/${indices[usernames.indexOf(username)]}`);
+        update(online_status,{
+            typing:true,
+            recipient:receiver
+        })
+        if(current_timeout.current)
+        {
+            clearTimeout(current_timeout.current)
+        }
+        current_timeout.current=setTimeout(()=>
+        {
+            update(online_status,{
+                typing:false,
+                recipient:''
+            })
+        },2000)
     }
 
     useEffect(()=>
@@ -318,7 +339,13 @@ function Home()
                 {
                     if(active_users[indices[i]].online)
                     {
-                        statuses.push('(Active)')
+                        if(active_users[indices[i]].typing && active_users[indices[i]].recipient==indices[usernames.indexOf(username)])
+                        {
+                            statuses.push('(Typing...)')
+                        }
+                        else{
+                            statuses.push('(Online)')
+                        }
                     }
                     else if(active_users[indices[i]].lastseen && active_users[indices[i]].online==false){
                         statuses.push(active_users[indices[i]].lastseen)
@@ -676,19 +703,12 @@ function Home()
             })
     }
     useEffect(() => {
-        let connect_msg=document.getElementById("connect_msg");
-        let profile_name=document.getElementById("profile_name");
+       
         let connect_buttons=document.getElementsByClassName("connect_buttons");
-        let connect_people=document.getElementsByClassName("connect_people");
-        console.log(connect_people.length)
         console.log(connect_buttons.length)
         for(let i=0;i<connect_buttons.length;i++)
         {
             connect_buttons[i].addEventListener('click',()=>{
-                let num=indices.indexOf(connect_buttons[i].getAttribute('data-indexid'))
-                profile_name.innerHTML="<i class='fas fa-user'></i> "+connect_people[i].innerHTML+" "+status[num];
-                console.log(connect_buttons[i].getAttribute('data-indexid'))
-                console.log(status)
 
                 if(window.innerWidth<=850){document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
                 else{document.getElementsByClassName('home13')[0].style.flex=0.25;document.getElementsByClassName('home12')[0].style.flex=1}
@@ -735,7 +755,9 @@ function Home()
                 <div className='home12'>
 
                     <div className='part1' style={{display:disp}} >
-                        <label  id="profile_name" ><i className='fas fa-user'></i> </label>
+                        <label  id="profile_name" >
+                            <i className='fas fa-user'></i> {info[indices.indexOf(receiver)*2]} {status[indices.indexOf(receiver)]}
+                        </label>
                         {messages.map((value,index)=>
                         {
                             if(selected_bar==messages[index][0])
@@ -760,7 +782,7 @@ function Home()
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div onClick={()=>{set_seen(indices[usernames.indexOf(value[0])]);document.getElementById('profile_name').innerHTML="<i class='fas fa-user'></i> "+info[usernames.indexOf(value[0])*2]+" "+status[usernames.indexOf(value[0])];set_selected_bar(messages[index][0]);set_disp_chat('none');setdisp('flex');update_receiver(indices[usernames.indexOf(value[0])])}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
+                                    <div onClick={()=>{set_seen(indices[usernames.indexOf(value[0])]);set_selected_bar(messages[index][0]);set_disp_chat('none');setdisp('flex');update_receiver(indices[usernames.indexOf(value[0])])}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
                                             <span ><i className='fas fa-user'></i> {info[usernames.indexOf(value[0])*2]}</span>
                                             <span style={{fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>{value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length).slice(4,value[1][value[1].length-1].length).replace(new Date().getFullYear()+'-',"").replace(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(':'),value[1][value[1].length-1].length-3),'')}</span>
@@ -811,11 +833,12 @@ function Home()
                             w = w + 1; // Increment w before returning
                             return (
                                 <div className='userinfo' key={index} > 
-                                    <i className='fas fa-user'>{info[index + w ]=== up_name ? ` You ${status[index]=='(Active)'?'(Active)':''}`: `${status[index]=='(Active)'?'(Active)':''}`}</i>                                    
+                                    <i className='fas fa-user'>{info[index + w ]=== up_name ? ` You ${status[index]=='(Online)'?'(Online)':''}`: `${status[index]=='(Online)'?'(Online)':''}`}</i>                                    
                                     <span className='connect_people' >{info[index + w ]}</span> 
                                     <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
                                     <button onClick={()=>
                                         {
+                                            update_receiver(indices[index])
                                             set_selected_bar(prev=>
                                                 {
                                                     for(let i=0;i<messages.length;i++)
@@ -838,8 +861,9 @@ function Home()
             </div>
             
             <div className='msg_div' style={{display:disp}}>
-                        <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...' ></textarea>
-                        <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
+                <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...'
+                onChange={()=>typing_status()}></textarea>
+                <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
             </div>
 
             <div className='home11_pro' style={{display:'none'}}>
