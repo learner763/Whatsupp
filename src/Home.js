@@ -16,7 +16,8 @@ import {
     updateDoc
 } from "firebase/firestore";
 import{
-    onDisconnect,set,ref,onValue,getDatabase,remove
+    onDisconnect,set,ref,onValue,getDatabase,remove,
+    update
 } from "firebase/database";
 function Home()
 {
@@ -290,8 +291,19 @@ function Home()
     {
         if(username.length<1 || usernames.length<1 || indices.length<1){return;}
         let online_status=ref(real_time_db,`online_status/${indices[usernames.indexOf(username)]}`);
-        onDisconnect(online_status).remove()
-        set(online_status,true)
+        
+        set(online_status,{
+            online:true,
+            lastseen:serverTimestamp()
+
+        })
+        onDisconnect(online_status).update(
+            {
+                online:false,
+                lastseen:serverTimestamp()
+            }
+        )
+        
         
         let online_users=ref(real_time_db,'/online_status')
         onValue(online_users,(snapshot)=>
@@ -303,12 +315,12 @@ function Home()
             console.log(usernames)
             for(let i=0;i<indices.length;i++)
             {
-                if(Object.keys(active_users).includes(String(indices[i])))
+                if(Object.keys(active_users).online)
                 {
                     statuses.push('(Active)')
                 }
                 else{
-                    statuses.push('')
+                    statuses.push(Object.keys(active_users).lastseen)
                 }
             }
             console.log(statuses)
@@ -795,7 +807,7 @@ function Home()
                             w = w + 1; // Increment w before returning
                             return (
                                 <div className='userinfo' key={index} > 
-                                    <i className='fas fa-user'>{info[index + w ]=== up_name ? ` You ${status[index]}`: `${status[index]}`}</i>                                    
+                                    <i className='fas fa-user'>{info[index + w ]=== up_name ? ` You ${status[index]=='(Active)'?'(Active)':''}`: `${status[index]=='(Active)'?'(Active)':''}`}</i>                                    
                                     <span className='connect_people' >{info[index + w ]}</span> 
                                     <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
                                     <button onClick={()=>
