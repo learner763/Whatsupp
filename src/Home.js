@@ -294,14 +294,13 @@ function Home()
         
         set(online_status,{
             online:true,
-            lastseen:serverTimestamp()
-
+            lastseen:new Date().toLocaleString()
         })
         onDisconnect(online_status).update(
-            {
-                online:false,
-                lastseen:serverTimestamp()
-            }
+        {
+            online:false,
+            lastseen:new Date().toLocaleString()
+        }
         )
         
         
@@ -315,13 +314,18 @@ function Home()
             console.log(usernames)
             for(let i=0;i<indices.length;i++)
             {
-                if(Object.keys(active_users).online)
+                if(Object.keys(active_users).includes(String(indices[i]) ))
                 {
-                    statuses.push('(Active)')
+                    if(active_users[indices[i]].online)
+                    {
+                        statuses.push('(Active)')
+                    }
+                    else if(active_users[indices[i]].lastseen && active_users[indices[i]].online==false){
+                        statuses.push(active_users[indices[i]].lastseen)
+                    }
                 }
-                else{
-                    statuses.push(Object.keys(active_users).lastseen)
-                }
+                else{statuses.push('')}
+
             }
             console.log(statuses)
             set_status(statuses)
