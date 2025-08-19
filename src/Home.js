@@ -311,6 +311,7 @@ function Home()
     useEffect(()=>
     {
         if(username.length<1 || usernames.length<1 || indices.length<1){return;}
+        localStorage.setItem('index',indices[usernames.indexOf(username)])
         let online_status=ref(real_time_db,`online_status/${indices[usernames.indexOf(username)]}`);
         
         set(online_status,{
@@ -357,12 +358,18 @@ function Home()
             console.log(statuses)
             set_status(statuses)
         })
-
+        return()=>
+        {
+            set(online_status,{
+                online:false,
+                lastseen:new Date().toLocaleString()
+            })
+        }
     },[indices,usernames,username])
 
     useEffect(()=>
     {
-        if(username.length<1 || usernames.length<1 || indices.length<1){return;}
+        if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username)){return;}
         console.log(usernames)
         console.log(indices[usernames.indexOf(username)])
         let unseen_messages=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("seen","==",false))
