@@ -2,8 +2,6 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
-import {createServer} from 'http';
-import {Server} from 'socket.io';
 const app = express();
 
 // Resolve __dirname for ES modules
@@ -13,14 +11,7 @@ const __dirname = path.dirname(__filename);
 const buildPath = path.join(__dirname, '../build');
 
 app.use(express.static(buildPath));
-const server=createServer(app);
-const io=new Server(server)
-// Configure CORS
 
-
-// Handle preflight requests
-
-// Middleware to parse JSON
 app.use(express.json());
 
 // API route

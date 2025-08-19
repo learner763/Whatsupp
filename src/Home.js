@@ -310,7 +310,7 @@ function Home()
 
     useEffect(()=>
     {
-        if(username.length<1 || usernames.length<1 || indices.length<1){return;}
+        if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username)){return;}
         localStorage.setItem('index',indices[usernames.indexOf(username)])
         let online_status=ref(real_time_db,`online_status/${indices[usernames.indexOf(username)]}`);
         

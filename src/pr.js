@@ -1,2 +1,3 @@
-let r=[5,6]
-r.pop()
+let r=new Date()
+
+console.log(new Date(r))
