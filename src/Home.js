@@ -190,6 +190,7 @@ function Home()
             if(snapshot.docs[snapshot.docs.length-1].metadata.hasPendingWrites){return;}
             let msgs=snapshot.docs.map(function(doc)
             {
+                console.log(5)
                 return {...doc.data()}
             })
             console.log(msgs)
@@ -204,8 +205,7 @@ function Home()
                     let to=msgs[msgs.length-1].to;
                     let from=msgs[msgs.length-1].from;
                     let message_text=msgs[msgs.length-1].text;
-                    let time=`${new Date().toDateString().replaceAll(" ",'-')}-${new Date().getHours()<13?new Date().getHours():new Date().getHours()-12}:${new Date().getMinutes()}:${new Date().getSeconds()}-${new Date().getHours()<12?"AM":"PM"}`
-                    
+                    let time=msgs[msgs.length-1].createdAt.toDate().toISOString();                    
                     console.log("hey")
                     setmessages(prev=>
                     {
@@ -311,17 +311,16 @@ function Home()
     useEffect(()=>
     {
         if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username)){return;}
-        localStorage.setItem('index',indices[usernames.indexOf(username)])
         let online_status=ref(real_time_db,`online_status/${indices[usernames.indexOf(username)]}`);
         
         set(online_status,{
             online:true,
-            lastseen:new Date().toLocaleString()
+            lastseen:new Date().toISOString()
         })
         onDisconnect(online_status).update(
         {
             online:false,
-            lastseen:new Date().toLocaleString()
+            lastseen:new Date().toISOString()
         }
         )
         
@@ -349,7 +348,7 @@ function Home()
                         }
                     }
                     else if(active_users[indices[i]].lastseen && active_users[indices[i]].online==false){
-                        statuses.push(active_users[indices[i]].lastseen)
+                        statuses.push(new Date(active_users[indices[i]].lastseen).toLocaleString())
                     }
                 }
                 else{statuses.push('')}
@@ -362,7 +361,7 @@ function Home()
         {
             set(online_status,{
                 online:false,
-                lastseen:new Date().toLocaleString()
+                lastseen:new Date().toISOString()
             })
         }
     },[indices,usernames,username])
@@ -421,7 +420,7 @@ function Home()
                             {
                                 for(let k=0;k<previous[i][1].length;k++)
                                 {
-                                    if(previous[i][1][k].slice(3,previous[i][1][k].lastIndexOf(" ")-4)==msgs[j].text)
+                                    if(previous[i][1][k].slice(previous[i][1][k].indexOf(' ')+1,previous[i][1][k].lastIndexOf(" ")-4)==msgs[j].text)
                                     {
                                         if(msgs[j].seen==true)
                                         {
@@ -792,7 +791,7 @@ function Home()
                                     <div onClick={()=>{set_seen(indices[usernames.indexOf(value[0])]);set_selected_bar(messages[index][0]);set_disp_chat('none');setdisp('flex');update_receiver(indices[usernames.indexOf(value[0])])}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
                                             <span ><i className='fas fa-user'></i> {info[usernames.indexOf(value[0])*2]}</span>
-                                            <span style={{fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>{value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length).slice(4,value[1][value[1].length-1].length).replace(new Date().getFullYear()+'-',"").replace(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(':'),value[1][value[1].length-1].length-3),'')}</span>
+                                            <span style={{fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>{new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleString()}</span>
                                         </div>
                                         <div style={{height:'35px'}}>
                                             <span style={{fontWeight:'normal'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'skyblue':'lightgreen'}`}}>{value[1][value[1].length-1].startsWith('✔✔')?'✔✔':''}</span>{value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>

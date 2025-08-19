@@ -1,3 +1,6 @@
-let r=new Date()
+let r=new Date().toISOString()
 
-console.log(new Date(r))
+setTimeout(() => {
+    console.log(r> new Date().toISOString());
+}, 2000);
+
