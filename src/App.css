@@ -7,13 +7,14 @@ body{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color:lightgreen; 
+  background-color:darkgreen; 
   width: auto;
-  height: 100vh;
+  height: 100dvh;
 
 }
 #bg{
   width: 150px;
+  align-self: center;
 }
 .App label{
   align-self: center;
@@ -52,4 +53,10 @@ body{
 }
 #t{
   font-weight: normal;
+}
+@media (max-width:850px)
+{
+  #bg{
+    width: 120px !important;
+  }
 }

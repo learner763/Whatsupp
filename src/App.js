@@ -16,62 +16,67 @@ function App() {
   const [f,df]=useState("none");
   const nav=useNavigate();
         async function post(email, password,bt) {
-        if (email.length>0 && password.length>0)
-        try {
-          
-          const response = await axios.post('/login', {
-            email: email,
-            password: password,
-            bt: bt
-          });
-          df("none");
-          console.log(response)
-          if(bt==="Log In")
-          {
-            setvisibility("block");
-            if (response.data.length === 0) {
-              setdisp("block");
-              settext("Invalid Credentials!");
-            }
-            else if(response.data[0].email===email && response.data[0].password===password){
-              setdisp("none");
-              settext("");
-              localStorage.setItem("email",email);
-              nav('/home');
-            }
-          }
-          else if(bt==="Sign Up")
-          {
+        if (email.length<13 && password.length<13)
+        {
+          try {
             
-            if (response.data.success===false) {
-              setdisp("block");
-              settext(`"${email}" already exists!`);
+            const response = await axios.post('/login', {
+              email: email,
+              password: password,
+              bt: bt
+            });
+            df("none");
+            console.log(response)
+            if(bt==="Log In")
+            {
+              setvisibility("block");
+              if (response.data.length === 0) {
+                setdisp("block");
+                settext("Invalid Credentials!");
+              }
+              else if(response.data[0].email===email && response.data[0].password===password){
+                setdisp("none");
+                settext("");
+                localStorage.setItem("email",email);
+                nav('/home');
+              }
             }
-            else if(response.data.success===true){
-              setdisp("none");
-              settext("");
-              localStorage.setItem("email",email);
+            else if(bt==="Sign Up")
+            {
+              
+              if (response.data.success===false) {
+                setdisp("block");
+                settext(`"${email}" already exists!`);
+              }
+              else if(response.data.success===true){
+                setdisp("none");
+                settext("");
+                localStorage.setItem("email",email);
 
-              fetch("/user_in_table",{    
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username: email })
-                }
-              )
-              .then(response => response.json())
-              .then(data => 
-              {
-                nav('/profile');
-              })
+                fetch("/user_in_table",{    
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ username: email })
+                  }
+                )
+                .then(response => response.json())
+                .then(data => 
+                {
+                  nav('/profile');
+                })
 
+              }
             }
+          } 
+          
+          catch (error) {
+            console.error('Error:', error.response ? error.response.data : error.message); // Log any errors
           }
-        } 
-        
-        catch (error) {
-          console.error('Error:', error.response ? error.response.data : error.message); // Log any errors
+        }
+        else{
+          alert("Username and Password should be 12 characters max!");
         }
       }
       
@@ -103,20 +108,16 @@ function App() {
         });
       }
 
-  useEffect(() => {
-    let s=document.getElementById("s");
-    s.addEventListener("click",()=>{
-
-    })})
   return (
       <div className="App" >
+        <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <img id="bg" src="bg.png" alt="Background" />
         <label >Username*</label>
        <input
           type="text"
           value={email}
           placeholder='Account Username:'
-          onChange={(e) => setemail(e.target.value)}
+          onChange={(e) => setemail(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} 
         />
         <label >Password*</label>
 
@@ -124,15 +125,19 @@ function App() {
           type="password"
           value={password}
           placeholder='Account Password:'
-          onChange={(e) => setpassword(e.target.value)}
+          onChange={(e) => setpassword(e.target.value.replace(' ',''))}
         />
-        <hr style={{display:f, width: "100%",  borderTop: "1px solid white", margin: "10px 0" }} />        
+        <hr style={{display:f, width: 'auto',  borderTop: "1px solid white", margin: "10px 0" }} />        
         <input placeholder='Enter Account Username:' style={{display:f}} type='text' value={email1} onChange={(e) => setemail1(e.target.value)}></input>
         <button style={{display:f}} onClick={()=>forget(email1)}>Find My Password</button>
         <label style={{display:disp}}>{text}</label>
-        <hr style={{display:f, width: "100%",  borderTop: "1px solid white", margin: "10px 0" }} />        
+        <hr style={{display:f, width: 'auto',  borderTop: "1px solid white", margin: "10px 0" }} />        
         <button onClick={() =>{ setvisibility("none") ; df("block");}}style={{display:visibility}}>Forgot Password?</button>
-        <button onClick={() => post(email,password,bt)}>{bt}</button> 
+        <button onClick={() => 
+              {
+                if(email.length>0 && password.length>0){post(email,password,bt)}
+              }}>{bt}
+        </button> 
         <label  id="t">{msg}<label
           id="s"
           onClick={() => {
@@ -155,7 +160,7 @@ function App() {
         >
           {lt}
         </label></label>
-      
+        </div>
       </div>
 
     

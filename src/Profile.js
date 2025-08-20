@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import './Profile.css';
 import axios from 'axios'; 
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
@@ -12,41 +12,79 @@ function Profile() {
 
     function personal_info(name,bio)
     {
-   
-        fetch('/personal', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username: username, name: name,bio:bio }),
-        })
+      let flag=false
+      if(name.length<13 && bio.length<21)
+      {
+        fetch('/accounts')
         .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            if(data.success===true)
+        .then(data=>{
+          for(let i=0;i<data.length;i++)
+          {
+            if(data[i].name==name && data[i].email!=username)
             {
-              nav1('/home');
+              flag=true;
+              alert(`${name} is taken by another user!Choose different.`)
             }
-          
+          }
+          if(!flag)
+            {
+            fetch('/personal', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ username: username, name: name,bio:bio }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if(data.success===true)
+                {
+                  nav1('/home');
+                }
+              
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+            }
         })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+          
+      }
+      else{
+        alert("Name and About should be 12 and 20 characters max respectively!");
+      }
     }
-        
+    useEffect(()=>
+    {
+      fetch('/accounts')
+      .then(response => response.json())
+      .then(data=>{
+        for(let i=0;i<data.length;i++)
+        {
+          if(data[i].email===username)
+          {
+            setname(data[i].name);
+            setbio(data[i].bio);
+          }
+        }
+      })
+    },[username]
+    )
       
       
 
   
   return (
       <div className="Profile" >
+        <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <img id="bg" src="bg.png" alt="Background" />
         <label >Profile Name*</label>
        <input
           type="text"
           value={name}
           placeholder='Name:'
-          onChange={(e) => setname(e.target.value)}
+          onChange={(e) => setname(e.target.value.replace(/[^a-zA-Z0-9_ ]/g,''))} 
         />
         <label >About Me*</label>
 
@@ -56,10 +94,14 @@ function Profile() {
           placeholder='Bio:'
           onChange={(e) => setbio(e.target.value)}
         />
-        <button onClick={() => personal_info(name,bio)}>Save</button>
-        <label>Set up profile name to help people find you easily. 
+        <button onClick={() => 
+          {
+            if(name.length>0 && bio.length>0){personal_info(name,bio)}
+          }}>Save</button>
+        <label>Help people find you easily. 
         </label>
-        <label>Keep profile name different from username for security purpose.</label>
+        <label style={{maxWidth:'270px'}}>Name shouldn't be username for security purpose.</label>
+        </div>
       </div>
 
     

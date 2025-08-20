@@ -669,7 +669,7 @@ function Home()
         {
             for(let i=0;i<data.length;i++)
             {
-                if(data[i].index==receiver)
+                if(data[i].index==receiver && message.value!='')
                 {
                     insert_msg(username,data[i].email,message.value);
                     message.value=""
