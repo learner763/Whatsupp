@@ -755,7 +755,9 @@ function Home()
                     <label><i class='fas fa-comment-dots'></i>Chats</label>
                     <label><i class='fas fa-user'></i>Profile</label>
                     <label><i class='fas fa-cog'></i>Settings</label>
-                    <label onClick={()=>nav2('/')} ><i class='fas fa-user-plus'></i>Add Account</label>
+                    <label onClick=
+                    {()=>{localStorage.setItem('root',true);nav2('/');}} 
+                    ><i class='fas fa-user-plus'></i>Add Account</label>
 
                 </div>
                 <div className='home12'>
@@ -876,7 +878,7 @@ function Home()
                 <label><i class='fas fa-comment-dots'></i>Chats</label>
                 <label><i class='fas fa-user'></i>Profile</label>
                 <label><i class='fas fa-cog'></i>Settings</label>
-                <label onClick={()=>nav2('/')} ><i class='fas fa-user-plus'></i>Add Account</label>
+                <label onClick={()=>{localStorage.setItem('root',true);nav2('/')}} ><i class='fas fa-user-plus'></i>Add Account</label>
                 <label id="people"><i class='fas fa-users'></i>People</label>
             </div>
         </div>

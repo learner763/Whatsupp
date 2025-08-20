@@ -100,7 +100,7 @@ function Profile() {
           }}>Save</button>
         <label>Help people find you easily. 
         </label>
-        <label style={{maxWidth:'270px'}}>Name shouldn't be username for security purpose.</label>
+        <label style={{maxWidth:'270px'}}>For security,profile name should ≠ username.</label>
         </div>
       </div>
 

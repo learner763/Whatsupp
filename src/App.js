@@ -15,7 +15,16 @@ function App() {
   const [msg,cmsg]=useState("New to this app?");
   const [f,df]=useState("none");
   const nav=useNavigate();
-        async function post(email, password,bt) {
+
+      useEffect(()=>
+      {
+        if(localStorage.getItem("email") && (!localStorage.getItem("root") || localStorage.getItem('root')==="false"))
+        {
+          nav('/home');
+        }
+      },[])
+
+      async function post(email, password,bt) {
         if (email.length<13 && password.length<13)
         {
           try {
@@ -38,6 +47,7 @@ function App() {
                 setdisp("none");
                 settext("");
                 localStorage.setItem("email",email);
+                localStorage.setItem('root',false)
                 nav('/home');
               }
             }
@@ -64,6 +74,7 @@ function App() {
                 .then(response => response.json())
                 .then(data => 
                 {
+                  localStorage.setItem('root',false)
                   nav('/profile');
                 })
 
