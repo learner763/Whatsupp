@@ -750,8 +750,8 @@ function Home()
                                         {value[1].map((text,ind)=>
                                         (
                                             text.startsWith('✔✔')?
-                                            (<span style={{marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',width:'300px',padding:'5px',fontSize:'20px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.replace('✔✔✔✔',''):text.replace('✔✔','')}</span>):
-                                            (<span style={{marginTop:'10px',alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',width:'300px',padding:'5px',fontSize:'20px'}}>{text}</span>)                                               
+                                            (<span style={{marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.replace('✔✔✔✔',''):text.replace('✔✔','')}</span>):
+                                            (<span style={{marginTop:'10px',alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}>{text}</span>)                                               
                                         )
                                         )}
                                     </div>
@@ -768,7 +768,13 @@ function Home()
                                     <div onClick={()=>{set_seen(indices[usernames.indexOf(value[0])]);set_selected_bar(messages[index][0]);set_disp_chat('none');setdisp('flex');update_receiver(indices[usernames.indexOf(value[0])]);console.log(receiver);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
                                             <span ><i className='fas fa-user'></i> {info[usernames.indexOf(value[0])*2]}</span>
-                                            <span style={{fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>{new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleString()}</span>
+                                            <span style={{fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
+                                                {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().slice
+                                                (new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().indexOf('/')+1,
+                                                new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().lastIndexOf('/')).includes( new Date().getDate())?
+                                                new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
+                                                new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleString()}
+                                                </span>
                                         </div>
                                         <div style={{height:'35px'}}>
                                             <span style={{fontWeight:'normal'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'skyblue':'lightgreen'}`}}>{value[1][value[1].length-1].startsWith('✔✔')?'✔✔':''}</span>{value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>

@@ -1,2 +1,3 @@
-let r=Array(new Set([4,4]))
-console.log(r)
+new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toDateString().slice(new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toDateString().indexOf('/'),value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toDateString().lastIndexOf('/'))
+
+new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toDateString()

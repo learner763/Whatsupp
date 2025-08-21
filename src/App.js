@@ -16,14 +16,6 @@ function App() {
   const [f,df]=useState("none");
   const nav=useNavigate();
 
-      useEffect(()=>
-      {
-        if(localStorage.getItem("email") && (!localStorage.getItem("root") || localStorage.getItem('root')==="false"))
-        {
-          nav('/home');
-        }
-      },[])
-
       async function post(email, password,bt) {
         if (email.length<13 && password.length<13)
         {
