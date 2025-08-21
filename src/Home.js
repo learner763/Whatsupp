@@ -15,6 +15,7 @@ import {
     getDocs,
     updateDoc,
     doc
+    
 } from "firebase/firestore";
 import{
     onDisconnect,set,ref,onValue,getDatabase,remove,
@@ -343,7 +344,7 @@ function Home()
 
     useEffect(()=>
     {
-        if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username)){return;}
+        if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username) ){return;}
     
         let unseen_messages=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
@@ -356,6 +357,7 @@ function Home()
             setmessages(prev=>
                 {
                     let previous=[...prev]
+                    console.log(previous.length)
                     for(let i=0;i<previous.length;i++)
                     {
                         let count=0
@@ -389,7 +391,9 @@ function Home()
             })
             setmessages(prev=>
                 {
-                    let previous=[...prev]
+                    let previous=prev.map(m=> [...m]) 
+                    console.log('seeen')
+                    console.log(previous.length)
                     for(let i=0;i<previous.length;i++)
                     {
                         for(let j=0;j<msgs.length;j++)
@@ -405,7 +409,7 @@ function Home()
                                             if(msgs[j].seen==true)
                                             {
                                                 previous[i][1][k]=`✔✔${previous[i][1][k]}`
-                                                console.log('seeen')
+                                                
                                             }
                                         }
                                     }
@@ -416,6 +420,7 @@ function Home()
                         }
                         
                     }
+                    console.log(previous)
                     return previous
                 })
         })
@@ -750,8 +755,8 @@ function Home()
                                         {value[1].map((text,ind)=>
                                         (
                                             text.startsWith('✔✔')?
-                                            (<span style={{marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.replace('✔✔✔✔',''):text.replace('✔✔','')}</span>):
-                                            (<span style={{marginTop:'10px',alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}>{text}</span>)                                               
+                                            (<span style={{overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.replace('✔✔✔✔',''):text.replace('✔✔','')}</span>):
+                                            (<span style={{overflowWrap:'break-word',marginTop:'10px',alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}>{text}</span>)                                               
                                         )
                                         )}
                                     </div>

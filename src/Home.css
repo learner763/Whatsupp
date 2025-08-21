@@ -31,7 +31,7 @@ body{
     background-color: white;
 }
 .home1 div{
-    height: 100vh;
+    height: 100dvh;
     width: 100%;
     display: flex;
 }
