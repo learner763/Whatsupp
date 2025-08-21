@@ -42,8 +42,6 @@ function Home()
     const [innerwidth,set_innerwidth]=useState(window.innerWidth);
     const [status,set_status]=useState([]);
     const current_timeout=useRef(null)
-    let msg_ids=[]
-    let seen_msgs_ids=[]
     let w=-1;
 
     async function set_seen(index)
@@ -190,9 +188,8 @@ function Home()
             })
             if(!msgs[msgs.length-1].pre)
             {
-                if(msg_ids.includes(msgs[msgs.length-1].id)==false && msgs.length>0 && (msgs[msgs.length-1].from==username || msgs[msgs.length-1].to==username))
+                if(msgs.length>0 && (msgs[msgs.length-1].from==username || msgs[msgs.length-1].to==username))
                 {
-                    msg_ids.push(msgs[msgs.length-1].id);
                     let to=msgs[msgs.length-1].to;
                     let from=msgs[msgs.length-1].from;
                     let message_text=msgs[msgs.length-1].text;
@@ -208,7 +205,8 @@ function Home()
                                 if(previous[i][0]==username)
                                 {
                                     found=1
-                                    previous[i][1].push(`✔✔ ${message_text}     ${time}`);
+                                    if(previous[i][1].includes(`✔✔ ${message_text}     ${time}`)==false){previous[i][1].push(`✔✔ ${message_text}     ${time}`);}
+                                    else{return previous;}
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
@@ -219,7 +217,8 @@ function Home()
                                 if(from==username && previous[i][0]==to)
                                 {
                                     found=1
-                                    previous[i][1].push(`✔✔ ${message_text}     ${time}`);
+                                    if(previous[i][1].includes(`✔✔ ${message_text}     ${time}`)==false){previous[i][1].push(`✔✔ ${message_text}     ${time}`);}
+                                    else{return previous;}                                    
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
@@ -227,7 +226,8 @@ function Home()
                                 }
                                 else if(to==username && previous[i][0]==from){
                                     found=1
-                                    previous[i][1].push(` ${message_text}     ${time}`);
+                                    if(previous[i][1].includes(` ${message_text}     ${time}`)==false){previous[i][1].push(` ${message_text}     ${time}`);}
+                                    else{return previous;}
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
@@ -394,24 +394,25 @@ function Home()
                     {
                         for(let j=0;j<msgs.length;j++)
                         {
-                            if(seen_msgs_ids.includes(msgs[j].id)==false)
+                            if(previous[i][0]== usernames[indices.indexOf(msgs[j].to_index)] )
                             {
-                                if(previous[i][0]== usernames[indices.indexOf(msgs[j].to_index)] )
+                                for(let k=0;k<previous[i][1].length;k++)
                                 {
-                                    for(let k=0;k<previous[i][1].length;k++)
+                                    if(previous[i][1][k].startsWith('✔✔✔✔')==false)
                                     {
                                         if(previous[i][1][k].slice(previous[i][1][k].indexOf(' ')+1,previous[i][1][k].lastIndexOf(" ")-4)==msgs[j].text)
                                         {
-                                            if(msgs[j].seen==true && previous[i][1][k].startsWith('✔✔✔✔')==false)
+                                            if(msgs[j].seen==true)
                                             {
-                                                seen_msgs_ids.push(msgs[j].id)
                                                 previous[i][1][k]=`✔✔${previous[i][1][k]}`
+                                                console.log('seeen')
                                             }
                                         }
                                     }
-                                    
                                 }
+                                
                             }
+                            
                         }
                         
                     }

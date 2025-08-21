@@ -4,7 +4,9 @@ flex-direction: column;
 background-color: darkgreen;
 
 }
-
+body{
+    font-family: sans-serif;
+}
 .top label
 {
     font-weight: bold;
@@ -12,7 +14,6 @@ background-color: darkgreen;
     justify-self: center;
     align-self: center;
     color: white;
-
 }
 .top
 {
@@ -197,7 +198,7 @@ background-color: darkgreen;
 .msg_div textarea{
     width: 336px;
     height: 60px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: sans-serif;
     font-size: 20px;
 }
 .msg_div button{
@@ -224,7 +225,6 @@ background-color: darkgreen;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-
 #connect_msg{
     border: solid darkgreen;
     border-width: 0px 0px 1px 0px;
@@ -232,12 +232,10 @@ background-color: darkgreen;
 }
 .home11_pro{
     color: white;
-
 }
 .chat_detail{
     padding-top: 28px;
 }
-
 .home11_pro label{
     border-radius: 6px;
 }
@@ -269,12 +267,10 @@ background-color: darkgreen;
         height: 30px;
         color: white;
         font-weight: bold;
-    }
-    
+    }   
     .home11_pro label {
         cursor: pointer;
     }
-    
     #profile_name,.msg_div{
         width: 100%;
     }
@@ -291,14 +287,12 @@ background-color: darkgreen;
     }
     .home13{
         padding-bottom: 40px;
-
     }
     .part2{
         padding-bottom: 40px;
     }
 }
 @media (max-width:500px) {
-    
     .part2 input,.part3 input,.part3 select{
         align-self: center;
     }
