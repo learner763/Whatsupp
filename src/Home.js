@@ -550,10 +550,12 @@ function Home()
         .then(data => 
             {
                 let accounts=[] 
+                let flag=false
                 for(let i=0;i<data.length;i++)
                 {
                     if(data[i].email===username)
                     {
+                        flag=true
                         fetch("/user_in_table",{    
                             method: 'POST',
                             headers: {
@@ -574,6 +576,7 @@ function Home()
                         setbg(data[i].bg);
                     }
                 }
+                if(flag==false){set_loaded(false);alert(`No account exists with "${username}"`)}
                 let ind=[]
                 let emails=[]
                 for(let i=0;i<data.length;i++)
