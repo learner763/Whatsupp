@@ -329,8 +329,12 @@ function Home()
                         }
                     }
                     else if(active_users[indices[i]].lastseen && active_users[indices[i]].online==false){
-                        statuses.push(new Date(active_users[indices[i]].lastseen).toLocaleString())
-                    }
+                        statuses.push(new Date(active_users[indices[i]].lastseen).toLocaleDateString()
+                        .slice(new Date(active_users[indices[i]].lastseen).toLocaleDateString().indexOf('/')+1,
+                        new Date(active_users[indices[i]].lastseen).toLocaleDateString().lastIndexOf('/')
+                        ).includes(new Date().getDate())?new Date(active_users[indices[i]].lastseen).toLocaleTimeString():
+                        new Date(active_users[indices[i]].lastseen).toLocaleDateString())
+                        }
                 }
                 else{statuses.push('')}
 
@@ -764,8 +768,22 @@ function Home()
                                         {value[1].map((text,ind)=>
                                         (
                                             text.startsWith('✔✔')?
-                                            (<span style={{overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.replace('✔✔✔✔',''):text.replace('✔✔','')}</span>):
-                                            (<span style={{overflowWrap:'break-word',marginTop:'10px',alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}>{text}</span>)                                               
+                                            (<span style={{overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>
+                                            {text.startsWith('✔✔✔✔')?text.slice(0,text.lastIndexOf(' ')).replace('✔✔✔✔',''):text.slice(0,text.lastIndexOf(' ')).replace('✔✔','')}
+                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{text.slice(text.lastIndexOf(' ')+1,text.length).replace(text.slice(text.lastIndexOf(' ')+1,text.length)
+                                            ,new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString()
+                                            .slice(new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().indexOf('/')+1,
+                                            new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().lastIndexOf('/')).includes(new Date().getDate())?
+                                            new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString():new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleString())}</span></span>):
+                                            
+                                            
+                                            (<span style={{overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}>
+                                            {text.slice(0,text.lastIndexOf(' '))}
+                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{text.slice(text.lastIndexOf(' ')+1,text.length).replace(text.slice(text.lastIndexOf(' ')+1,text.length)
+                                            ,new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString()
+                                            .slice(new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().indexOf('/')+1,
+                                            new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().lastIndexOf('/')).includes(new Date().getDate())?
+                                            new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString():new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleString())}</span></span>) 
                                         )
                                         )}
                                     </div>
