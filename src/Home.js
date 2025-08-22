@@ -90,13 +90,16 @@ function Home()
             .then(response => response.json())
             .then(data => 
                 {
-                    let frontend_messages=[]
-                    for(let i=0;i<data.length;i+=2)
-                    {
-                        frontend_messages.push([data[i],data[i+1]])
+                    if(data.error){}
+                    else{
+                        let frontend_messages=[]
+                        for(let i=0;i<data.length;i+=2)
+                        {
+                            frontend_messages.push([data[i],data[i+1]])
+                        }
+                        setmessages(frontend_messages);
+                        set_refresh(true)
                     }
-                    setmessages(frontend_messages);
-                    set_refresh(true)
                 })
         
     }
@@ -210,7 +213,7 @@ function Home()
                                 if(previous[i][0]==username)
                                 {
                                     found=1
-                                    if(previous[i][1].includes(`✔✔ ${message_text}     ${time}`)==false){previous[i][1].push(`✔✔ ${message_text}     ${time}`);}
+                                    if(previous[i][1].includes(`✔✔✔✔ ${message_text}     ${time}`)!=true && previous[i][1].includes(`✔✔ ${message_text}     ${time}`)!=true){previous[i][1].push(`✔✔ ${message_text}     ${time}`);}
                                     else{return previous;}
                                     let inter=previous[i]
                                     previous.splice(i,1)
@@ -222,7 +225,7 @@ function Home()
                                 if(from==username && previous[i][0]==to)
                                 {
                                     found=1
-                                    if(previous[i][1].includes(`✔✔ ${message_text}     ${time}`)==false){previous[i][1].push(`✔✔ ${message_text}     ${time}`);}
+                                    if(previous[i][1].includes(`✔✔✔✔ ${message_text}     ${time}`)!=true && previous[i][1].includes(`✔✔ ${message_text}     ${time}`)!=true){previous[i][1].push(`✔✔ ${message_text}     ${time}`)}
                                     else{return previous;}                                    
                                     let inter=previous[i]
                                     previous.splice(i,1)
@@ -353,7 +356,7 @@ function Home()
         
     useEffect(()=>
     {
-        if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username) || messages.length<1){return;}
+        if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username) ){return;}
     
         let unseen_messages=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
@@ -826,7 +829,12 @@ function Home()
                         <input onChange={(e)=>setup_name(e.target.value)} value={up_name} style={{alignSelf:'end'}}></input>
                         <label>About</label>
                         <input onChange={(e)=>setup_bio(e.target.value)} value={up_bio} style={{alignSelf:'end'}}></input>
-                        <button onClick={()=>update_info(up_user,up_name,up_bio)} id="save">Save</button>
+                        <button onClick={()=>
+                            {
+                                if(up_user.length>0 && up_user<13 && up_name.length>0 && up_name<13 && up_bio.length>0 && up_bio<21)
+                                    {update_info(up_user,up_name,up_bio)}
+                                else{alert("Username,Profile Name Range:1-12 and About Range:1-20")}
+                            }} id="save">Save</button>
                     </div>
                     
                     <div className='part3' style={{display:part3}} >
@@ -841,7 +849,11 @@ function Home()
                             <option style={{color:"orange"}} value="orange">Orange</option>
                             <option style={{color:"pink"}} value="pink">Pink</option>
                         </select>
-                        <button onClick={()=>update_settings(pass,bgr)} id="save">Save</button>
+                        <button onClick={()=>
+                            {
+                                if(pass.length>0 && pass<13){update_settings(pass,bgr)}
+                                else{alert("Password Range:1-12")}
+                            }} id="save">Save</button>
                     </div>
                 </div>
                 

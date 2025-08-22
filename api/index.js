@@ -109,8 +109,9 @@ app.post('/get_messages',(req,res)=>
     let messages={}
     let frontend_messages=[]
     const {username}=req.body;
-    pool.query(`select "${username}",chat_with from public.chats `, (err, results) => {
-        pool.query(`select * from public.chats where chat_with=$1`,[username], (err, results2) => {
+    pool.query(`select "${username}",chat_with from public.chats `, (err1, results) => {
+        pool.query(`select * from public.chats where chat_with=$1`,[username], (err2, results2) => {
+            if( err1 || err2) {return res.json({error:`No account exists with "${username}"`})}
             let a_list=results.rows
             for(let i=0;i<a_list.length;i++)
             {
