@@ -43,6 +43,8 @@ function Home()
     const [innerwidth,set_innerwidth]=useState(window.innerWidth);
     const [status,set_status]=useState([]);
     const current_timeout=useRef(null)
+    const [refreshed,set_refresh]=useState(false);
+    const [loaded,set_loaded]=useState(false)
     let w=-1;
 
     async function set_seen(index)
@@ -94,6 +96,7 @@ function Home()
                         frontend_messages.push([data[i],data[i+1]])
                     }
                     setmessages(frontend_messages);
+                    set_refresh(true)
                 })
         
     }
@@ -346,7 +349,7 @@ function Home()
         
     useEffect(()=>
     {
-        if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username) ){return;}
+        if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username) || messages.length<1){return;}
     
         let unseen_messages=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
@@ -425,13 +428,14 @@ function Home()
                     console.log(previous)
                     return previous
                 })
+                set_loaded(true)
         })
         return()=>
         {
             seen();
             ticked();
         }
-    },[indices,usernames,username,receiver])
+    },[indices,usernames,username,receiver,refreshed])
     
     useEffect(() => {
         for(let i=0;i<3;i++)
@@ -727,7 +731,7 @@ function Home()
         }
     }, [info]);
     return(
-        <div className='home'>
+        <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
             <div className='top'>
                 <label><i class='fas fa-phone'></i>Whatsupp</label>
                 <label><i class='fas fa-user'></i>{up_name}</label>
