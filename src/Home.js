@@ -182,6 +182,7 @@ function Home()
         let action=onSnapshot(q,(snapshot)=>
         {
             if(first_snapshot){first_snapshot=false;return;}
+            
             if(snapshot.docs[snapshot.docs.length-1].metadata.hasPendingWrites){return;}
             let msgs=snapshot.docs.map(function(doc)
             {
@@ -342,6 +343,7 @@ function Home()
         }
     },[indices,usernames,username])
 
+        
     useEffect(()=>
     {
         if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username) ){return;}
