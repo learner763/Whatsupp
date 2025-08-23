@@ -209,7 +209,7 @@ app.post("/save_info", (req, res) => {
             else
             {return res.json({success:false,msg:'Username & Profile name is taken already.Choose Another!'});}
         }
-        if(username!=previous){
+        if(username!=previous ){
             console.log('agia')
             pool.query("update public.chats set chat_with=$1 where chat_with=$2;", [username,previous], (err, results) => {
             });

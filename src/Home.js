@@ -763,8 +763,8 @@ function Home()
                                         {value[1].map((text,ind)=>
                                         (
                                             text.startsWith('✔✔')?
-                                            (<span style={{overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>
-                                            {text.startsWith('✔✔✔✔')?text.slice(0,text.lastIndexOf(' ')).replace('✔✔✔✔',''):text.slice(0,text.lastIndexOf(' ')).replace('✔✔','')}
+                                            (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
+                                            <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.slice(0,text.lastIndexOf(' ')).replace('✔✔✔✔',''):text.slice(0,text.lastIndexOf(' ')).replace('✔✔','')}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{text.slice(text.lastIndexOf(' ')+1,text.length).replace(text.slice(text.lastIndexOf(' ')+1,text.length)
                                             ,new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString()
                                             .slice(new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().indexOf('/')+1,
@@ -772,8 +772,8 @@ function Home()
                                             new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString():new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleString())}</span></span>):
                                             
                                             
-                                            (<span style={{overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'300px',padding:'5px',fontSize:'20px'}}>
-                                            {text.slice(0,text.lastIndexOf(' '))}
+                                            (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
+                                            <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{text.slice(text.lastIndexOf(' ')+1,text.length).replace(text.slice(text.lastIndexOf(' ')+1,text.length)
                                             ,new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString()
                                             .slice(new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().indexOf('/')+1,
@@ -816,9 +816,9 @@ function Home()
                     <div className='part2' style={{display:part2}} >
                         <i style={{alignSelf:'center'}} class='fas fa-user'></i>
                         <label>Username</label>
-                        <input onChange={(e)=>setup_user(e.target.value)} value={up_user} style={{alignSelf:'end'}}></input>
+                        <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} style={{alignSelf:'end'}}></input>
                         <label>Name</label>
-                        <input onChange={(e)=>setup_name(e.target.value)} value={up_name} style={{alignSelf:'end'}}></input>
+                        <input onChange={(e)=>setup_name(e.target.value.replace(/[^a-zA-Z0-9_ ]/g, ''))} value={up_name} style={{alignSelf:'end'}}></input>
                         <label>About</label>
                         <input onChange={(e)=>setup_bio(e.target.value)} value={up_bio} style={{alignSelf:'end'}}></input>
                         <button onClick={()=>
@@ -833,7 +833,7 @@ function Home()
                     <div className='part3' style={{display:part3}} >
                         <i style={{alignSelf:'center'}} class='fas fa-user'></i>
                         <label>Change Password</label>
-                        <input onChange={(e)=>setpass(e.target.value)} value={pass} style={{alignSelf:'end'}}></input>
+                        <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
                         <label>Background Theme</label>
                         <select value={bgr} style={{ alignSelf:'end'}} onChange={(e)=>setbg(e.target.value)} >
                             <option style={{color:"white"}} value="white">White</option>
