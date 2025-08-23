@@ -1,3 +1,8 @@
-let r='gt';
-r=r.replace('g','t').replace('t','g');
-console.log(r); // Output: 'tg'
+if(3>2)
+{
+    console.log(9)
+}
+else if(3>1)
+{
+    console.log(8)
+}

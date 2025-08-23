@@ -175,18 +175,42 @@ app.post('/get_messages',(req,res)=>
         
 })
 app.post("/save_info", (req, res) => {
-    const { previous,username, name,bio } = req.body;
-
-    pool.query("select * from public.users where email=$1", [username], (err, results) => {
-        if (err) {}
+    const { previous,username,profile, name,bio } = req.body;
+    console.log(username==previous)
+    pool.query("select * from public.users where email=$1 union all select * from public.users where name=$2", [username,name], (err, results) => {
         if(results.rows.length>0)
         {
-            if(username==previous)
+            if(username==previous && profile==name)
             {pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,previous], (err, results) => {});}
+            else if(username==previous && profile!=name)
+            {
+                for(let i=0;i<results.rows.length;i++)
+                {
+                    if(results.rows[i].name==name && results.rows[i].email!=username)
+                    {
+                        pool.query("update public.users set bio=$1 where email=$2", [bio,previous], (err, results) => {});
+                        return res.json({success:false,msg:'Profile name is taken already.Choose Another!'});
+                    }
+                }
+                pool.query("update public.users set bio=$1,name=$2 where email=$3", [bio,name,previous], (err, results) => {});
+            }
+            else if(profile==name && username!=previous)
+                {
+                    for(let i=0;i<results.rows.length;i++)
+                    {
+                        if(results.rows[i].email==username && results.rows[i].profile!=name)
+                        {
+                            pool.query("update public.users set bio=$1 where name=$2", [bio,name], (err, results) => {});
+                            return res.json({success:false,msg:'Username name is taken already.Choose Another!'});
+                        }
+                    }
+                pool.query("update public.users set bio=$1,email=$2 where name=$3", [bio,username,name], (err, results) => {});
+                }
             else
-            {res.json({success:false});}
+            {return res.json({success:false,msg:'Username & Profile name is taken already.Choose Another!'});}
         }
-        else{
+        if(username!=previous){
+            console.log('agia')
             pool.query("update public.chats set chat_with=$1 where chat_with=$2;", [username,previous], (err, results) => {
             });
             pool.query(`alter table public.chats rename column "${previous}" to "${username}";`, (err, results) => {

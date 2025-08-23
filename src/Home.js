@@ -25,6 +25,7 @@ function Home()
 {
     const [info, setinfo] = useState([]);
     const [username, change_username] = useState(localStorage.getItem("email"));
+    const [profile, change_profile] = useState(localStorage.getItem("profile"));
     const nav2=useNavigate();
     const [up_user,setup_user]=useState('');
     const [up_name,setup_name]=useState('');
@@ -110,7 +111,7 @@ function Home()
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ previous: username, username: up_user, name: up_name,bio:up_bio }),
+            body: JSON.stringify({ previous: username, username: up_user,profile:profile, name: up_name,bio:up_bio }),
         })
         .then(response => response.json())
         .then(data =>
@@ -137,12 +138,14 @@ function Home()
                 }
                 );
                 localStorage.setItem("email",up_user);
+                localStorage.setItem('profile',up_name)
                 change_username(localStorage.getItem("email")); 
+                change_profile(localStorage.getItem('profile'))
                 update_data();
             }
             else
             {
-                alert(`"${up_user}" already exists! Please choose another username.`); 
+                alert(data.msg); 
             }
         });
         
@@ -562,20 +565,9 @@ function Home()
                 {
                     if(data[i].email===username)
                     {
+                        localStorage.setItem('profile',data[i].name)
+                        change_profile(localStorage.getItem('profile'))
                         flag=true
-                        fetch("/user_in_table",{    
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ username: data[i].email })
-                            }
-                        )
-                        .then(response => response.json())
-                        .then(data => 
-                        {
-                        })
-                        
                         setup_user(data[i].email);
                         setup_name(data[i].name);
                         setup_bio(data[i].bio);
@@ -744,7 +736,7 @@ function Home()
         <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
             <div className='top'>
                 <label><i class='fas fa-phone'></i>Whatsupp</label>
-                <label><i class='fas fa-user'></i>{up_name}</label>
+                <label><i class='fas fa-user'></i>{localStorage.getItem('profile')}</label>
             </div>
             <div className='home1' style={{backgroundColor:bgr}} >
                 <div className='home11'>
@@ -831,9 +823,10 @@ function Home()
                         <input onChange={(e)=>setup_bio(e.target.value)} value={up_bio} style={{alignSelf:'end'}}></input>
                         <button onClick={()=>
                             {
-                                if(up_user.length>0 && up_user<13 && up_name.length>0 && up_name<13 && up_bio.length>0 && up_bio<21)
+                                if(up_user.length>0 && up_user.length<13 && up_name.length>0 && up_name.length<13 && up_bio.length>0 && up_bio.length<21)
                                     {update_info(up_user,up_name,up_bio)}
-                                else{alert("Username,Profile Name Range:1-12 and About Range:1-20")}
+                                else{alert("Username,Profile Name Range:1-12 and About Range:1-20")
+                                }
                             }} id="save">Save</button>
                     </div>
                     

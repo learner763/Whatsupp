@@ -28,6 +28,7 @@ function Profile() {
           }
           if(!flag)
             {
+            localStorage.setItem('profile',name)
             fetch('/personal', {
               method: 'POST',
               headers: {
