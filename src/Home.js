@@ -1,7 +1,6 @@
-import React, {  use, useEffect, useRef, useState } from 'react';
+import React, {  useEffect, useRef, useState } from 'react';
 import './Home.css';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { BrowserRouter ,  useNavigate } from 'react-router-dom';
 import {db} from './firebase';
 import { real_time_db } from './firebase';
 import {
@@ -18,7 +17,7 @@ import {
     
 } from "firebase/firestore";
 import{
-    onDisconnect,set,ref,onValue,getDatabase,remove,
+    onDisconnect,set,ref,onValue,
     update
 } from "firebase/database";
 function Home()
@@ -26,6 +25,7 @@ function Home()
     const [info, setinfo] = useState([]);
     const [username, change_username] = useState(localStorage.getItem("email"));
     const [profile, change_profile] = useState(localStorage.getItem("profile"));
+    const [index,change_index]=useState(localStorage.getItem('index'))
     const nav2=useNavigate();
     const [up_user,setup_user]=useState('');
     const [up_name,setup_name]=useState('');
@@ -39,8 +39,6 @@ function Home()
     const [messages,setmessages]=useState([]);
     const [disp_chat,set_disp_chat]=useState("flex");
     const [indices,set_indices]=useState([]);
-    const [selected_bar,set_selected_bar]=useState(0);
-    const [usernames,set_usernames]=useState([]);
     const [innerwidth,set_innerwidth]=useState(window.innerWidth);
     const [status,set_status]=useState([]);
     const current_timeout=useRef(null)
@@ -48,37 +46,17 @@ function Home()
     const [loaded,set_loaded]=useState(false)
     let w=-1;
 
-    async function set_seen(index)
+    async function set_seen()
     {
-        let entries=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("from_index","==",index),where("seen","==",false));
+        console.log('dekh')
+        let entries=query(collection(db,'messages'),where("to","==",index),where("from","==",receiver),where("seen","==",false));
         const snapshot=await getDocs(entries);
         snapshot.forEach(async (doc)=>
         {
             await updateDoc(doc.ref,{seen:true})
         })
     }   
-    function update_data()
-    {
-        fetch('/accounts')
-        .then(response => response.json())
-        .then(data=>
-        {
-            let accounts=[];
-            let ind=[]
-            let emails=[]
-            for(let i=0;i<data.length;i++)
-            {
-                accounts.push(data[i].name);
-                accounts.push(data[i].bio);
-                ind.push(data[i].index)
-                emails.push(data[i].email);
-            }
-            set_usernames(emails);
-            set_indices(ind);
-            setinfo(accounts);
-        })
-    }
-    function retrieve_messages()
+    function retrieve_messages(you)
     {
         fetch('/get_messages',
             {
@@ -86,7 +64,7 @@ function Home()
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username: username }),
+                body: JSON.stringify({ username:you }),
             })
             .then(response => response.json())
             .then(data => 
@@ -116,37 +94,34 @@ function Home()
         .then(response => response.json())
         .then(data =>
         {
-            if(data.success)
+            console.log(data)
+            if(data.success===true)
             {
-                fetch("/message_change",
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ previous: username,username: up_user }),
-                    }
-                )
-                .then(response => response.json())
-                .then(data => 
-                {
-                    addDoc(collection(db,'messages'),{
-                        pre:username,
-                        post:up_user,
-                        createdAt: serverTimestamp()
-                    })
-                }
-                );
                 localStorage.setItem("email",up_user);
                 localStorage.setItem('profile',up_name)
                 change_username(localStorage.getItem("email")); 
                 change_profile(localStorage.getItem('profile'))
-                update_data();
             }
-            else
+            else if(data.success===false)
             {
-                alert(data.msg); 
+                if(data.person===false && data.user===true)
+                {
+                    localStorage.setItem("email",up_user);
+                    change_username(localStorage.getItem("email")); 
+                    alert(data.msg);
+                }
+                else if(data.person===true && data.user===false)
+                {
+                    localStorage.setItem('profile',up_name)
+                    change_profile(localStorage.getItem('profile'))
+                    alert(data.msg);
+                }
+                else
+                {
+                    alert(data.msg); 
+                }
             }
+            
         });
         
     }
@@ -166,7 +141,7 @@ function Home()
 
     function typing_status()
     {
-        let online_status=ref(real_time_db,`online_status/${indices[usernames.indexOf(username)]}`);
+        let online_status=ref(real_time_db,`online_status/${index}`);
         update(online_status,{
             typing:true,
             recipient:receiver
@@ -197,9 +172,8 @@ function Home()
             {
                 return {id:doc.id,...doc.data()}
             })
-            if(!msgs[msgs.length-1].pre)
-            {
-                if(msgs.length>0 && (msgs[msgs.length-1].from==username || msgs[msgs.length-1].to==username))
+            
+                if(msgs.length>0 && (msgs[msgs.length-1].from==index || msgs[msgs.length-1].to==index))
                 {
                     let to=msgs[msgs.length-1].to;
                     let from=msgs[msgs.length-1].from;
@@ -211,9 +185,9 @@ function Home()
                         let found=0
                         for(let i=0;i<previous.length;i++)
                         {
-                            if(to==from)
+                            if(to===from)
                             {
-                                if(previous[i][0]==username)
+                                if(previous[i][0]===index)
                                 {
                                     found=1
                                     if(previous[i][1].includes(`✔✔✔✔ ${message_text}     ${time}`)!=true && previous[i][1].includes(`✔✔ ${message_text}     ${time}`)!=true){previous[i][1].push(`✔✔ ${message_text}     ${time}`);}
@@ -225,7 +199,7 @@ function Home()
                                 }
                             }
                             else{
-                                if(from==username && previous[i][0]==to)
+                                if(from==index && previous[i][0]==to)
                                 {
                                     found=1
                                     if(previous[i][1].includes(`✔✔✔✔ ${message_text}     ${time}`)!=true && previous[i][1].includes(`✔✔ ${message_text}     ${time}`)!=true){previous[i][1].push(`✔✔ ${message_text}     ${time}`)}
@@ -235,7 +209,7 @@ function Home()
                                     previous.unshift(inter);
                                     return previous;
                                 }
-                                else if(to==username && previous[i][0]==from){
+                                else if(to==index && previous[i][0]==from){
                                     found=1
                                     if(previous[i][1].includes(` ${message_text}     ${time}`)==false){previous[i][1].push(` ${message_text}     ${time}`);}
                                     else{return previous;}
@@ -250,10 +224,11 @@ function Home()
                         }
                         if(found==0)
                         {
+                            console.log(9)
                             if(to==from){previous.unshift([from,[`✔✔ ${message_text}     ${time}`]]);}
-                            else if(from==username){previous.unshift([to,[`✔✔ ${message_text}     ${time}`]]);}
-                            else if(to==username){
-                                update_data()
+                            else if(from==index){previous.unshift([to,[`✔✔ ${message_text}     ${time}`]]);}
+                            else if(to==index){
+                                
                                 previous.unshift([from,[` ${message_text}     ${time}`]]);
                             }
                             return previous;
@@ -262,45 +237,19 @@ function Home()
                     );
                         
                 }
-            }
-            else{            
-                let pre=msgs[msgs.length-1].pre;
-                let post=msgs[msgs.length-1].post;
-                setmessages(prev=>
-                {
-                    let previous=[...prev]
-                    for(let i=0;i<previous.length;i++)
-                    {
-                        if(previous[i][0]==pre)
-                        {
-                            set_usernames(previous_array=>
-                            {
-                                let previous_one=[...previous_array]
-                                if(previous_one.includes(pre))
-                                {
-                                    previous_one.splice(previous_one.indexOf(pre),1,post)
-                                }
-                                return previous_one
-                            })
-                            if(selected_bar==pre){set_selected_bar(post)}
-                            previous[i][0]=post;
-                        }
-                    }
-                    
-                    return previous;
-                })
-            }
+            console.log(msgs)
+            
         })
         return()=>
         {
             action();
         }
-    },[username])
+    },[])
 
     useEffect(()=>
     {
-        if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username)){return;}
-        let online_status=ref(real_time_db,`online_status/${indices[usernames.indexOf(username)]}`);
+        if(index.length<1 || indices.includes(index)===false){return;}
+        let online_status=ref(real_time_db,`online_status/${index}`);
         
         set(online_status,{
             online:true,
@@ -322,11 +271,11 @@ function Home()
             
             for(let i=0;i<indices.length;i++)
             {
-                if(Object.keys(active_users).includes(String(indices[i]) ))
+                if(Object.keys(active_users).includes(indices[i] ))
                 {
                     if(active_users[indices[i]].online)
                     {
-                        if(active_users[indices[i]].typing && active_users[indices[i]].recipient==indices[usernames.indexOf(username)])
+                        if(active_users[indices[i]].typing && active_users[indices[i]].recipient===index)
                         {
                             statuses.push('(Typing...)')
                         }
@@ -354,14 +303,14 @@ function Home()
                 lastseen:new Date().toISOString()
             })
         }
-    },[indices,usernames,username])
+    },[indices,index])
 
         
     useEffect(()=>
     {
-        if(username.length<1 || usernames.length<1 || indices.length<1 || !usernames.includes(username) ){return;}
+        if( indices.length<1 || indices.includes(index)===false ){return;}
     
-        let unseen_messages=query(collection(db,'messages'),where("to_index","==",indices[usernames.indexOf(username)]),where("seen","==",false))
+        let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
         {
             let msgs=snapshot.docs.map(function(doc)
@@ -378,11 +327,11 @@ function Home()
                         let count=0
                         for(let j=0;j<msgs.length;j++)
                         {
-                            if(previous[i][0]== usernames[indices.indexOf(msgs[j].from_index)] && previous[i][0]!=username)
+                            if(previous[i][0]===msgs[j].from && previous[i][0]!==index)
                             {
-                                if(msgs[j].seen==false)
+                                if(msgs[j].seen===false)
                                 {
-                                    if(receiver!=msgs[j].from_index)
+                                    if(receiver!==msgs[j].from)
                                     {console.log('hey'); count+=1}
                                     else{
                                         let msgref=doc(db,'messages',msgs[j].id)
@@ -397,7 +346,7 @@ function Home()
                 })
         })
 
-        let tick_messages=query(collection(db,'messages'),where("from_index","==",indices[usernames.indexOf(username)]))
+        let tick_messages=query(collection(db,'messages'),where("from","==",index))
         let ticked=onSnapshot(tick_messages,(snapshot)=>
         {
             let msgs=snapshot.docs.map(function(doc)
@@ -413,15 +362,15 @@ function Home()
                     {
                         for(let j=0;j<msgs.length;j++)
                         {
-                            if(previous[i][0]== usernames[indices.indexOf(msgs[j].to_index)] )
+                            if(previous[i][0]=== msgs[j].to)
                             {
                                 for(let k=0;k<previous[i][1].length;k++)
                                 {
-                                    if(previous[i][1][k].startsWith('✔✔✔✔')==false)
+                                    if(previous[i][1][k].startsWith('✔✔✔✔')===false)
                                     {
-                                        if(previous[i][1][k].slice(previous[i][1][k].indexOf(' ')+1,previous[i][1][k].lastIndexOf(" ")-4)==msgs[j].text)
+                                        if(previous[i][1][k].slice(previous[i][1][k].indexOf(' ')+1,previous[i][1][k].lastIndexOf(" ")-4)===msgs[j].text)
                                         {
-                                            if(msgs[j].seen==true)
+                                            if(msgs[j].seen===true)
                                             {
                                                 previous[i][1][k]=`✔✔${previous[i][1][k]}`
                                                 
@@ -445,7 +394,7 @@ function Home()
             seen();
             ticked();
         }
-    },[indices,usernames,username,receiver,refreshed])
+    },[indices,index,receiver,refreshed])
     
     useEffect(() => {
         for(let i=0;i<3;i++)
@@ -547,9 +496,8 @@ function Home()
         
         let container=document.getElementsByClassName('part1');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
-    },[messages,selected_bar])
+    },[messages,receiver])
     useEffect(() => {
-        retrieve_messages()
         window.addEventListener('resize',()=>
         {
             set_innerwidth(window.innerWidth);
@@ -566,7 +514,10 @@ function Home()
                     if(data[i].email===username)
                     {
                         localStorage.setItem('profile',data[i].name)
+                        localStorage.setItem('index',data[i].index)
                         change_profile(localStorage.getItem('profile'))
+                        change_index(localStorage.getItem('index'))
+                        retrieve_messages(data[i].index)
                         flag=true
                         setup_user(data[i].email);
                         setup_name(data[i].name);
@@ -577,20 +528,16 @@ function Home()
                 }
                 if(flag==false){set_loaded(false);alert(`No account exists with "${username}"`)}
                 let ind=[]
-                let emails=[]
                 for(let i=0;i<data.length;i++)
                 {
                     accounts.push(data[i].name);
                     accounts.push(data[i].bio);
                     ind.push(data[i].index)
-                    emails.push(data[i].email);
                 }
-                set_usernames(emails);
                 set_indices(ind);
                 setinfo(accounts);
             }
         );
-        let connect_msg=document.getElementById("connect_msg");
         let icons=document.querySelectorAll(".home11 label");
         let refresh_people=document.getElementById("refresh_people");
         refresh_people.addEventListener("click",function()
@@ -601,16 +548,13 @@ function Home()
             {
                 let accounts=[]
                 let ind=[]
-                let emails=[]
                 for(let i=0;i<data.length;i++)
                 {
                     accounts.push(data[i].name);
                     accounts.push(data[i].bio);
                     ind.push(data[i].index)
-                    emails.push(data[i].email);
                 }
                 set_indices(ind);
-                set_usernames(emails);
                 setinfo(accounts);
             })
         })
@@ -618,6 +562,7 @@ function Home()
         for(let i=0;i<phone_icons.length;i++)
         {
             phone_icons[i].addEventListener('click',()=>{
+                update_receiver(0)
             for(let j=0;j<phone_icons.length;j++)
             {   
                 phone_icons[j].style.color='white';
@@ -637,6 +582,7 @@ function Home()
         for(let i=0;i<icons.length;i++)
         {
             icons[i].addEventListener('click',()=>{
+                update_receiver(0)
                 for(let j=0;j<icons.length;j++)
                 {
                     icons[j].style.backgroundColor='lightgreen';
@@ -656,27 +602,17 @@ function Home()
     {
         console.log(receiver)
         let message =document.getElementById("message");
-        fetch("/accounts")
-        .then(response => response.json())
-        .then(data => 
+        if(message.value!=='')
         {
-            for(let i=0;i<data.length;i++)
-            {
-                if(data[i].index==receiver && message.value!='')
-                {
-                    insert_msg(username,data[i].email,message.value);
-                    message.value=""
-                    return;
-                }
-            }
-        })
-        
+            insert_msg(index,receiver,message.value);
+            message.value=""
+            return;
+        }
     }
     
     
     function insert_msg(from,to,msg)
     {
-        set_selected_bar(to)
         fetch('/save_msg',
         {
             method: 'POST',
@@ -692,9 +628,7 @@ function Home()
                     from: from,
                     to: to,
                     text: msg,
-                    from_index:indices[usernames.indexOf(username)],
-                    to_index:indices[usernames.indexOf(to)],
-                    seen:indices[usernames.indexOf(username)]==indices[usernames.indexOf(to)]?true:false,
+                    seen:from===to?true:false,
                     createdAt: serverTimestamp()
                 })
             })
@@ -727,7 +661,6 @@ function Home()
                 }   
                 icons[0].style.backgroundColor='darkgreen';
                 icons[0].style.color='white';
-                update_receiver(connect_buttons[i].getAttribute('data-indexid'));
                 set_seen(connect_buttons[i].getAttribute('data-indexid'));
             });
         }
@@ -756,7 +689,7 @@ function Home()
                         </label>
                         {messages.map((value,index)=>
                         {
-                            if(selected_bar==messages[index][0])
+                            if(receiver==messages[index][0])
                             {
                                 return(
                                     <div key={index} className='chat_detail' style={{display:'flex',flexDirection:'column'}} >
@@ -792,9 +725,9 @@ function Home()
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div onClick={()=>{set_seen(indices[usernames.indexOf(value[0])]);set_selected_bar(messages[index][0]);set_disp_chat('none');setdisp('flex');update_receiver(indices[usernames.indexOf(value[0])]);console.log(receiver);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
+                                    <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');update_receiver(value[0]);console.log(receiver);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
-                                            <span ><i className='fas fa-user'></i> {info[usernames.indexOf(value[0])*2]}</span>
+                                            <span ><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
                                             <span style={{fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
                                                 {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().slice
                                                 (new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().indexOf('/')+1,
@@ -859,25 +792,17 @@ function Home()
                             w = w + 1; // Increment w before returning
                             return (
                                 <div className='userinfo' key={index} > 
+                                    <div style={{display:'flex',flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'auto',height:'auto',backgroundColor:'darkgreen',borderRadius:'30px',padding:'10px'}}>
                                     <i className='fas fa-user'>{info[index + w ]=== up_name ? ` You ${status[index]=='(Online)'?'(Online)':''}`: `${status[index]=='(Online)'?'(Online)':''}`}</i>                                    
                                     <span className='connect_people' >{info[index + w ]}</span> 
                                     <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
                                     <button onClick={()=>
                                         {
                                             update_receiver(indices[index])
-                                            set_selected_bar(prev=>
-                                                {
-                                                    for(let i=0;i<messages.length;i++)
-                                                    {
-                                                        if(messages[i][0]==usernames[indices.indexOf(Number(indices[index]))])
-                                                        {
-                                                            return messages[i][0];
-                                                        }
-                                                    }
-                                                })
                                                 console.log(receiver)
                                         }
                                     } className='connect_buttons' data-indexid={indices[index]}><i className='fas fa-people-arrows'></i>Connect</button>
+                                    </div>
                                 </div>
                             );
                         }
@@ -894,11 +819,11 @@ function Home()
             </div>
 
             <div className='home11_pro' style={{display:'none'}}>
-                <label onClick={()=>update_receiver(0)}><i class='fas fa-comment-dots'></i>Chats</label>
-                <label onClick={()=>update_receiver(0)}><i class='fas fa-user'></i>Profile</label>
-                <label onClick={()=>update_receiver(0)}><i class='fas fa-cog'></i>Settings</label>
-                <label onClick={()=>{update_receiver(0);localStorage.setItem('root',true);nav2('/')}} ><i class='fas fa-user-plus'></i>Add Account</label>
-                <label onClick={()=>update_receiver(0)} id="people"><i class='fas fa-users'></i>People</label>
+                <label ><i class='fas fa-comment-dots'></i>Chats</label>
+                <label ><i class='fas fa-user'></i>Profile</label>
+                <label ><i class='fas fa-cog'></i>Settings</label>
+                <label onClick={()=>{localStorage.setItem('root',true);nav2('/')}} ><i class='fas fa-user-plus'></i>Add Account</label>
+                <label  id="people"><i class='fas fa-users'></i>People</label>
             </div>
         </div>
     );

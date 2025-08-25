@@ -1,2 +1,5 @@
-let t=['ll ','klkl']
-console.log(t.includes('ll ') || t.includes('klkll') );
+let r={l:null}
+if(r.l===false)
+{
+    console.log(34)
+}

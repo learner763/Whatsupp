@@ -51,47 +51,29 @@ app.post("/login", (req, res) => {
 
     if(bt=="Log In")    
         pool.query("select * from public.users where email=$1 and password=$2", [email,password], (err, results) => {
-            if (err) {}
-            else res.json(results.rows);
-            
+            return res.json(results.rows);
         });
 
     else if(bt=="Sign Up")
-        pool.query("select * from public.users where email=$1", [email], (err, results) => {
+        pool.query("select * from public.users where email=$1 union all select * from public.users where index=$1", [email], (err, results) => {
             if (err) {}
-            if(results.rows.length>0){res.json({success:false});}
+            if(results.rows.length>0){return res.json({success:false});}
             else{
                 
-                pool.query("insert into public.users(email,password) values($1,$2)", [email,password], (err, results) => {
-                    if (err) {
-                        return res.status(500).send('Database error');
-                    }
-                    else 
-                    {
-                        pool.query('select index from public.users',(err,results)=>
-                        {
-                            let array=[]
-                            for(let i=0;i<results.rows.length;i++)
-                            {
-                                array.push(results.rows[i].index)
-                            }
-                            pool.query(`update public.users set index=${Math.max(...array)+1} where email=$1`,[email])
-                        });
-                        res.json({success:true});
-                    }
+                pool.query("insert into public.users(email,password,index) values($1,$2,$3)", [email,password,email], (err, results) => {
+                    return res.json({success:true});
+                    
                 });
                 
             }
         });
-
       
 });
 
 app.post("/personal", (req, res) => {
     const { username, name,bio } = req.body;
-    pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,username], (err, results) => {   
-        if (err) {console.log(4)}
-        else res.json({success:true}); 
+    pool.query("update public.users set name=$1,bio=$2 where index=$3", [name,bio,username], (err, results) => {   
+        return res.json({success:true}); 
     });
 });
 app.post("/user_in_table", (req, res) => {
@@ -181,7 +163,8 @@ app.post("/save_info", (req, res) => {
         if(results.rows.length>0)
         {
             if(username==previous && profile==name)
-            {pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,previous], (err, results) => {});}
+            {pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,previous], (err, results) => {});
+            return res.json({success:true});}
             else if(username==previous && profile!=name)
             {
                 for(let i=0;i<results.rows.length;i++)
@@ -189,10 +172,11 @@ app.post("/save_info", (req, res) => {
                     if(results.rows[i].name==name && results.rows[i].email!=username)
                     {
                         pool.query("update public.users set bio=$1 where email=$2", [bio,previous], (err, results) => {});
-                        return res.json({success:false,msg:'Profile name is taken already.Choose Another!'});
+                        return res.json({success:false,msg:'Profile name is taken already.Choose Another!',person:false,user:true});
                     }
                 }
                 pool.query("update public.users set bio=$1,name=$2 where email=$3", [bio,name,previous], (err, results) => {});
+                return res.json({success:true});
             }
             else if(profile==name && username!=previous)
                 {
@@ -201,25 +185,18 @@ app.post("/save_info", (req, res) => {
                         if(results.rows[i].email==username && results.rows[i].profile!=name)
                         {
                             pool.query("update public.users set bio=$1 where name=$2", [bio,name], (err, results) => {});
-                            return res.json({success:false,msg:'Username name is taken already.Choose Another!'});
+                            return res.json({success:false,msg:'Username name is taken already.Choose Another!',user:false,person:true});
                         }
                     }
                 pool.query("update public.users set bio=$1,email=$2 where name=$3", [bio,username,name], (err, results) => {});
-                }
+                return res.json({success:true});
+            }
             else
             {return res.json({success:false,msg:'Username & Profile name is taken already.Choose Another!'});}
         }
-        if(username!=previous ){
-            console.log('agia')
-            pool.query("update public.chats set chat_with=$1 where chat_with=$2;", [username,previous], (err, results) => {
-            });
-            pool.query(`alter table public.chats rename column "${previous}" to "${username}";`, (err, results) => {
-                if (err) {console.log(err)}
-            });
+        else{
             pool.query("update public.users set name=$1,bio=$2,email=$3 where email=$4", [name,bio,username,previous], (err, results) => {   
-                if (err) {console.log(4)}
-                res.json({success:true})
-
+                return res.json({success:true})
             });
             
             
@@ -227,43 +204,7 @@ app.post("/save_info", (req, res) => {
     });
     
 });
-app.post('/message_change',(req,res)=>
-{
-    let chat={}
-    const {previous,username}=req.body;
-    pool.query("select * from public.chats where chat_with=$1;",[username],(err,results)=>
-    {
-        chat=results.rows[0]
-        for(let i=0;i<Object.keys(chat).length;i++)
-        {
-            if(Array.isArray(chat[Object.keys(chat)[i]]) && Object.keys(chat)[i]!="chat_with") 
-            {
-                for(let j=0;j<chat[Object.keys(chat)[i]].length;j++)
-                {
-                    if(chat[Object.keys(chat)[i]][j].startsWith(`${previous}`))
-                    {
-                        chat[Object.keys(chat)[i]][j]=chat[Object.keys(chat)[i]][j].replace(`${previous}`,`${username}`);
-                    }
-                }
-            }
-        }
-        let users=Object.keys(chat)
-        for(let i=0;i<users.length;i++)
-            {
-                if(users[i]!="chat_with")
-                {
-                    pool.query(`update public.chats set "${users[i]}"= $1 where chat_with=$2`,[chat[users[i]],username],(err,results)=>
-                    {
-                        if(err){res.json(err)}
-                    })
-                }
-        
-            }
-    });
-    res.json({success:true})
-    
-}
-);
+
 app.post("/save_settings", (req, res) => {
     const { username,password, bg } = req.body;
     pool.query("update public.users set password=$1,bg=$2 where email=$3", [password,bg,username], (err, results) => {   
@@ -286,7 +227,7 @@ app.post('/save_msg',(req,res)=>
     pool.query(`select "${from}" as chat from public.chats where chat_with=$1 
                 union all 
                 select "${to}" from public.chats where chat_with=$2`,[to,from],(err,results)=>
-    {
+            {
         
             if((results.rows[0].chat==null && results.rows[1].chat==null) || results.rows[0].chat==null || from==to)
             {
@@ -298,7 +239,7 @@ app.post('/save_msg',(req,res)=>
             }
         
         
-    })
+            })
     res.json({success:true});
 })
 

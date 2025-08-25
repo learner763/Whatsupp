@@ -1,14 +1,12 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Profile.css';
-import axios from 'axios'; 
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 
 function Profile() {
   const [name, setname] = useState('');
   const [bio, setbio] = useState('');
   const nav1=useNavigate();
-  const username=localStorage.getItem("email");
+  const index=localStorage.getItem("index")
 
     function personal_info(name,bio)
     {
@@ -20,7 +18,7 @@ function Profile() {
         .then(data=>{
           for(let i=0;i<data.length;i++)
           {
-            if(data[i].name==name && data[i].email!=username)
+            if(data[i].name===name && data[i].index!==index)
             {
               flag=true;
               alert(`${name} is taken by another user!Choose different.`)
@@ -34,7 +32,7 @@ function Profile() {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ username: username, name: name,bio:bio }),
+              body: JSON.stringify({ username: index, name: name,bio:bio }),
             })
             .then(response => response.json())
             .then(data => {
@@ -63,14 +61,14 @@ function Profile() {
       .then(data=>{
         for(let i=0;i<data.length;i++)
         {
-          if(data[i].email===username)
+          if(data[i].email===index)
           {
             setname(data[i].name);
             setbio(data[i].bio);
           }
         }
       })
-    },[username]
+    },[index]
     )
       
       
@@ -97,6 +95,7 @@ function Profile() {
         />
         <button onClick={() => 
           {
+            console.log(name,bio)
             if(name.length>0 && bio.length>0){personal_info(name,bio)}
           }}>Save</button>
         <label>Help people find you easily. 

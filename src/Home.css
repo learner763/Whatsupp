@@ -80,7 +80,7 @@ body{
 .userinfo{
     display: flex;
     flex-direction: column;
-    color: darkgreen;
+    color: white;
     flex-wrap: wrap;
     border: darkgreen solid ;
     border-width: 1px 0px 1px 0px;

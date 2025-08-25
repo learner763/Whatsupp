@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios'; 
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter , useNavigate } from 'react-router-dom';
 
 function App() {
   const [email, setemail] = useState('');
@@ -60,7 +60,7 @@ function App() {
                 setdisp("none");
                 settext("");
                 localStorage.setItem("email",email);
-
+                localStorage.setItem("index",email)
                 fetch("/user_in_table",{    
                   method: 'POST',
                   headers: {

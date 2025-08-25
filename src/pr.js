@@ -1,8 +1,5 @@
-if(3>2)
+let r={l:4}
+if(r.l==true)
 {
-    console.log(9)
-}
-else if(3>1)
-{
-    console.log(8)
+    console.log(34)
 }
