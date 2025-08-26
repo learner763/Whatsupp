@@ -56,6 +56,25 @@ function Home()
             await updateDoc(doc.ref,{seen:true})
         })
     }   
+    function update_data()
+    {
+        let ind=[]
+        let accounts=[]
+        fetch('/accounts')
+        .then(responce=>responce.json())
+        .then(data=>
+        {
+            for(let i=0;i<data.length;i++)
+            {
+                ind.push(data[i].index)
+                accounts.push(data[i].name)
+                accounts.push(data[i].bio)
+            }
+            set_indices(ind)
+            setinfo(accounts)
+        }
+        )
+    }
     function retrieve_messages(you)
     {
         fetch('/get_messages',
@@ -228,7 +247,7 @@ function Home()
                             if(to==from){previous.unshift([from,[`✔✔ ${message_text}     ${time}`]]);}
                             else if(from==index){previous.unshift([to,[`✔✔ ${message_text}     ${time}`]]);}
                             else if(to==index){
-                                
+                                update_data()
                                 previous.unshift([from,[` ${message_text}     ${time}`]]);
                             }
                             return previous;
