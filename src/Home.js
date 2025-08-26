@@ -446,7 +446,7 @@ function Home()
                 }
             }
         }
-        if(window.innerWidth<=850){
+        if(window.innerWidth<=1100){
             let people=document.getElementById('people');
             if(window.getComputedStyle(people).color=='rgb(255, 255, 255)')
                 {document.getElementsByClassName('home13')[0].style.flex=0;}
@@ -658,7 +658,7 @@ function Home()
         {
             connect_buttons[i].addEventListener('click',()=>{
 
-                if(window.innerWidth<=850){document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
+                if(window.innerWidth<=1100){document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
                 else{document.getElementsByClassName('home13')[0].style.flex=0.5;document.getElementsByClassName('home12')[0].style.flex=1}
                 
                 setdisp("flex");
@@ -820,7 +820,7 @@ function Home()
                                             update_receiver(indices[index])
                                                 console.log(receiver)
                                         }
-                                    } className='connect_buttons' data-indexid={indices[index]}><i className='fas fa-comment'></i>Message</button>
+                                    } className='connect_buttons' data-indexid={indices[index]}><i className='fas fa-envelope'></i>Message</button>
                                     </div>
                                 </div>
                             );
@@ -834,7 +834,7 @@ function Home()
             <div className='msg_div' style={{display:disp}}>
                 <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...'
                 onChange={()=>typing_status()}></textarea>
-                <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} ><i class="fas fa-paper-plane"></i>Send</button>
+                <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} >Send</button>
             </div>
 
             <div className='home11_pro' style={{display:'none'}}>
