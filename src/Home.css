@@ -112,14 +112,13 @@ body{
 .part2,.part3{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: start;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 .part2 i, .part2 button, .part2 label, .part2 input,
 .part3 i, .part3 button, .part3 label, .part3 input,.part3 select{
     color: darkgreen;
-    margin: 30px;
 }
 .part2 i,.part3 i{
     font-size: 60px;
@@ -155,6 +154,8 @@ body{
     align-items: center;
     flex: .85;
     padding-top: 28px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 .chats{
     display: flex;
@@ -241,17 +242,13 @@ body{
 }
 @media (max-width: 1100px)
 {
-    .part2 i, .part2 button, .part2 label, .part2 input,
-    .part3 i, .part3 button, .part3 label, .part3 input,.part3 select{
-    margin: 25px;
+    .part2 label,.part3 label{
+        font-size: 20px;
     }
     .part2 input,.part3 input,.part3 select{
         font-size: 21px;
     }
-    .part2,.part3{
-        justify-self: center;
-        align-self: center;
-    }
+    
     .home11{
         display: none !important;
     }
@@ -285,16 +282,17 @@ body{
     .msg_div textarea{
         width: 222px;
     }
-    .home13{
+    
+    .part2,.part3,.home13,.chats{
         padding-bottom: 40px;
     }
-    .part2{
-        padding-bottom: 40px;
-    }
+    
 }
 @media (max-width:500px) {
+    
     .part2 input,.part3 input,.part3 select{
         align-self: center;
+        font-size: 21px;
     }
     .home11_pro{
         height: auto;

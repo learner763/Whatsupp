@@ -766,7 +766,7 @@ function Home()
                     </div>
                     
                     <div className='part2' style={{display:part2}} >
-                        <i style={{alignSelf:'center'}} class='fas fa-user'></i>
+                        <i style={{alignSelf:'center',paddingTop:'30px'}} class='fas fa-user'></i>
                         <label>Username</label>
                         <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} style={{alignSelf:'end'}}></input>
                         <label>Name</label>
@@ -783,7 +783,7 @@ function Home()
                     </div>
                     
                     <div className='part3' style={{display:part3}} >
-                        <i style={{alignSelf:'center'}} class='fas fa-user'></i>
+                        <i style={{alignSelf:'center',paddingTop:'30px'}} class='fas fa-user'></i>
                         <label>Change Password</label>
                         <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
                         <label>Background Theme</label>
