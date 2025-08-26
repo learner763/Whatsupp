@@ -154,8 +154,6 @@ body{
     align-items: center;
     flex: .85;
     padding-top: 28px;
-    padding-left: 5px;
-    padding-right: 5px;
 }
 .chats{
     display: flex;
