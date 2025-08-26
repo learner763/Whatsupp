@@ -327,7 +327,7 @@ function Home()
         
     useEffect(()=>
     {
-        if( indices.length<1 || indices.includes(index)===false ){return;}
+        if( index.length<1 || indices.includes(index)===false ){return;}
     
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
@@ -480,7 +480,7 @@ function Home()
         }
         else{
             document.getElementsByClassName('home13')[0].style.display='flex';
-            document.getElementsByClassName('home13')[0].style.flex=0.25;
+            document.getElementsByClassName('home13')[0].style.flex=0.5;
             document.getElementsByClassName('home12')[0].style.flex=1;
             document.getElementsByClassName('home12')[0].style.display='flex';
             for(let j=0;j<5;j++)
@@ -659,7 +659,7 @@ function Home()
             connect_buttons[i].addEventListener('click',()=>{
 
                 if(window.innerWidth<=850){document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
-                else{document.getElementsByClassName('home13')[0].style.flex=0.25;document.getElementsByClassName('home12')[0].style.flex=1}
+                else{document.getElementsByClassName('home13')[0].style.flex=0.5;document.getElementsByClassName('home12')[0].style.flex=1}
                 
                 setdisp("flex");
                 setpart2('none');
@@ -811,7 +811,7 @@ function Home()
                             w = w + 1; // Increment w before returning
                             return (
                                 <div className='userinfo' key={index} > 
-                                    <div style={{display:'flex',flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'auto',height:'auto',backgroundColor:'darkgreen',borderRadius:'30px',padding:'10px'}}>
+                                    <div style={{display:'flex',flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'160px',backgroundColor:'darkgreen',borderRadius:'20px',padding:'5px'}}>
                                     <i className='fas fa-user'>{info[index + w ]=== up_name ? ` You ${status[index]=='(Online)'?'(Online)':''}`: `${status[index]=='(Online)'?'(Online)':''}`}</i>                                    
                                     <span className='connect_people' >{info[index + w ]}</span> 
                                     <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
@@ -820,7 +820,7 @@ function Home()
                                             update_receiver(indices[index])
                                                 console.log(receiver)
                                         }
-                                    } className='connect_buttons' data-indexid={indices[index]}><i className='fas fa-people-arrows'></i>Connect</button>
+                                    } className='connect_buttons' data-indexid={indices[index]}><i className='fas fa-comment'></i>Message</button>
                                     </div>
                                 </div>
                             );

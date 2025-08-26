@@ -73,7 +73,7 @@ body{
 .home13
 {
     overflow-y: scroll;
-    flex: .25 ;
+    flex: .5 ;
     flex-direction: column;
 }
 
@@ -82,19 +82,18 @@ body{
     flex-direction: column;
     color: white;
     flex-wrap: wrap;
-    border: darkgreen solid ;
-    border-width: 1px 0px 1px 0px;
     justify-content: center;
     align-items: start;
+    margin-top: 10px;
+    margin-bottom: 10px;
     
 }
 .userinfo button{
     background-color: lightgreen;
     color: darkgreen;
     cursor: pointer;
-    border: darkgreen solid;
-    border-width: 1px 0px 1px 0px;
-    border-radius: 20px;
+    border: none;
+    border-radius: 10px;
 }
 .userinfo i, .userinfo button, .userinfo span{
     font-weight: bold;
