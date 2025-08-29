@@ -1,5 +1,3 @@
-let r={l:4}
-if(r.l==true)
-{
-    console.log(34)
-}
+let r="fgfrvf"
+r=r.substring(2)
+console.log(r)

@@ -228,7 +228,7 @@ app.post('/save_msg',(req,res)=>
                 union all 
                 select "${to}" from public.chats where chat_with=$2`,[to,from],(err,results)=>
             {
-        
+            console.log(results.rows)
             if((results.rows[0].chat==null && results.rows[1].chat==null) || results.rows[0].chat==null || from==to)
             {
                 pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}     ${new Date().toISOString()}`]])

@@ -63,8 +63,8 @@ function Profile() {
         {
           if(data[i].email===index)
           {
-            setname(data[i].name);
-            setbio(data[i].bio);
+            if(data[i].name===null){data[i].name=''}setname(data[i].name);
+            if(data[i].bio===null){data[i].bio=''}setbio(data[i].bio);
           }
         }
       })
@@ -83,7 +83,11 @@ function Profile() {
           type="text"
           value={name}
           placeholder='Name:'
-          onChange={(e) => setname(e.target.value.replace(/[^a-zA-Z0-9_ ]/g,''))} 
+          onChange={(e) => 
+          {
+            if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+            setname(e.target.value.replace(/[^a-zA-Z0-9_ ]/g,''))} 
+          }
         />
         <label >About Me*</label>
 
@@ -91,7 +95,11 @@ function Profile() {
           type="text"
           value={bio}
           placeholder='Bio:'
-          onChange={(e) => setbio(e.target.value)}
+          onChange={(e) => 
+            {
+              if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+              setbio(e.target.value)}
+            }
         />
         <button onClick={() => 
           {

@@ -542,7 +542,13 @@ function Home()
                         setup_name(data[i].name);
                         setup_bio(data[i].bio);
                         setpass(data[i].password);
+                        if(data[i].bg===null){data[i].bg='white'}
                         setbg(data[i].bg);
+                        console.log(data[i].email)
+                        console.log(data[i].name)
+                        console.log(data[i].bio)
+                        console.log(data[i].password)
+                        console.log(data[i].bg)
                     }
                 }
                 if(flag==false){set_loaded(false);alert(`No account exists with "${username}"`)}
@@ -623,6 +629,13 @@ function Home()
         let message =document.getElementById("message");
         if(message.value!=='')
         {
+            addDoc(collection(db,'messages'),{
+                from: index,
+                to: receiver,
+                text: message.value,
+                seen:index===receiver?true:false,
+                createdAt: serverTimestamp()
+            })
             insert_msg(index,receiver,message.value);
             message.value=""
             return;
@@ -642,15 +655,9 @@ function Home()
         })
         .then(response => response.json())
         .then(data=>
-            {   
-                addDoc(collection(db,'messages'),{
-                    from: from,
-                    to: to,
-                    text: msg,
-                    seen:from===to?true:false,
-                    createdAt: serverTimestamp()
-                })
-            })
+        {   
+            
+        })
     }
     useEffect(() => {
         let connect_buttons=document.getElementsByClassName("connect_buttons");
@@ -770,9 +777,17 @@ function Home()
                         <label>Username</label>
                         <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} style={{alignSelf:'end'}}></input>
                         <label>Name</label>
-                        <input onChange={(e)=>setup_name(e.target.value.replace(/[^a-zA-Z0-9_ ]/g, ''))} value={up_name} style={{alignSelf:'end'}}></input>
+                        <input onChange={(e)=>
+                            {
+                            if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+                            setup_name(e.target.value.replace(/[^a-zA-Z0-9_ ]/g, ''))
+                            }} value={up_name} style={{alignSelf:'end'}}></input>
                         <label>About</label>
-                        <input onChange={(e)=>setup_bio(e.target.value)} value={up_bio} style={{alignSelf:'end'}}></input>
+                        <input onChange={(e)=>
+                            {
+                            if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+                            setup_bio(e.target.value)
+                            }} value={up_bio} style={{alignSelf:'end'}}></input>
                         <button onClick={()=>
                             {
                                 if(up_user.length>0 && up_user.length<13 && up_name.length>0 && up_name.length<13 && up_bio.length>0 && up_bio.length<21)
@@ -796,7 +811,7 @@ function Home()
                         </select>
                         <button onClick={()=>
                             {
-                                if(pass.length>0 && pass<13){update_settings(pass,bgr)}
+                                if(pass.length>0 && pass.length<13){update_settings(pass,bgr)}
                                 else{alert("Password Range:1-12")}
                             }} id="save">Save</button>
                     </div>
@@ -833,7 +848,12 @@ function Home()
             
             <div className='msg_div' style={{display:disp}}>
                 <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...'
-                onChange={()=>typing_status()}></textarea>
+                onChange={()=>
+                {
+                    if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
+                    typing_status()
+                }
+                }></textarea>
                 <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} >Send</button>
             </div>
 
