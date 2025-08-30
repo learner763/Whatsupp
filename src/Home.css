@@ -235,6 +235,9 @@ body{
 .chat_detail{
     padding-top: 28px;
 }
+.chat_detail:hover{
+    cursor: pointer;
+}
 .home11_pro label{
     border-radius: 6px;
 }
@@ -275,7 +278,7 @@ body{
         bottom: 30px;
     }
     .msg_div{
-        background-color: darkmagenta;
+        background-color: lightgreen;
     }
     .msg_div textarea{
         width: 222px;

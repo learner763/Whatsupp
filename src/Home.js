@@ -56,6 +56,23 @@ function Home()
             await updateDoc(doc.ref,{seen:true})
         })
     }   
+    function delete_msg(user,message)
+    {
+        console.log(message)
+        setmessages(prev=>
+        {
+            let previous=[...prev]
+            for(let i=0;i<previous.length;i++)
+            {
+                if(previous[i][0]===user)
+                {
+                    previous[i][1].splice(previous[i][1].indexOf(message),1)
+                    return previous
+                }
+            }
+        }
+        )
+    }
     function update_data()
     {
         let ind=[]
@@ -723,12 +740,20 @@ function Home()
                                         (
                                             text.startsWith('✔✔')?
                                             (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
+                                            <select onChange={(e)=>
+                                                {if(e.target.value==='🗑️'){delete_msg(receiver,text);console.log(value)}}}
+                                                    style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
+                                                <option >✏️</option>
+                                                <option >🗑️</option>
+                                                <option>Not Seen</option>
+                                            </select>
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.slice(0,text.lastIndexOf(' ')).replace('✔✔✔✔',''):text.slice(0,text.lastIndexOf(' ')).replace('✔✔','')}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{text.slice(text.lastIndexOf(' ')+1,text.length).replace(text.slice(text.lastIndexOf(' ')+1,text.length)
                                             ,new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString()
                                             .slice(new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().indexOf('/')+1,
                                             new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().lastIndexOf('/')).includes(new Date().getDate())?
-                                            new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString():new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleString())}</span></span>):
+                                            new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString():new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleString())}</span>
+                                            </span>):
                                             
                                             
                                             (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>

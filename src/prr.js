@@ -1,5 +1,2 @@
-let r={l:null}
-if(r.l===false)
-{
-    console.log(34)
-}
+let g=[5,6,7]
+g.pop(console.log(g)
