@@ -1,2 +1,3 @@
 let g=[5,6,7]
-g.pop(console.log(g)
+g=g.filter(f=>f>3 && f<7)
+console.log(g)

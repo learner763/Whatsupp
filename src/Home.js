@@ -10,6 +10,7 @@ import {
     query,
     orderBy,
     serverTimestamp,
+    or,
     where,
     getDocs,
     updateDoc,
@@ -72,6 +73,14 @@ function Home()
             }
         }
         )
+        fetch('/delete_msg',
+            {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({from:index,to:user,message:message})
+        })
+        .then(responce=>responce.json())
+
     }
     function update_data()
     {
@@ -198,23 +207,24 @@ function Home()
     useEffect(()=>
     {
         let first_snapshot=true
-        let q=query(collection(db,'messages'),orderBy('createdAt'))
+        let q=query(collection(db,'messages'),or(where('from','==',index),where('to','==',index)));
         let action=onSnapshot(q,(snapshot)=>
         {
             if(first_snapshot){first_snapshot=false;return;}
-            
-            if(snapshot.docs[snapshot.docs.length-1].metadata.hasPendingWrites){return;}
-            let msgs=snapshot.docs.map(function(doc)
+            let msgs=snapshot.docChanges().filter(change=>change.type==='added').map(function(change)
             {
-                return {id:doc.id,...doc.data()}
+                return {id:change.doc.id,...change.doc.data()}
             })
-            
+
+            console.log(msgs)
+            console.log(msgs[msgs.length-1])
+
                 if(msgs.length>0 && (msgs[msgs.length-1].from==index || msgs[msgs.length-1].to==index))
                 {
                     let to=msgs[msgs.length-1].to;
                     let from=msgs[msgs.length-1].from;
                     let message_text=msgs[msgs.length-1].text;
-                    let time=msgs[msgs.length-1].createdAt.toDate().toISOString();                    
+                    let time=new Date().toISOString();                    
                     setmessages(prev=>
                     {
                         let previous=[...prev]
@@ -430,6 +440,7 @@ function Home()
             seen();
             ticked();
         }
+    
     },[indices,index,receiver,refreshed])
     
     useEffect(() => {

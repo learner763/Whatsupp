@@ -242,7 +242,20 @@ app.post('/save_msg',(req,res)=>
             })
     res.json({success:true});
 })
-
+app.post('/delete_msg',(req,res)=>
+{
+    const {from,to,message}=req.body;
+    let updated_msg=message.replace(message.slice(0,message.indexOf(' ')),`${from}:`)
+    pool.query(`update public.chats set "${from}"=array_remove("${from}",$1) where chat_with=$2 and "${from}" is not null`,[updated_msg,to],(err,results)=>
+                {
+                    console.log(results.rowCount)
+                    if(results.rowCount===0)
+                    {
+                        pool.query(`update public.chats set "${to}"=array_remove("${to}",$1) where chat_with=$2 and "${to}" is not null`,[updated_msg,from],(err,results)=>
+                        {})
+                    }
+                })
+})
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
