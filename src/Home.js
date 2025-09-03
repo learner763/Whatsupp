@@ -15,8 +15,9 @@ import {
     getDocs,
     getDoc,
     updateDoc,
-    doc
-    
+    doc,
+    deleteDoc,
+    Timestamp
 } from "firebase/firestore";
 import{
     onDisconnect,set,ref,onValue,
@@ -59,20 +60,15 @@ function Home()
             await updateDoc(doc.ref,{seen:true})
         })
     }   
-    function delete_msg(user,message)
+    async function delete_msg(user,message)
     {
-        console.log(message)
-        setmessages(prev=>
+        let msg_to_be_deleted=query(collection(db,'messages'),where('from','==',index),where('to','==',user),where('text','==',message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)));
+        const to_be_deleted=await getDocs(msg_to_be_deleted)
+        console.log(to_be_deleted)
+        to_be_deleted.forEach( async (doc)=>
         {
-            let previous=[...prev]
-            for(let i=0;i<previous.length;i++)
-            {
-                if(previous[i][0]===user)
-                {
-                    previous[i][1].splice(previous[i][1].indexOf(message),1)
-                    return previous
-                }
-            }
+            await deleteDoc(doc.ref)
+            console.log(doc.data())
         }
         )
         fetch('/delete_msg',
@@ -678,20 +674,23 @@ function Home()
             onSnapshot(inserted_msg,(document)=>
             {
                 let data=document.data()
-                if(!data.createdAt){return}
-                else
+                console.log(data)
+                if(data!==undefined)
                 {
-                    if(ids.includes(document.id)===false)
+                    if(!data.createdAt){return}
+                    else
                     {
-                    ids.push(document.id)
-                    console.log('e')
-                    set_time_stamp(data.createdAt.toDate().toISOString())
-                    insert_msg(index,receiver,message.value,data.createdAt.toDate().toISOString());
-                    message.value=""
-                    return;
+                        if(ids.includes(document.id)===false)
+                        {
+                        ids.push(document.id)
+                        console.log('e')
+                        set_time_stamp(data.createdAt.toDate().toISOString())
+                        insert_msg(index,receiver,message.value,data.createdAt.toDate().toISOString());
+                        message.value=""
+                        return;
+                        }
                     }
                 }
-
             })
             
         }
