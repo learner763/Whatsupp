@@ -13,6 +13,7 @@ import {
     or,
     where,
     getDocs,
+    getDoc,
     updateDoc,
     doc
     
@@ -45,6 +46,7 @@ function Home()
     const current_timeout=useRef(null)
     const [refreshed,set_refresh]=useState(false);
     const [loaded,set_loaded]=useState(false)
+    const [time_stamp,set_time_stamp]=useState('');
     let w=-1;
 
     async function set_seen()
@@ -236,8 +238,7 @@ function Home()
                                 if(previous[i][0]===index)
                                 {
                                     found=1
-                                    if(previous[i][1].includes(`✔✔✔✔ ${message_text}     ${time}`)!=true && previous[i][1].includes(`✔✔ ${message_text}     ${time}`)!=true){previous[i][1].push(`✔✔ ${message_text}     ${time}`);}
-                                    else{return previous;}
+                                    previous[i][1].push(`✔✔ ${message_text}     ${time}`);
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
@@ -248,8 +249,7 @@ function Home()
                                 if(from==index && previous[i][0]==to)
                                 {
                                     found=1
-                                    if(previous[i][1].includes(`✔✔✔✔ ${message_text}     ${time}`)!=true && previous[i][1].includes(`✔✔ ${message_text}     ${time}`)!=true){previous[i][1].push(`✔✔ ${message_text}     ${time}`)}
-                                    else{return previous;}                                    
+                                    previous[i][1].push(`✔✔ ${message_text}     ${time}`)
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
@@ -257,8 +257,7 @@ function Home()
                                 }
                                 else if(to==index && previous[i][0]==from){
                                     found=1
-                                    if(previous[i][1].includes(` ${message_text}     ${time}`)==false){previous[i][1].push(` ${message_text}     ${time}`);}
-                                    else{return previous;}
+                                    previous[i][1].push(` ${message_text}     ${time}`)
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
@@ -282,6 +281,17 @@ function Home()
                     }
                     );
                         
+                }
+                if(msgs.length===0){
+                    setmessages(prev=>
+                    {
+                        let previous=[...prev]
+                        console.log(previous)
+                        console.log(time_stamp)
+                        //previous[0][1][previous[0][1].length-1]=previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,time_stamp)
+                        console.log(previous)
+                        return previous
+                    })
                 }
             console.log(msgs)
             
@@ -651,27 +661,44 @@ function Home()
         
     }, []);
     
-    function Send()
+    async function Send()
     {
+        let ids=[]
         console.log(receiver)
         let message =document.getElementById("message");
         if(message.value!=='')
         {
-            addDoc(collection(db,'messages'),{
+            let inserted_msg=await addDoc(collection(db,'messages'),{
                 from: index,
                 to: receiver,
                 text: message.value,
                 seen:index===receiver?true:false,
                 createdAt: serverTimestamp()
             })
-            insert_msg(index,receiver,message.value);
-            message.value=""
-            return;
+            onSnapshot(inserted_msg,(document)=>
+            {
+                let data=document.data()
+                if(!data.createdAt){return}
+                else
+                {
+                    if(ids.includes(document.id)===false)
+                    {
+                    ids.push(document.id)
+                    console.log('e')
+                    set_time_stamp(data.createdAt.toDate().toISOString())
+                    insert_msg(index,receiver,message.value,data.createdAt.toDate().toISOString());
+                    message.value=""
+                    return;
+                    }
+                }
+
+            })
+            
         }
     }
     
     
-    function insert_msg(from,to,msg)
+    function insert_msg(from,to,msg,time)
     {
         fetch('/save_msg',
         {
@@ -679,7 +706,7 @@ function Home()
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ from: from, to: to, message: msg }),
+            body: JSON.stringify({ from: from, to: to, message: msg,time:time }),
         })
         .then(response => response.json())
         .then(data=>

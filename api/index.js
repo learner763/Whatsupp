@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
+import { timeStamp } from 'console';
 const app = express();
 
 // Resolve __dirname for ES modules
@@ -222,29 +223,27 @@ app.post("/forpass", (req, res) => {
 });
 app.post('/save_msg',(req,res)=>
 {
-    const {from,to,message}=req.body;
-    
+    const {from,to,message,time}=req.body;
+    console.log(time)
     pool.query(`select "${from}" as chat from public.chats where chat_with=$1 
                 union all 
                 select "${to}" from public.chats where chat_with=$2`,[to,from],(err,results)=>
             {
-            console.log(results.rows)
             if((results.rows[0].chat==null && results.rows[1].chat==null) || results.rows[0].chat==null || from==to)
             {
-                pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}     ${new Date().toISOString()}`]])
+                pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}     ${time}`]])
             }
             else if(results.rows[1].chat==null)
             {
-                pool.query(`update public.chats set "${from}"= coalesce("${from}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[to,[`${from}: ${message}     ${new Date().toISOString()}`]])
+                pool.query(`update public.chats set "${from}"= coalesce("${from}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[to,[`${from}: ${message}     ${time}`]])
             }
-        
-        
             })
     res.json({success:true});
 })
 app.post('/delete_msg',(req,res)=>
 {
     const {from,to,message}=req.body;
+    console.log(message)
     let updated_msg=message.replace(message.slice(0,message.indexOf(' ')),`${from}:`)
     pool.query(`update public.chats set "${from}"=array_remove("${from}",$1) where chat_with=$2 and "${from}" is not null`,[updated_msg,to],(err,results)=>
                 {
