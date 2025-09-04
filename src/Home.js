@@ -213,7 +213,6 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-
             console.log(msgs)
             console.log(msgs[msgs.length-1])
 
