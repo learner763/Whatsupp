@@ -359,7 +359,7 @@ function Home()
         
     useEffect(()=>
     {
-        if( index.length<1 || indices.includes(index)===false ){return;}
+        if( !index || indices.includes(index)===false ){return;}
     
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
