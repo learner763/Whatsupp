@@ -254,6 +254,7 @@ app.post('/delete_msg',(req,res)=>
                         {})
                     }
                 })
+    res.json({success:true});
 })
 // Start the server
 const PORT = process.env.PORT || 8080;
