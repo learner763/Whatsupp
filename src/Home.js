@@ -299,7 +299,7 @@ function Home()
 
     useEffect(()=>
     {
-        if(index.length<1 || indices.includes(index)===false){return;}
+        if(!index || indices.includes(index)===false){return;}
         let online_status=ref(real_time_db,`online_status/${index}`);
         
         set(online_status,{
