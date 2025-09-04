@@ -48,7 +48,7 @@ function Home()
     const [refreshed,set_refresh]=useState(false);
     const [loaded,set_loaded]=useState(false)
     const [time_stamp,set_time_stamp]=useState('');
-    const [flag,set_flag]=useState(false);
+    const [flag1,set_flag1]=useState(false);
     let w=-1;
 
     async function set_seen()
@@ -439,7 +439,7 @@ function Home()
                     console.log(previous)
                     return previous
                 })
-                if(flag===true)set_loaded(true)
+                if(flag1===true)set_loaded(true)
         })
         return()=>
         {
@@ -560,6 +560,7 @@ function Home()
         .then(response => response.json())
         .then(data => 
             {
+                let flag=false
                 let accounts=[] 
                 for(let i=0;i<data.length;i++)
                 {
@@ -570,7 +571,8 @@ function Home()
                         change_profile(localStorage.getItem('profile'))
                         change_index(localStorage.getItem('index'))
                         retrieve_messages(data[i].index)
-                        set_flag(true)
+                        flag=true
+                        set_flag1(true)
                         setup_user(data[i].email);
                         setup_name(data[i].name);
                         setup_bio(data[i].bio);
@@ -584,7 +586,7 @@ function Home()
                         console.log(data[i].bg)
                     }
                 }
-                if(flag==false){set_loaded(false);alert(`No account exists with "${username}"`)}
+                if(flag==false){set_flag1(false);set_loaded(false);alert(`No account exists with "${username}"`)}
                 let ind=[]
                 for(let i=0;i<data.length;i++)
                 {
