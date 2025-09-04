@@ -63,8 +63,25 @@ function Home()
     }   
     async function delete_msg(user,message)
     {
-        
-        
+        setmessages(prev=>
+        {
+            let previous=[...prev]
+            for(let i=0;i<previous.length;i++)
+            {
+                if(previous[i][0]===user)
+                {
+                    previous[i][1].forEach(x=>
+                    {
+                        if(x.slice(x.indexOf(' ')+1,x.length)===message.slice(message.indexOf(' ')+1,message.length))
+                        {
+                            previous[i][1].splice(previous[i][1].indexOf(x),1)
+                        }
+                    })
+                    return previous;
+                }
+            }
+        }
+        )
         fetch('/delete_msg',
             {
             method:'POST',
