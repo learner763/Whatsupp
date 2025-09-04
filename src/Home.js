@@ -63,15 +63,8 @@ function Home()
     }   
     async function delete_msg(user,message)
     {
-        let msg_to_be_deleted=query(collection(db,'messages'),where('from','==',index),where('to','==',user),where('text','==',message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)));
-        const to_be_deleted=await getDocs(msg_to_be_deleted)
-        console.log(to_be_deleted)
-        to_be_deleted.forEach( async (doc)=>
-        {
-            await deleteDoc(doc.ref)
-            console.log(doc.data())
-        }
-        )
+        
+        
         fetch('/delete_msg',
             {
             method:'POST',
