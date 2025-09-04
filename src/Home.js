@@ -48,6 +48,7 @@ function Home()
     const [refreshed,set_refresh]=useState(false);
     const [loaded,set_loaded]=useState(false)
     const [time_stamp,set_time_stamp]=useState('');
+    const [flag,set_flag]=useState(false);
     let w=-1;
 
     async function set_seen()
@@ -438,7 +439,7 @@ function Home()
                     console.log(previous)
                     return previous
                 })
-                set_loaded(true)
+                if(flag===true)set_loaded(true)
         })
         return()=>
         {
@@ -560,7 +561,6 @@ function Home()
         .then(data => 
             {
                 let accounts=[] 
-                let flag=false
                 for(let i=0;i<data.length;i++)
                 {
                     if(data[i].email===username)
@@ -570,7 +570,7 @@ function Home()
                         change_profile(localStorage.getItem('profile'))
                         change_index(localStorage.getItem('index'))
                         retrieve_messages(data[i].index)
-                        flag=true
+                        set_flag(true)
                         setup_user(data[i].email);
                         setup_name(data[i].name);
                         setup_bio(data[i].bio);
