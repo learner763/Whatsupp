@@ -253,7 +253,7 @@ function Home()
                     let to=msgs[msgs.length-1].to;
                     let from=msgs[msgs.length-1].from;
                     let message_text=msgs[msgs.length-1].text;
-                    let time=new Date().toISOString();                    
+                    let time=msgs[msgs.length-1].createdAt===null?new Date().toISOString():msgs[msgs.length-1].createdAt.toDate().toISOString();                    
                     setmessages(prev=>
                     {
                         let previous=[...prev]
