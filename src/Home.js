@@ -861,6 +861,7 @@ function Home()
 
                         {messages.map((value,index)=>
                             {
+                                console.log(messages)
                                 return(
                                     <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');update_receiver(value[0]);console.log(receiver);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
