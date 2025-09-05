@@ -217,10 +217,9 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let msgs__deleted=snapshot.docChanges().filter(change=>change.type==='modified').map(function(change)
+            let msgs__deleted=snapshot.docChanges().filter(change=>change.type==='modified' && change.doc.data().delete).map(function(change)
             {
-                if(change.doc.data().delete!==null)
-                {return {id:change.doc.id,...change.doc.data()}}
+                console.log(32);return {id:change.doc.id,...change.doc.data()}
             })            
             console.log(msgs__deleted)
             console.log(msgs[msgs.length-1])
@@ -233,11 +232,11 @@ function Home()
                         {
                             if(previous[i][0]===msgs__deleted[0].to || previous[i][0]===msgs__deleted[0].from)
                             {
+                                console.log('deleted')
                                 for(let j=0;j<previous[i][1].length;j++)
                                 {
                                     if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
                                     {
-                                        console.log('deleted')
                                         previous[i][1].splice(j,1)
                                         break
                                     }

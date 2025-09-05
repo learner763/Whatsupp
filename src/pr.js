@@ -1,3 +1,2 @@
-let r="fgfrvf"
-r=r.substring(2)
-console.log(r)
+let d={f:4}
+console.log(d.l)
