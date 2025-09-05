@@ -231,7 +231,7 @@ function Home()
                         let previous=[...prev]
                         for(let i=0;i<previous.length;i++)
                         {
-                            if(previous[i][0]===msgs__deleted[0].to)
+                            if(previous[i][0]===msgs__deleted[0].to || previous[i][0]===msgs__deleted[0].from)
                             {
                                 for(let j=0;j<previous[i][1].length;j++)
                                 {
