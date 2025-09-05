@@ -237,6 +237,7 @@ function Home()
                                 {
                                     if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
                                     {
+                                        console.log('deleted')
                                         previous[i][1].splice(j,1)
                                         break
                                     }
@@ -583,7 +584,13 @@ function Home()
     },[innerwidth])
         
     useEffect(() => {
-        
+        setmessages(prev=>
+        {
+            let previous=[...prev]
+            previous.filter(x=>x[1].length>0)
+            return previous
+        }
+        )
         let container=document.getElementsByClassName('part1');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
     },[messages,receiver])
@@ -861,7 +868,6 @@ function Home()
 
                         {messages.map((value,index)=>
                             {
-                                console.log(messages)
                                 return(
                                     <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');update_receiver(value[0]);console.log(receiver);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
