@@ -11,6 +11,7 @@ import {
     orderBy,
     serverTimestamp,
     or,
+    and,
     where,
     getDocs,
     getDoc,
@@ -64,25 +65,16 @@ function Home()
     }   
     async function delete_msg(user,message)
     {
-        setmessages(prev=>
+        let deleted_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("text","==",message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)));
+        const deleted=await getDocs(deleted_msgs)
+        deleted.forEach(async (doc)=>
         {
-            let previous=[...prev]
-            for(let i=0;i<previous.length;i++)
+            if(!doc.data().delete)
             {
-                if(previous[i][0]===user)
-                {
-                    previous[i][1].forEach(x=>
-                    {
-                        if(x.slice(x.indexOf(' ')+1,x.length)===message.slice(message.indexOf(' ')+1,message.length))
-                        {
-                            previous[i][1].splice(previous[i][1].indexOf(x),1)
-                        }
-                    })
-                    return previous;
-                }
+                await updateDoc(doc.ref,{delete:message.slice(message.lastIndexOf(' ')+1,message.length)})
+                return
             }
-        }
-        )
+        })
         fetch('/delete_msg',
             {
             method:'POST',
@@ -225,9 +217,37 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            console.log(msgs)
+            let msgs__deleted=snapshot.docChanges().filter(change=>change.type==='modified').map(function(change)
+            {
+                if(change.doc.data().delete!==null)
+                {return {id:change.doc.id,...change.doc.data()}}
+            })            
+            console.log(msgs__deleted)
             console.log(msgs[msgs.length-1])
+                if(msgs__deleted.length>0)
+                {
+                    setmessages(prev=>
+                    {
+                        let previous=[...prev]
+                        for(let i=0;i<previous.length;i++)
+                        {
+                            if(previous[i][0]===msgs__deleted[0].to)
+                            {
+                                for(let j=0;j<previous[i][1].length;j++)
+                                {
+                                    if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
+                                    {
+                                        previous[i][1].splice(j,1)
+                                        break
+                                    }
+                                }
+                            }
+                            break
+                        }
+                        return previous
 
+                    })
+                }
                 if(msgs.length>0 && (msgs[msgs.length-1].from==index || msgs[msgs.length-1].to==index))
                 {
                     let to=msgs[msgs.length-1].to;
@@ -290,6 +310,7 @@ function Home()
                         
                 }
                 if(msgs.length===0){
+                    console.log(msgs)
                     setmessages(prev=>
                     {
                         let previous=[...prev]
@@ -308,6 +329,7 @@ function Home()
             action();
         }
     },[])
+
 
     useEffect(()=>
     {
@@ -462,6 +484,7 @@ function Home()
         }
     
     },[indices,index,receiver,refreshed])
+    
     
     useEffect(() => {
         for(let i=0;i<3;i++)
@@ -700,6 +723,17 @@ function Home()
                         ids.push(document.id)
                         console.log('e')
                         set_time_stamp(data.createdAt.toDate().toISOString())
+
+                        setmessages(prev=>
+                            {
+                                let previous=[...prev]
+                                console.log(previous)
+                                console.log(time_stamp)
+                                previous[0][1][previous[0][1].length-1]=previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,data.createdAt.toDate().toISOString())
+                                console.log(previous)
+                                return previous
+                            })
+
                         insert_msg(index,receiver,message.value,data.createdAt.toDate().toISOString());
                         message.value=""
                         return;
