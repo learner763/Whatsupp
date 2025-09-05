@@ -723,7 +723,7 @@ function Home()
                         ids.push(document.id)
                         console.log('e')
                         set_time_stamp(data.createdAt.toDate().toISOString())
-
+/*
                         setmessages(prev=>
                             {
                                 let previous=[...prev]
@@ -733,7 +733,7 @@ function Home()
                                 console.log(previous)
                                 return previous
                             })
-
+                            */
                         insert_msg(index,receiver,message.value,data.createdAt.toDate().toISOString());
                         message.value=""
                         return;
