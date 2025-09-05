@@ -306,6 +306,9 @@ body{
         padding: 5px;
         border-radius: 10px !important;
     }
+    .home11_pro label sup{
+        font-size: 15px;
+    }
     .home11_pro label i{
         font-size: 30px;
     }

@@ -49,6 +49,7 @@ function Home()
     const [loaded,set_loaded]=useState(false)
     const [time_stamp,set_time_stamp]=useState('');
     const [flag1,set_flag1]=useState(false);
+    const [unread,set_unread]=useState(0);
     let w=-1;
 
     async function set_seen()
@@ -384,6 +385,7 @@ function Home()
                 {
                     let previous=[...prev]
                     console.log(previous.length)
+                    let unread_chats=0
                     for(let i=0;i<previous.length;i++)
                     {
                         let count=0
@@ -403,7 +405,9 @@ function Home()
                             } 
                         }
                         previous[i][2]=count
+                        if(count>0){unread_chats+=1}
                     }
+                    set_unread(unread_chats)
                     return previous
                 })
         })
@@ -764,7 +768,7 @@ function Home()
             </div>
             <div className='home1' style={{backgroundColor:bgr}} >
                 <div className='home11'>
-                    <label><i class='fas fa-comment-dots'></i>Chats</label>
+                    <label><i class='fas fa-comment-dots'></i>Chats<sup>{unread===0?'':unread}</sup></label>
                     <label><i class='fas fa-user'></i>Profile</label>
                     <label><i class='fas fa-cog'></i>Settings</label>
                     <label onClick=
@@ -931,7 +935,7 @@ function Home()
             </div>
 
             <div className='home11_pro' style={{display:'none'}}>
-                <label ><i class='fas fa-comment-dots'></i>Chats</label>
+                <label ><i class='fas fa-comment-dots'></i>Chats<sup>{unread===0?'':unread}</sup></label>
                 <label ><i class='fas fa-user'></i>Profile</label>
                 <label ><i class='fas fa-cog'></i>Settings</label>
                 <label onClick={()=>{localStorage.setItem('root',true);nav2('/')}} ><i class='fas fa-user-plus'></i>Add Account</label>
