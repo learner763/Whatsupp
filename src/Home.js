@@ -730,7 +730,7 @@ function Home()
                         ids.push(document.id)
                         console.log('e')
                         set_time_stamp(data.createdAt.toDate().toISOString())
-
+                            /*
                         setmessages(prev=>
                             {
                                 let previous=[...prev]
@@ -739,7 +739,7 @@ function Home()
                                 previous[0][1][previous[0][1].length-1]=previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,data.createdAt.toDate().toISOString())
                                 console.log(previous)
                                 return previous
-                            })
+                            })*/
                             
                         insert_msg(index,receiver,message.value,data.createdAt.toDate().toISOString());
                         message.value=""
