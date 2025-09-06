@@ -715,6 +715,9 @@ function Home()
                 seen:index===receiver?true:false,
                 createdAt: serverTimestamp()
             })
+            insert_msg(index,receiver,message.value,data.createdAt.toDate().toISOString());
+                        message.value=""
+                        return;
             onSnapshot(inserted_msg,(document)=>
             {
                 let data=document.data()
@@ -742,9 +745,7 @@ function Home()
                             
                         
                         }
-                        insert_msg(index,receiver,message.value,data.createdAt.toDate().toISOString());
-                        message.value=""
-                        return;
+                        
                     }
                 }
             })
