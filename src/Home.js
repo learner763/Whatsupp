@@ -715,9 +715,8 @@ function Home()
                 seen:index===receiver?true:false,
                 createdAt: serverTimestamp()
             })
-            insert_msg(index,receiver,message.value,data.createdAt.toDate().toISOString());
-                        message.value=""
-                        return;
+            insert_msg(index,receiver,message.value,new Date().toISOString());
+            message.value=""
             onSnapshot(inserted_msg,(document)=>
             {
                 let data=document.data()
