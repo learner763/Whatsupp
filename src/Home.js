@@ -237,7 +237,8 @@ function Home()
                                 {
                                     if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
                                     {
-                                        previous[i][1].splice(j,1)
+                                        if(previous[i][1].length>1){previous[i][1].splice(j,1)}
+                                        if(previous[i][1].length===1){previous.splice(i,1)}
                                         break
                                     }
                                 }
@@ -583,13 +584,6 @@ function Home()
     },[innerwidth])
         
     useEffect(() => {
-        setmessages(prev=>
-        {
-            let previous=[...prev]
-            previous.filter(x=>x[1].length>0)
-            return previous
-        }
-        )
         let container=document.getElementsByClassName('part1');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
     },[messages,receiver])

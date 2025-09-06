@@ -15,10 +15,11 @@ function App() {
   const [msg,cmsg]=useState("New to this app?");
   const [f,df]=useState("none");
   const nav=useNavigate();
-
+  
   useEffect(()=>
-    {if(localStorage.getItem("email") && (!localStorage.getItem("root") || localStorage.getItem("root")==="false"))
+    {if(localStorage.getItem("email")!==null && (!localStorage.getItem("root") || localStorage.getItem("root")==="false"))
     {
+      console.log(6)
       nav('/home');
     }},[])
   
