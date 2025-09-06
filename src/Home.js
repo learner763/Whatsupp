@@ -708,6 +708,8 @@ function Home()
         let message =document.getElementById("message");
         if(message.value!=='')
         {
+            insert_msg(index,receiver,message.value,new Date().toISOString());
+            message.value=""
             let inserted_msg=await addDoc(collection(db,'messages'),{
                 from: index,
                 to: receiver,
@@ -715,8 +717,7 @@ function Home()
                 seen:index===receiver?true:false,
                 createdAt: serverTimestamp()
             })
-            insert_msg(index,receiver,message.value,new Date().toISOString());
-            message.value=""
+            
             onSnapshot(inserted_msg,(document)=>
             {
                 let data=document.data()
