@@ -66,15 +66,12 @@ function Home()
     async function delete_msg(user,message)
     {
         let deleted_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("text","==",message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)));
-        const deleted=await getDocs(deleted_msgs)
-        deleted.forEach(async (doc)=>
-        {
-            if(!doc.data().delete)
-            {
-                await updateDoc(doc.ref,{delete:message.slice(message.lastIndexOf(' ')+1,message.length)})
-                return
-            }
-        })
+        let deleted=await getDocs(deleted_msgs)
+        console.log(deleted)
+        deleted=deleted.docs.filter(x=>!x.data().delete)
+        if(deleted.length>0){const doc=deleted[0]
+        await updateDoc(doc.ref,{delete:message.slice(message.lastIndexOf(' ')+1,message.length)})}
+        
         fetch('/delete_msg',
             {
             method:'POST',
@@ -938,7 +935,7 @@ function Home()
                             return (
                                 <div className='userinfo' key={index} > 
                                     <div style={{display:'flex',flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'160px',backgroundColor:'darkgreen',borderRadius:'20px',padding:'5px'}}>
-                                    <i className='fas fa-user'>{info[index + w ]=== up_name ? ` You ${status[index]=='(Online)'?'(Online)':''}`: `${status[index]=='(Online)'?'(Online)':''}`}</i>                                    
+                                    <i className='fas fa-user'>{info[index + w ]=== up_name ? ` You ${status[index]==='(Online)' || status[index]==='(Typing...)'?'(Online)':''}`: `${status[index]==='(Online)' || status[index]==='(Typing...)'?'(Online)':''}`}</i>                                    
                                     <span className='connect_people' >{info[index + w ]}</span> 
                                     <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
                                     <button onClick={()=>
