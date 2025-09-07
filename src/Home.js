@@ -8,18 +8,12 @@ import {
     addDoc,
     onSnapshot,
     query,
-    orderBy,
     serverTimestamp,
-    or,
-    and,
     where,
     getDocs,
-    getDoc,
+    or,
     updateDoc,
-    doc,
-    deleteDoc,
-    Timestamp
-} from "firebase/firestore";
+    doc} from "firebase/firestore";
 import{
     onDisconnect,set,ref,onValue,
     update
@@ -51,6 +45,9 @@ function Home()
     const [time_stamp,set_time_stamp]=useState('');
     const [flag1,set_flag1]=useState(false);
     const [unread,set_unread]=useState(0);
+    const [edit_icon,set_edit]=useState('none')
+    const [selectval,set_selectval]=useState('Select')
+    const [msg_before_edit,set_msg_value]=useState('')
     let w=-1;
 
     async function set_seen()
@@ -81,6 +78,39 @@ function Home()
         .then(responce=>responce.json())
 
     }
+
+    function edit_msg(user,message)
+    {
+        document.getElementById('message').value=message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)
+        set_msg_value(message)
+       
+    }
+    
+    async function write_edit()
+    {
+        if(document.getElementById('message').value!=='')
+        {
+        set_edit('none')
+        let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4)));
+        let edited_msgs=await getDocs(edit_this_msg)
+        edited_msgs=edited_msgs.docs.filter(x=>!x.data().edit)
+        if(edited_msgs.length>0){const edit_doc=edited_msgs[0]
+        await updateDoc(edit_doc.ref,{edit:true,text:document.getElementById('message').value})}
+        console.log(msg_before_edit)
+        fetch('/edit_message',
+            {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({from:index,to:receiver,text:document.getElementById('message').value,original_msg:msg_before_edit})
+            }
+        )
+
+        document.getElementById('message').value=''
+        set_msg_value('')
+        }
+    }
+
+
     function update_data()
     {
         let ind=[]
@@ -217,10 +247,38 @@ function Home()
             let msgs__deleted=snapshot.docChanges().filter(change=>change.type==='modified' && change.doc.data().delete).map(function(change)
             {
                 console.log(32);return {id:change.doc.id,...change.doc.data()}
-            })            
-            console.log(msgs__deleted)
-            console.log(msgs[msgs.length-1])
-                if(msgs__deleted.length>0)
+            })
+            let edited=snapshot.docChanges().filter(change=>change.type==='modified' && change.doc.data().edit).map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
+            console.log(edited)
+            if(edited.length>0)
+            {
+                setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    for(let i=0;i<previous.length;i++)
+                    {
+                        if(previous[i][0]===edited[0].to || previous[i][0]===edited[0].from)
+                        {
+                            console.log('deleted')
+                            for(let j=0;j<previous[i][1].length;j++)
+                            {
+                                if(previous[i][1][j].endsWith(edited[0].createdAt.toDate().toISOString()))
+                                {
+                                    previous[i][1][j]=previous[i][1][j].replace(previous[i][1][j].slice(previous[i][1][j].indexOf(' ')+1,previous[i][1][j].lastIndexOf(' ')-4),edited[0].text)
+                                    break
+                                }
+                            }
+                        }
+                        break
+                    }
+                    return previous
+                }
+                )
+            }
+            if(msgs__deleted.length>0)
                 {
                     setmessages(prev=>
                     {
@@ -235,7 +293,7 @@ function Home()
                                     if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
                                     {
                                         if(previous[i][1].length>1){previous[i][1].splice(j,1)}
-                                        if(previous[i][1].length===1){previous.splice(i,1)}
+                                        else{previous.splice(i,1)}
                                         break
                                     }
                                 }
@@ -584,6 +642,11 @@ function Home()
         let container=document.getElementsByClassName('part1');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
     },[messages,receiver])
+    useEffect(()=>
+    {
+        document.getElementById('message').value=''
+        set_edit('none')
+    },[receiver])
     useEffect(() => {
         window.addEventListener('resize',()=>
         {
@@ -823,12 +886,16 @@ function Home()
                                         (
                                             text.startsWith('✔✔')?
                                             (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
-                                            <select onChange={(e)=>
-                                                {if(e.target.value==='🗑️'){delete_msg(receiver,text);console.log(value)}}}
+                                            <select id='options' value={selectval} onChange={(e)=>
+                                                {console.log(e.target.value); 
+                                                if(e.target.value==='Delete'){delete_msg(receiver,text);console.log(value)};
+                                                if(e.target.value==='Edit'){set_edit('flex');edit_msg(receiver,text);console.log(value)};
+                                                set_selectval('Select')}}
                                                     style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
-                                                <option >✏️</option>
-                                                <option >🗑️</option>
-                                                <option>Not Seen</option>
+                                                <option value='Select'>Select</option>
+                                                <option value='Edit'>✏️</option>
+                                                <option value='Delete'>🗑️</option>
+                                                <option value='seen'>👁️❌</option>
                                             </select>
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.slice(0,text.lastIndexOf(' ')).replace('✔✔✔✔',''):text.slice(0,text.lastIndexOf(' ')).replace('✔✔','')}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{text.slice(text.lastIndexOf(' ')+1,text.length).replace(text.slice(text.lastIndexOf(' ')+1,text.length)
@@ -955,6 +1022,7 @@ function Home()
             </div>
             
             <div className='msg_div' style={{display:disp}}>
+                <i className='far fa-times-circle' style={{display:edit_icon}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}></i>
                 <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...'
                 onChange={()=>
                 {
@@ -962,7 +1030,7 @@ function Home()
                     typing_status()
                 }
                 }></textarea>
-                <button id="Send_Button" onClick={()=>Send()} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} >Send</button>
+                <button id="Send_Button" onClick={()=>{if(edit_icon==='none'){Send()};if(edit_icon==='flex'){write_edit()}}} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} >Send</button>
             </div>
 
             <div className='home11_pro' style={{display:'none'}}>

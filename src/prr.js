@@ -1,5 +1,3 @@
-[4,5].forEach(a=>
-{
-    if(a===4){console.log(a);break}
-}
-)
+let message=' df     dg'
+let original=message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)
+console.log(original)
