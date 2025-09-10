@@ -3,7 +3,7 @@
 ## Application Link
 https://whatsupp-chat.vercel.app/
 
-*Note: This application is in progress!*
+*Note: This application is completed 90%!*
 
 ## Frameworks 
 **FrontEnd**- React JS
@@ -11,6 +11,11 @@ https://whatsupp-chat.vercel.app/
 **BackEnd**- Express JS
 
 **Database**- Postgresql
+
+**Real Time Communication Layer**- Firebase 
+
+
+
 
 
 
