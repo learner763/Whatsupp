@@ -150,6 +150,24 @@ function Home()
                         {
                             frontend_messages.push([data[i],data[i+1]])
                         }
+                        let dates=[]
+                        let months=['January','February','March','April','May','June','July','August','September','October','November','December']
+                        for(let i=0;i<frontend_messages.length;i++)
+                        {
+                            for(let j=0;j<frontend_messages[i][1].length;j++)
+                            {
+                                let present_date=new Date(frontend_messages[i][1][j].slice(frontend_messages[i][1][j].lastIndexOf(' ')+1,frontend_messages[i][1][j].length)).toLocaleDateString()
+                                present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
+                                present_date=present_date.replace(present_date[present_date.indexOf('/')],' ')
+                                present_date=present_date.replace(present_date[present_date.lastIndexOf('/')],',')
+                                if(dates.includes(present_date)===false)
+                                {
+                                    dates.push(present_date)
+                                    frontend_messages[i][1].splice(j,0,present_date)
+                                }
+                            }
+                        }
+                        
                         setmessages(frontend_messages);
                         set_refresh(true)
                     }
@@ -642,11 +660,13 @@ function Home()
         let container=document.getElementsByClassName('part1');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
     },[messages,receiver])
+
     useEffect(()=>
     {
         document.getElementById('message').value=''
         set_edit('none')
     },[receiver])
+
     useEffect(() => {
         window.addEventListener('resize',()=>
         {
@@ -898,21 +918,15 @@ function Home()
                                                 <option value='seen'>👁️❌</option>
                                             </select>
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.slice(0,text.lastIndexOf(' ')).replace('✔✔✔✔',''):text.slice(0,text.lastIndexOf(' ')).replace('✔✔','')}</span>
-                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{text.slice(text.lastIndexOf(' ')+1,text.length).replace(text.slice(text.lastIndexOf(' ')+1,text.length)
-                                            ,new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString()
-                                            .slice(new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().indexOf('/')+1,
-                                            new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().lastIndexOf('/')).includes(new Date().getDate())?
-                                            new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString():new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleString())}</span>
+                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             
-                                            
+                                            text.startsWith(' ')?
                                             (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
-                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{text.slice(text.lastIndexOf(' ')+1,text.length).replace(text.slice(text.lastIndexOf(' ')+1,text.length)
-                                            ,new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString()
-                                            .slice(new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().indexOf('/')+1,
-                                            new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleDateString().lastIndexOf('/')).includes(new Date().getDate())?
-                                            new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString():new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleString())}</span></span>) 
+                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span></span>):
+
+                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'darkmagenta',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
                                         )
                                         )}
                                     </div>
@@ -934,7 +948,7 @@ function Home()
                                                 (new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().indexOf('/')+1,
                                                 new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().lastIndexOf('/')).includes( new Date().getDate())?
                                                 new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
-                                                new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleString()}
+                                                new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()}
                                                 </span>
                                         </div>
                                         <div style={{height:'35px'}}>
@@ -1030,7 +1044,7 @@ function Home()
                     typing_status()
                 }
                 }></textarea>
-                <button id="Send_Button" onClick={()=>{if(edit_icon==='none'){Send()};if(edit_icon==='flex'){write_edit()}}} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} >Send</button>
+                <button id="Send_Button" onClick={()=>{if(edit_icon==='none'){Send(document.getElementbyId)};if(edit_icon==='flex'){write_edit()}}} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} >Send</button>
             </div>
 
             <div className='home11_pro' style={{display:'none'}}>
