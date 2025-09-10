@@ -3,7 +3,7 @@
 ## Application Link
 https://whatsupp-chat.vercel.app/
 
-*Note: This application is completed 90%!*
+*Note: This application is completed 90% and one to one chatting has been implemented.*
 
 ## Frameworks 
 **FrontEnd**- React JS
