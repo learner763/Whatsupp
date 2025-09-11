@@ -49,6 +49,7 @@ function Home()
     const [selectval,set_selectval]=useState('Select')
     const [msg_before_edit,set_msg_value]=useState('')
     const [date_change,set_date_change]=useState(0)
+    const [seen_at,set_seen_at]=useState([])
     let w=-1;
 
     async function set_seen()
@@ -58,7 +59,7 @@ function Home()
         const snapshot=await getDocs(entries);
         snapshot.forEach(async (doc)=>
         {
-            await updateDoc(doc.ref,{seen:true})
+            await updateDoc(doc.ref,{seen:true,seenAt:serverTimestamp()})
         })
     }   
     async function delete_msg(user,message)
@@ -503,7 +504,7 @@ function Home()
                                     {console.log('hey'); count+=1}
                                     else{
                                         let msgref=doc(db,'messages',msgs[j].id)
-                                        updateDoc(msgref,{seen:true})
+                                        updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
                                     }
                                 }
                             } 
@@ -528,6 +529,7 @@ function Home()
                     let previous=prev.map(m=> [...m]) 
                     console.log('seeen')
                     console.log(previous.length)
+                    let seen_time=[]
                     for(let i=0;i<previous.length;i++)
                     {
                         for(let j=0;j<msgs.length;j++)
@@ -550,11 +552,53 @@ function Home()
                                 }
                                 
                             }
+                            if(msgs[j].to===receiver)
+                            {
+                                if(msgs[j].seenAt===null){seen_time.push(null)}
+                                else{seen_time.push(msgs[j].seenAt.toDate().toISOString())}
+                                
+                                
+                            }
                             
                         }
                         
+                        seen_time.sort((a,b)=>new Date(a)-new Date(b))
+                        if(seen_time.length>0)
+                        {
+                            for(let i=0;i<previous.length;i++)
+                            {
+                                if(previous[i][0]===receiver)
+                                {
+                                    console.log(previous[i][1])
+                                    previous[i][1].forEach(x=>
+                                    {
+                                        
+                                        if(x.startsWith('✔✔')===false){console.log(previous[i][1].indexOf(x));seen_time.splice(previous[i][1].indexOf(x),0,'received/date')}
+                                    }
+                                    )
+                                }
+                            }
+
+                        }
+                        seen_time=seen_time.map(x=>
+                        {
+                            if(x===null){return '👁️❌'}
+                            else if(x==='received/date'){return 'received/date'}
+                            else{
+                                if(new Date(x).getDate()===new Date().getDate())
+                                {
+                                    return `👁️:${new Date(x).toLocaleTimeString()}`
+                                }
+                                else{
+                                    return `👁️:${new Date(x).toLocaleDateString()}`
+                                }
+                            }
+                        }
+                        )
+                        set_seen_at(seen_time)
+                        seen_time=[]
+                        
                     }
-                    console.log(previous)
                     return previous
                 })
                 if(flag1===true)set_loaded(true)
@@ -823,8 +867,9 @@ function Home()
             to: receiver,
             text: message,
             seen:index===receiver?true:false,
-            createdAt: serverTimestamp()
-        })
+            createdAt: serverTimestamp(),
+            seenAt:index===receiver?serverTimestamp():null
+        });
         onSnapshot(inserted_msg,(document)=>
         {
             let data=document.data()
@@ -948,7 +993,7 @@ function Home()
                                                 <option value='Select'>Select</option>
                                                 <option value='Edit'>✏️</option>
                                                 <option value='Delete'>🗑️</option>
-                                                <option value='seen'>👁️❌</option>
+                                                <option value='seen'>{seen_at[ind]}</option>
                                             </select>
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.slice(0,text.lastIndexOf(' ')).replace('✔✔✔✔',''):text.slice(0,text.lastIndexOf(' ')).replace('✔✔','')}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
