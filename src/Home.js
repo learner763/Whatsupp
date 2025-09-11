@@ -48,6 +48,7 @@ function Home()
     const [edit_icon,set_edit]=useState('none')
     const [selectval,set_selectval]=useState('Select')
     const [msg_before_edit,set_msg_value]=useState('')
+    const [date_change,set_date_change]=useState(0)
     let w=-1;
 
     async function set_seen()
@@ -86,28 +87,26 @@ function Home()
        
     }
     
-    async function write_edit()
+    async function write_edit(message)
     {
-        if(document.getElementById('message').value!=='')
-        {
+        
         set_edit('none')
         let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4)));
         let edited_msgs=await getDocs(edit_this_msg)
         edited_msgs=edited_msgs.docs.filter(x=>!x.data().edit)
         if(edited_msgs.length>0){const edit_doc=edited_msgs[0]
-        await updateDoc(edit_doc.ref,{edit:true,text:document.getElementById('message').value})}
+        await updateDoc(edit_doc.ref,{edit:true,text:message})}
         console.log(msg_before_edit)
         fetch('/edit_message',
             {
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({from:index,to:receiver,text:document.getElementById('message').value,original_msg:msg_before_edit})
+                body:JSON.stringify({from:index,to:receiver,text:message,original_msg:msg_before_edit})
             }
         )
 
-        document.getElementById('message').value=''
         set_msg_value('')
-        }
+        
     }
 
 
@@ -157,17 +156,19 @@ function Home()
                             for(let j=0;j<frontend_messages[i][1].length;j++)
                             {
                                 let present_date=new Date(frontend_messages[i][1][j].slice(frontend_messages[i][1][j].lastIndexOf(' ')+1,frontend_messages[i][1][j].length)).toLocaleDateString()
-                                present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
+                                if(present_date.slice(present_date.indexOf('/')+1,present_date.lastIndexOf('/'))!==String(new Date().getDate()))
+                                {present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
                                 present_date=present_date.replace(present_date[present_date.indexOf('/')],' ')
-                                present_date=present_date.replace(present_date[present_date.lastIndexOf('/')],',')
+                                present_date=present_date.replace(present_date[present_date.lastIndexOf('/')],',')}
+                                else{present_date='Today'}
                                 if(dates.includes(present_date)===false)
                                 {
                                     dates.push(present_date)
                                     frontend_messages[i][1].splice(j,0,present_date)
                                 }
                             }
+                            dates=[]
                         }
-                        
                         setmessages(frontend_messages);
                         set_refresh(true)
                     }
@@ -312,6 +313,7 @@ function Home()
                                     {
                                         if(previous[i][1].length>1){previous[i][1].splice(j,1)}
                                         else{previous.splice(i,1)}
+                                        set_date_change(prev=>prev+1)
                                         break
                                     }
                                 }
@@ -343,6 +345,7 @@ function Home()
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
+                                    set_date_change(prev=>prev+1)
                                     return previous;
                                 }
                             }
@@ -351,9 +354,11 @@ function Home()
                                 {
                                     found=1
                                     previous[i][1].push(`✔✔ ${message_text}     ${time}`)
+                                    console.log(found)
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
+                                    set_date_change(prev=>prev+1)
                                     return previous;
                                 }
                                 else if(to==index && previous[i][0]==from){
@@ -362,8 +367,10 @@ function Home()
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
+                                    set_date_change(prev=>prev+1)
                                     return previous;
                                 }
+                                
                                 
                             }
                             
@@ -377,6 +384,7 @@ function Home()
                                 update_data()
                                 previous.unshift([from,[` ${message_text}     ${time}`]]);
                             }
+                            set_date_change(prev=>prev+1)
                             return previous;
                         }
                     }
@@ -667,6 +675,36 @@ function Home()
         set_edit('none')
     },[receiver])
 
+    useEffect(()=>
+    {
+        setmessages(prev=>
+        {
+            let previous=[...prev]
+            let months=['January','February','March','April','May','June','July','August','September','October','November','December']
+            for(let i=0;i<previous.length;i++)
+            {
+                for(let j=0;j<previous[i][1].length;j++)
+                {
+                    if(previous[i][1][j].startsWith(' ') || previous[i][1][j].startsWith('✔✔'))
+                    {
+                        let present_date=new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).toLocaleDateString()
+                        if(present_date.slice(present_date.indexOf('/')+1,present_date.lastIndexOf('/'))!==String(new Date().getDate()))
+                        {present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
+                        present_date=present_date.replace(present_date[present_date.indexOf('/')],' ')
+                        present_date=present_date.replace(present_date[present_date.lastIndexOf('/')],',')}
+                        else{present_date='Today'}
+                        if(previous[i][1].includes(present_date)===false)
+                        {
+                            previous[i][1].splice(j,0,present_date)
+                        }
+                    }
+                }
+            }
+            return previous
+        })
+        
+    },[date_change])
+
     useEffect(() => {
         window.addEventListener('resize',()=>
         {
@@ -775,54 +813,49 @@ function Home()
         
     }, []);
     
-    async function Send()
+    async function Send(message)
     {
         let ids=[]
         console.log(receiver)
-        let message =document.getElementById("message");
-        if(message.value!=='')
+        
+        let inserted_msg=await addDoc(collection(db,'messages'),{
+            from: index,
+            to: receiver,
+            text: message,
+            seen:index===receiver?true:false,
+            createdAt: serverTimestamp()
+        })
+        onSnapshot(inserted_msg,(document)=>
         {
-            let inserted_msg=await addDoc(collection(db,'messages'),{
-                from: index,
-                to: receiver,
-                text: message.value,
-                seen:index===receiver?true:false,
-                createdAt: serverTimestamp()
-            })
-            onSnapshot(inserted_msg,(document)=>
+            let data=document.data()
+            console.log(data)
+            if(data!==undefined)
             {
-                let data=document.data()
-                console.log(data)
-                if(data!==undefined)
+                if(!data.createdAt){return}
+                else
                 {
-                    if(!data.createdAt){return}
-                    else
+                    if(ids.includes(document.id)===false)
                     {
-                        if(ids.includes(document.id)===false)
-                        {
-                        ids.push(document.id)
-                        console.log('e')
-                        set_time_stamp(data.createdAt.toDate().toISOString())
+                    ids.push(document.id)
+                    console.log('e')
+                    set_time_stamp(data.createdAt.toDate().toISOString())
 
-                        setmessages(prev=>
-                            {
-                                let previous=[...prev]
-                                console.log(previous)
-                                console.log(time_stamp)
-                                previous[0][1][previous[0][1].length-1]=previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,data.createdAt.toDate().toISOString())
-                                console.log(previous)
-                                return previous
-                            })
-                            
-                        insert_msg(index,receiver,message.value,data.createdAt.toDate().toISOString());
-                        message.value=""
-                        return;
-                        }
+                    setmessages(prev=>
+                        {
+                            let previous=[...prev]
+                            console.log(previous)
+                            console.log(time_stamp)
+                            previous[0][1][previous[0][1].length-1]=previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,data.createdAt.toDate().toISOString())
+                            console.log(previous)
+                            return previous
+                        })
+                        
+                    insert_msg(index,receiver,message,data.createdAt.toDate().toISOString());
+                    return;
                     }
                 }
-            })
-            
-        }
+            }
+        })    
     }
     
     
@@ -1044,7 +1077,12 @@ function Home()
                     typing_status()
                 }
                 }></textarea>
-                <button id="Send_Button" onClick={()=>{if(edit_icon==='none'){Send(document.getElementbyId)};if(edit_icon==='flex'){write_edit()}}} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} >Send</button>
+                <button id="Send_Button" onClick={()=>{
+                    if(document.getElementById('message').value!='')
+                    {
+                    if(edit_icon==='none'){Send(document.getElementById('message').value)};
+                    if(edit_icon==='flex'){write_edit(document.getElementById('message').value)}
+                    document.getElementById('message').value=''}}} style={{borderRadius:"5px",color:"white",backgroundColor:"green",border:"darkgreen solid 1px",cursor:"pointer"}} >Send</button>
             </div>
 
             <div className='home11_pro' style={{display:'none'}}>
