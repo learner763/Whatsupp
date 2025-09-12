@@ -1,5 +1,3 @@
-let r=null
-if(Array.isArray(r)?r.length===0:Array.isArray(r))
-{
-    console.log("ok")
-}
+let a=[5,4,3,null,9]
+a.sort((x,y)=>x-y)
+console.log(a)

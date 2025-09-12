@@ -150,7 +150,6 @@ function Home()
                         {
                             frontend_messages.push([data[i],data[i+1]])
                         }
-                        frontend_messages=frontend_messages.filter(x=>x[1].length>0)
                         let dates=[]
                         let months=['January','February','March','April','May','June','July','August','September','October','November','December']
                         for(let i=0;i<frontend_messages.length;i++)
@@ -289,6 +288,7 @@ function Home()
                                 {
                                     previous[i][1][j]=previous[i][1][j].replace(previous[i][1][j].slice(previous[i][1][j].indexOf(' ')+1,previous[i][1][j].lastIndexOf(' ')-4),edited[0].text)
                                     break
+                                    
                                 }
                             }
                         }
@@ -497,7 +497,7 @@ function Home()
                         {
                             if(previous[i][0]===msgs[j].from && previous[i][0]!==index)
                             {
-                                if(msgs[j].seen===false)
+                                if(msgs[j].seen===false && !msgs[j].delete)
                                 {
                                     if(receiver!==msgs[j].from)
                                     {console.log('hey'); count+=1}
@@ -541,7 +541,7 @@ function Home()
                                     {
                                         if(previous[i][1][k].slice(previous[i][1][k].indexOf(' ')+1,previous[i][1][k].lastIndexOf(" ")-4)===msgs[j].text)
                                         {
-                                            if(msgs[j].seen===true)
+                                            if(msgs[j].seen===true && !msgs[j].delete)
                                             {
                                                 previous[i][1][k]=`✔✔${previous[i][1][k]}`
                                                 
@@ -551,7 +551,7 @@ function Home()
                                 }
                                 
                             }
-                            if(msgs[j].to===receiver)
+                            if(msgs[j].to===receiver && !msgs[j].delete)
                             {
                                 if(msgs[j].seenAt===null){seen_time.push(null)}
                                 else{seen_time.push(msgs[j].seenAt.toDate().toISOString())}

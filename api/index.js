@@ -133,6 +133,15 @@ app.post('/get_messages',(req,res)=>
                 }
                 frontend_messages.push(sent_received);
             }
+
+            for(let i=0;i<frontend_messages.length;i+=2)
+            {
+                if(Array.from(frontend_messages[i+1]).length===0)
+                {
+                    frontend_messages.splice(i,2)
+                }
+            }
+
             for(let j=0;j<(frontend_messages.length-2)/2;j++)
             {
                 for(let i=1;i<frontend_messages.length-2;i+=2)
