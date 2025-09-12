@@ -66,7 +66,6 @@ function Home()
     {
         let deleted_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("text","==",message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)));
         let deleted=await getDocs(deleted_msgs)
-        console.log(deleted)
         deleted=deleted.docs.filter(x=>!x.data().delete)
         if(deleted.length>0){const doc=deleted[0]
         await updateDoc(doc.ref,{delete:message.slice(message.lastIndexOf(' ')+1,message.length)})}
@@ -188,7 +187,6 @@ function Home()
         .then(response => response.json())
         .then(data =>
         {
-            console.log(data)
             if(data.success===true)
             {
                 localStorage.setItem("email",up_user);
@@ -266,15 +264,17 @@ function Home()
             })
             let msgs__deleted=snapshot.docChanges().filter(change=>change.type==='modified' && change.doc.data().delete).map(function(change)
             {
-                console.log(32);return {id:change.doc.id,...change.doc.data()}
+                return {id:change.doc.id,...change.doc.data()}
             })
             let edited=snapshot.docChanges().filter(change=>change.type==='modified' && change.doc.data().edit).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
+            console.log(msgs__deleted)
             console.log(edited)
             if(edited.length>0)
             {
+                let do_break=false
                 setmessages(prev=>
                 {
                     let previous=[...prev]
@@ -286,13 +286,16 @@ function Home()
                             {
                                 if(previous[i][1][j].endsWith(edited[0].createdAt.toDate().toISOString()))
                                 {
+                                    console.log(previous[i][1][j])
                                     previous[i][1][j]=previous[i][1][j].replace(previous[i][1][j].slice(previous[i][1][j].indexOf(' ')+1,previous[i][1][j].lastIndexOf(' ')-4),edited[0].text)
+                                    console.log(previous[i][1][j])
+                                    do_break=true
                                     break
                                     
                                 }
                             }
                         }
-                        break
+                        if(do_break){break}
                     }
                     return previous
                 }
@@ -300,25 +303,33 @@ function Home()
             }
             if(msgs__deleted.length>0)
                 {
+                    let is_break=false
                     setmessages(prev=>
                     {
                         let previous=[...prev]
+                        console.log(previous)
+
                         for(let i=0;i<previous.length;i++)
                         {
                             if(previous[i][0]===msgs__deleted[0].to || previous[i][0]===msgs__deleted[0].from)
                             {
+                                console.log(msgs__deleted)
+
                                 for(let j=0;j<previous[i][1].length;j++)
                                 {
                                     if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
                                     {
-                                        if(previous[i][1].filter(x=>x.startsWith('✔✔') || x.startsWith(' ')).length>1){previous[i][1].splice(j,1)}
+                                        console.log(previous[i][1][j])
+                                        if(previous[i][1].filter(x=>x.startsWith('✔✔') || x.startsWith(' ')).length>1){previous[i][1].splice(j,1);console.log(previous[i][1])}
                                         else{previous.splice(i,1)}
                                         set_date_change(prev=>prev+1)
+                                        is_break=true
                                         break
                                     }
                                 }
                             }
-                            break
+                            if(is_break){break}
+                            
                         }
                         return previous
 
@@ -377,7 +388,6 @@ function Home()
                         }
                         if(found==0)
                         {
-                            console.log(9)
                             if(to==from){previous.unshift([from,[`✔✔ ${message_text}     ${time}`]]);}
                             else if(from==index){previous.unshift([to,[`✔✔ ${message_text}     ${time}`]]);}
                             else if(to==index){
@@ -391,26 +401,13 @@ function Home()
                     );
                         
                 }
-                if(msgs.length===0){
-                    console.log(msgs)
-                    setmessages(prev=>
-                    {
-                        let previous=[...prev]
-                        console.log(previous)
-                        console.log(time_stamp)
-                        //previous[0][1][previous[0][1].length-1]=previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,time_stamp)
-                        console.log(previous)
-                        return previous
-                    })
-                }
-            console.log(msgs)
-            
+                            
         })
         return()=>
         {
             action();
         }
-    },[])
+    },[index])
 
 
     useEffect(()=>
@@ -488,7 +485,6 @@ function Home()
             setmessages(prev=>
                 {
                     let previous=[...prev]
-                    console.log(previous.length)
                     let unread_chats=0
                     for(let i=0;i<previous.length;i++)
                     {
@@ -525,9 +521,7 @@ function Home()
             })
             setmessages(prev=>
                 {
-                    let previous=prev.map(m=> [...m]) 
-                    console.log('seeen')
-                    console.log(previous.length)
+                    let previous=prev.map(m=> [...m])
                     let seen_time=[]
                     for(let i=0;i<previous.length;i++)
                     {
@@ -560,36 +554,38 @@ function Home()
                             }
                             
                         }
-                        
+
                         seen_time.sort((a,b)=>new Date(a)-new Date(b))
+                        let not_seen=seen_time.filter(x=>x===null)
+                        seen_time=seen_time.filter(x=>x!==null)
+                        seen_time=seen_time.concat(not_seen)
                         if(seen_time.length>0)
                         {
                             for(let i=0;i<previous.length;i++)
                             {
                                 if(previous[i][0]===receiver)
                                 {
-                                    console.log(previous[i][1])
                                     previous[i][1].forEach(x=>
                                     {
-                                        
-                                        if(x.startsWith('✔✔')===false){console.log(previous[i][1].indexOf(x));seen_time.splice(previous[i][1].indexOf(x),0,'received/date')}
+                                        if(x.startsWith('✔✔')===false){seen_time.splice(previous[i][1].indexOf(x),0,'received/date')}
                                     }
                                     )
                                 }
                             }
 
                         }
+
                         seen_time=seen_time.map(x=>
                         {
-                            if(x===null){return '👁️❌'}
+                            if(x===null){return '👁️=>❌'}
                             else if(x==='received/date'){return 'received/date'}
                             else{
                                 if(new Date(x).getDate()===new Date().getDate())
                                 {
-                                    return `👁️:${new Date(x).toLocaleTimeString()}`
+                                    return `👁️=>${new Date(x).toLocaleTimeString()}`
                                 }
                                 else{
-                                    return `👁️:${new Date(x).toLocaleDateString()}`
+                                    return `👁️=>${new Date(x).toLocaleDateString()}`
                                 }
                             }
                         }
@@ -777,14 +773,9 @@ function Home()
                         setpass(data[i].password);
                         if(data[i].bg===null){data[i].bg='white'}
                         setbg(data[i].bg);
-                        console.log(data[i].email)
-                        console.log(data[i].name)
-                        console.log(data[i].bio)
-                        console.log(data[i].password)
-                        console.log(data[i].bg)
                     }
                 }
-                if(flag==false){set_flag1(false);set_loaded(false);alert(`No account exists with "${username}"`)}
+                if(flag==false){set_flag1(false);set_loaded(false);alert(`No account exists with "${username}"`);localStorage.setItem('root',true);nav2('/');}
                 let ind=[]
                 for(let i=0;i<data.length;i++)
                 {
@@ -859,7 +850,6 @@ function Home()
     async function Send(message)
     {
         let ids=[]
-        console.log(receiver)
         
         let inserted_msg=await addDoc(collection(db,'messages'),{
             from: index,
@@ -872,7 +862,6 @@ function Home()
         onSnapshot(inserted_msg,(document)=>
         {
             let data=document.data()
-            console.log(data)
             if(data!==undefined)
             {
                 if(!data.createdAt){return}
@@ -881,7 +870,6 @@ function Home()
                     if(ids.includes(document.id)===false)
                     {
                     ids.push(document.id)
-                    console.log('e')
                     set_time_stamp(data.createdAt.toDate().toISOString())
 
                     setmessages(prev=>
@@ -916,7 +904,6 @@ function Home()
         .then(response => response.json())
         .then(data=>
         {   
-            console.log(data)
         })
     }
     useEffect(() => {
