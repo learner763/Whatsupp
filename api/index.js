@@ -96,6 +96,7 @@ app.post('/get_messages',(req,res)=>
         pool.query(`select * from public.chats where chat_with=$1`,[username], (err2, results2) => {
             if( err1 || err2) {return res.json({error:`No account exists with "${username}"`})}
             let a_list=results.rows
+            console.log(results.rows,results2.rows)
             for(let i=0;i<a_list.length;i++)
             {
                 if(Array.isArray(a_list[i][username]))
@@ -151,7 +152,7 @@ app.post('/get_messages',(req,res)=>
                 }
             }
             console.log(frontend_messages)
-
+            
             res.json(frontend_messages);
         })
     })

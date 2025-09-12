@@ -1,3 +1,5 @@
-let r=[3,4,1,'x',5]
-r.sort((a,b)=>a-b)
-console.log(r)
+let r=null
+if(Array.isArray(r)?r.length===0:Array.isArray(r))
+{
+    console.log("ok")
+}

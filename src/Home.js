@@ -94,8 +94,8 @@ function Home()
         set_edit('none')
         let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4)));
         let edited_msgs=await getDocs(edit_this_msg)
-        edited_msgs=edited_msgs.docs.filter(x=>!x.data().edit)
-        if(edited_msgs.length>0){const edit_doc=edited_msgs[0]
+        if(edited_msgs.docs.length>0){const edit_doc=edited_msgs.docs[0]
+        console.log(edited_msgs)
         await updateDoc(edit_doc.ref,{edit:true,text:message})}
         console.log(msg_before_edit)
         fetch('/edit_message',
@@ -150,6 +150,7 @@ function Home()
                         {
                             frontend_messages.push([data[i],data[i+1]])
                         }
+                        frontend_messages=frontend_messages.filter(x=>x[1].length>0)
                         let dates=[]
                         let months=['January','February','March','April','May','June','July','August','September','October','November','December']
                         for(let i=0;i<frontend_messages.length;i++)
@@ -282,7 +283,6 @@ function Home()
                     {
                         if(previous[i][0]===edited[0].to || previous[i][0]===edited[0].from)
                         {
-                            console.log('deleted')
                             for(let j=0;j<previous[i][1].length;j++)
                             {
                                 if(previous[i][1][j].endsWith(edited[0].createdAt.toDate().toISOString()))
@@ -307,12 +307,11 @@ function Home()
                         {
                             if(previous[i][0]===msgs__deleted[0].to || previous[i][0]===msgs__deleted[0].from)
                             {
-                                console.log('deleted')
                                 for(let j=0;j<previous[i][1].length;j++)
                                 {
                                     if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
                                     {
-                                        if(previous[i][1].length>1){previous[i][1].splice(j,1)}
+                                        if(previous[i][1].filter(x=>x.startsWith('✔✔') || x.startsWith(' ')).length>1){previous[i][1].splice(j,1)}
                                         else{previous.splice(i,1)}
                                         set_date_change(prev=>prev+1)
                                         break
