@@ -590,6 +590,7 @@ function Home()
                             }
                         }
                         )
+                        console.log(seen_time)
                         set_seen_at(seen_time)
                         seen_time=[]
                         
