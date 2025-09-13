@@ -534,7 +534,7 @@ function Home()
                     {
                         for(let j=0;j<msgs.length;j++)
                         {
-                            if(seen.includes(j)===fasle && msgs[j].seen===true && previous[i][0]=== msgs[j].to && msgs[j].createdAt!==null)
+                            if(seen.includes(j)===false && msgs[j].seen===true && previous[i][0]=== msgs[j].to && msgs[j].createdAt!==null)
                             {
                                 for(let k=0;k<previous[i][1].length;k++)
                                 {
