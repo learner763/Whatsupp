@@ -423,12 +423,12 @@ function Home()
         
         set(online_status,{
             online:true,
-            lastseen:new Date().toISOString()
+            lastseen:serverTimestamp()
         })
         onDisconnect(online_status).update(
         {
             online:false,
-            lastseen:new Date().toISOString()
+            lastseen:serverTimestamp()
         }
         )
         
@@ -454,11 +454,11 @@ function Home()
                         }
                     }
                     else if(active_users[indices[i]].lastseen && active_users[indices[i]].online==false){
-                        statuses.push(new Date(active_users[indices[i]].lastseen).toLocaleDateString()
-                        .slice(new Date(active_users[indices[i]].lastseen).toLocaleDateString().indexOf('/')+1,
-                        new Date(active_users[indices[i]].lastseen).toLocaleDateString().lastIndexOf('/')
-                        ).includes(new Date().getDate())?new Date(active_users[indices[i]].lastseen).toLocaleTimeString():
-                        new Date(active_users[indices[i]].lastseen).toLocaleDateString())
+                        statuses.push(active_users[indices[i]].lastseen.toDate().toLocaleDateString()
+                        .slice(active_users[indices[i]].lastseen.toDate().toLocaleDateString().indexOf('/')+1,
+                        active_users[indices[i]].lastseen.toDate().toLocaleDateString().lastIndexOf('/')
+                        ).includes(new Date().getDate())?active_users[indices[i]].lastseen.toDate().toLocaleTimeString():
+                        active_users[indices[i]].lastseen.toDate().toLocaleDateString())
                         }
                 }
                 else{statuses.push('')}
