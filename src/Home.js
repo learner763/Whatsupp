@@ -988,7 +988,7 @@ function Home()
                                                 <option value='Delete'>🗑️</option>
                                                 <option value='seen'>{seen_at[ind]}</option>
                                             </select>
-                                            <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf('')).replace(text.slice(0,text.indexOf('')),'')}</span>
+                                            <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             
