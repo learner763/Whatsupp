@@ -16,7 +16,7 @@ import {
     doc} from "firebase/firestore";
 import{
     onDisconnect,set,ref,onValue,
-    update
+    update,serverTimestamp as rtdb_time
 } from "firebase/database";
 function Home()
 {
@@ -423,12 +423,12 @@ function Home()
         
         set(online_status,{
             online:true,
-            lastseen:new Date().toISOString()
+            lastseen:rtdb_time()
         })
         onDisconnect(online_status).update(
         {
             online:false,
-            lastseen:new Date().toISOString()
+            lastseen:rtdb_time()
         }
         )
         
@@ -470,7 +470,7 @@ function Home()
         {
             set(online_status,{
                 online:false,
-                lastseen:new Date().toISOString()
+                lastseen:rtdb_time()
             })
         }
     },[indices,index])
