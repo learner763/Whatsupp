@@ -423,12 +423,12 @@ function Home()
         
         set(online_status,{
             online:true,
-            lastseen:serverTimestamp()
+            lastseen:new Date().toISOString()
         })
         onDisconnect(online_status).update(
         {
             online:false,
-            lastseen:serverTimestamp()
+            lastseen:new Date().toISOString()
         }
         )
         
@@ -454,11 +454,11 @@ function Home()
                         }
                     }
                     else if(active_users[indices[i]].lastseen && active_users[indices[i]].online==false){
-                        statuses.push(active_users[indices[i]].lastseen.toDate().toLocaleDateString()
-                        .slice(active_users[indices[i]].lastseen.toDate().toLocaleDateString().indexOf('/')+1,
+                        statuses.push(new Date(active_users[indices[i]].lastseen).toLocaleDateString()
+                        .slice(new Date(active_users[indices[i]].lastseen).toLocaleDateString().indexOf('/')+1,
                         new Date(active_users[indices[i]].lastseen).toLocaleDateString().lastIndexOf('/')
-                        ).includes(new Date().getDate())?active_users[indices[i]].lastseen.toDate().toLocaleTimeString():
-                        active_users[indices[i]].lastseen.toDate().toLocaleDateString())
+                        ).includes(new Date().getDate())?new Date(active_users[indices[i]].lastseen).toLocaleTimeString():
+                        new Date(active_users[indices[i]].lastseen).toLocaleDateString())
                         }
                 }
                 else{statuses.push('')}
@@ -518,7 +518,7 @@ function Home()
                 })
         })
 
-        let tick_messages=query(collection(db,'messages'),where("from","==",index))
+        let tick_messages=query(collection(db,'messages'),where("from","==",index),where("seen","==",true))
         let ticked=onSnapshot(tick_messages,(snapshot)=>
         {
             let msgs=snapshot.docs.map(function(doc)
