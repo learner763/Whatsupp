@@ -456,7 +456,7 @@ function Home()
                     else if(active_users[indices[i]].lastseen && active_users[indices[i]].online==false){
                         statuses.push(active_users[indices[i]].lastseen.toDate().toLocaleDateString()
                         .slice(active_users[indices[i]].lastseen.toDate().toLocaleDateString().indexOf('/')+1,
-                        active_users[indices[i]].lastseen.toDate().toLocaleDateString().lastIndexOf('/')
+                        new Date(active_users[indices[i]].lastseen).toLocaleDateString().lastIndexOf('/')
                         ).includes(new Date().getDate())?active_users[indices[i]].lastseen.toDate().toLocaleTimeString():
                         active_users[indices[i]].lastseen.toDate().toLocaleDateString())
                         }
