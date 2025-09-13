@@ -582,15 +582,15 @@ function Home()
 
                         seen_time=seen_time.map(x=>
                         {
-                            if(x===null){return '👁️=>❌'}
+                            if(x===null){return '👁️ => ❌'}
                             else if(x==='received/date'){return 'received/date'}
                             else{
                                 if(new Date(x).getDate()===new Date().getDate())
                                 {
-                                    return `👁️=>${new Date(x).toLocaleTimeString()}`
+                                    return `👁️ => ${new Date(x).toLocaleTimeString()}`
                                 }
                                 else{
-                                    return `👁️=>${new Date(x).toLocaleDateString()}`
+                                    return `👁️ => ${new Date(x).toLocaleDateString()}`
                                 }
                             }
                         }
@@ -983,9 +983,9 @@ function Home()
                                                 set_selectval('Select')}}
                                                     style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
                                                 <option value='Select'>Select</option>
-                                                <option value='Edit'>✏️</option>
-                                                <option value='Delete'>🗑️</option>
-                                                <option value='seen'>{seen_at[ind]}</option>
+                                                <option value='Edit'>✏️ Edit</option>
+                                                <option value='Delete'>🗑️ Delete</option>
+                                                <option value='seen'>{seen_at[ind]===undefined?'👁️ => ❌':seen_at[ind]}</option>
                                             </select>
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
