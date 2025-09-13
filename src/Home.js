@@ -539,7 +539,7 @@ function Home()
                                 {
                                     if(previous[i][1][k].startsWith('✔✔✔✔')===false)
                                     {
-                                        if(previous[i][1][k].slice(previous[i][1][k].indexOf(' ')+1,previous[i][1][k].lastIndexOf(" ")-4)===msgs[j].text)
+                                        if(previous[i][1][k].slice(previous[i][1][k].indexOf(' ')+1,previous[i][1][k].lastIndexOf(" ")-4)===msgs[j].text && msgs[j].createdAt.toDate().toISOString()===previous[i][1][k].slice(previous[i][1][k].lastIndexOf(" ")+1,previous[i][1][k].length))
                                         {
                                             if(!msgs[j].delete)
                                             {
