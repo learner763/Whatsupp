@@ -732,7 +732,7 @@ function Home()
             {
                 for(let j=0;j<previous[i][1].length;j++)
                 {
-                    if(previous[i][1][j].startsWith(' ') || previous[i][1][j].startsWith('✔✔'))
+                    if(previous[i][1][j].startsWith(' ') || previous[i][1][j].startsWith('✔'))
                     {
                         let present_date=new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).toLocaleDateString()
                         if(present_date.slice(present_date.indexOf('/')+1,present_date.lastIndexOf('/'))!==String(new Date().getDate()))
