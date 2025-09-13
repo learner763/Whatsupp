@@ -518,7 +518,7 @@ function Home()
                 })
         })
 
-        let tick_messages=query(collection(db,'messages'),where("from","==",index),where("seen","==",true))
+        let tick_messages=query(collection(db,'messages'),where("from","==",index))
         let ticked=onSnapshot(tick_messages,(snapshot)=>
         {
             let msgs=snapshot.docs.map(function(doc)
