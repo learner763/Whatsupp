@@ -64,26 +64,32 @@ function Home()
     }   
     async function delete_msg(user,message)
     {
-        let deleted_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("text","==",message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)));
-        let deleted=await getDocs(deleted_msgs)
-        deleted=deleted.docs.filter(x=>!x.data().delete)
-        if(deleted.length>0){const doc=deleted[0]
-        await updateDoc(doc.ref,{delete:message.slice(message.lastIndexOf(' ')+1,message.length)})}
-        
-        fetch('/delete_msg',
-            {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({from:index,to:user,message:message})
-        })
-        .then(responce=>responce.json())
+        if(message.startsWith('✔✔'))
+        {
+            let deleted_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("text","==",message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)));
+            let deleted=await getDocs(deleted_msgs)
+            deleted=deleted.docs.filter(x=>!x.data().delete)
+            if(deleted.length>0){const doc=deleted[0]
+            await updateDoc(doc.ref,{delete:message.slice(message.lastIndexOf(' ')+1,message.length)})}
+            
+            fetch('/delete_msg',
+                {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({from:index,to:user,message:message})
+            })
+            .then(responce=>responce.json())
+        }
 
     }
 
     function edit_msg(user,message)
     {
-        document.getElementById('message').value=message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)
-        set_msg_value(message)
+        if(message.startsWith('✔✔'))
+        {
+            document.getElementById('message').value=message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)
+            set_msg_value(message)
+        }
        
     }
     
@@ -320,7 +326,7 @@ function Home()
                                     if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
                                     {
                                         console.log(previous[i][1][j])
-                                        if(previous[i][1].filter(x=>x.startsWith('✔✔') || x.startsWith(' ')).length>1){previous[i][1].splice(j,1);console.log(previous[i][1])}
+                                        if(previous[i][1].filter(x=>x.startsWith('✔') || x.startsWith(' ')).length>1){previous[i][1].splice(j,1);console.log(previous[i][1])}
                                         else{previous.splice(i,1)}
                                         set_date_change(prev=>prev+1)
                                         is_break=true
@@ -352,7 +358,7 @@ function Home()
                                 if(previous[i][0]===index)
                                 {
                                     found=1
-                                    previous[i][1].push(`✔✔ ${message_text}     ${time}`);
+                                    previous[i][1].push(`✔ ${message_text}     ${time}`);
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
@@ -364,7 +370,7 @@ function Home()
                                 if(from==index && previous[i][0]==to)
                                 {
                                     found=1
-                                    previous[i][1].push(`✔✔ ${message_text}     ${time}`)
+                                    previous[i][1].push(`✔ ${message_text}     ${time}`)
                                     console.log(found)
                                     let inter=previous[i]
                                     previous.splice(i,1)
@@ -388,8 +394,8 @@ function Home()
                         }
                         if(found==0)
                         {
-                            if(to==from){previous.unshift([from,[`✔✔ ${message_text}     ${time}`]]);}
-                            else if(from==index){previous.unshift([to,[`✔✔ ${message_text}     ${time}`]]);}
+                            if(to==from){previous.unshift([from,[`✔ ${message_text}     ${time}`]]);}
+                            else if(from==index){previous.unshift([to,[`✔ ${message_text}     ${time}`]]);}
                             else if(to==index){
                                 update_data()
                                 previous.unshift([from,[` ${message_text}     ${time}`]]);
@@ -512,7 +518,7 @@ function Home()
                 })
         })
 
-        let tick_messages=query(collection(db,'messages'),where("from","==",index))
+        let tick_messages=query(collection(db,'messages'),where("from","==",index),where("seen","==",true))
         let ticked=onSnapshot(tick_messages,(snapshot)=>
         {
             let msgs=snapshot.docs.map(function(doc)
@@ -527,7 +533,7 @@ function Home()
                     {
                         for(let j=0;j<msgs.length;j++)
                         {
-                            if(previous[i][0]=== msgs[j].to)
+                            if(previous[i][0]=== msgs[j].to && msgs[j].createdAt!==null)
                             {
                                 for(let k=0;k<previous[i][1].length;k++)
                                 {
@@ -567,7 +573,7 @@ function Home()
                                 {
                                     previous[i][1].forEach(x=>
                                     {
-                                        if(x.startsWith('✔✔')===false){seen_time.splice(previous[i][1].indexOf(x),0,'received/date')}
+                                        if(x.startsWith('✔')===false){seen_time.splice(previous[i][1].indexOf(x),0,'received/date')}
                                     }
                                     )
                                 }
@@ -878,7 +884,7 @@ function Home()
                             let previous=[...prev]
                             console.log(previous)
                             console.log(time_stamp)
-                            previous[0][1][previous[0][1].length-1]=previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,data.createdAt.toDate().toISOString())
+                            previous[0][1][previous[0][1].length-1]='✔'+previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,data.createdAt.toDate().toISOString())
                             console.log(previous)
                             return previous
                         })
@@ -969,7 +975,7 @@ function Home()
                                     <div key={index} className='chat_detail' style={{display:'flex',flexDirection:'column'}} >
                                         {value[1].map((text,ind)=>
                                         (
-                                            text.startsWith('✔✔')?
+                                            text.startsWith('✔')?
                                             (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
                                             <select id='options' value={selectval} onChange={(e)=>
                                                 {console.log(e.target.value); 
@@ -982,7 +988,7 @@ function Home()
                                                 <option value='Delete'>🗑️</option>
                                                 <option value='seen'>{seen_at[ind]}</option>
                                             </select>
-                                            <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>✔✔</span>{text.startsWith('✔✔✔✔')?text.slice(0,text.lastIndexOf(' ')).replace('✔✔✔✔',''):text.slice(0,text.lastIndexOf(' ')).replace('✔✔','')}</span>
+                                            <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf('')).replace(text.slice(0,text.indexOf('')),'')}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             
