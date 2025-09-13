@@ -529,12 +529,11 @@ function Home()
                 {
                     let previous=prev.map(m=> [...m])
                     let seen_time=[]
-                    let seen=[]
                     for(let i=0;i<previous.length;i++)
                     {
                         for(let j=0;j<msgs.length;j++)
                         {
-                            if(seen.includes(j)===false && msgs[j].seen===true && previous[i][0]=== msgs[j].to && msgs[j].createdAt!==null)
+                            if( msgs[j].seen===true && previous[i][0]=== msgs[j].to && msgs[j].createdAt!==null)
                             {
                                 for(let k=0;k<previous[i][1].length;k++)
                                 {
@@ -544,7 +543,6 @@ function Home()
                                         {
                                             if(!msgs[j].delete)
                                             {
-                                                seen.push(j)
                                                 previous[i][1][k]=`✔✔${previous[i][1][k]}`
                                             }
                                         }
