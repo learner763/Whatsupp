@@ -11,6 +11,7 @@ import {
     serverTimestamp,
     where,
     getDocs,
+    getDoc,
     or,
     updateDoc,
     doc} from "firebase/firestore";
@@ -48,16 +49,16 @@ function Home()
     const [edit_icon,set_edit]=useState('none')
     const [selectval,set_selectval]=useState('Select')
     const [msg_before_edit,set_msg_value]=useState('')
-    const [date_change,set_date_change]=useState(0)
+    const [msg_removed,set_msg_removed]=useState(0)
     const [seen_at,set_seen_at]=useState([])
     const [reply_icon,set_reply]=useState('none')
     const [reply_to,set_reply_to]=useState('')
     const [replies,set_replies]=useState([])
+    const [msg_transfer,set_msg_transfer]=useState(0)
     let w=-1;
 
     async function set_seen()
     {
-        console.log('dekh')
         let entries=query(collection(db,'messages'),where("to","==",index),where("from","==",receiver),where("seen","==",false));
         const snapshot=await getDocs(entries);
         snapshot.forEach(async (doc)=>
@@ -103,9 +104,21 @@ function Home()
         let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4)));
         let edited_msgs=await getDocs(edit_this_msg)
         if(edited_msgs.docs.length>0){const edit_doc=edited_msgs.docs[0]
-        console.log(edited_msgs)
         await updateDoc(edit_doc.ref,{edit:true,text:message})}
+
+        let edit_replied=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("reply","==",true));
+        let edited_replied_msgs=await getDocs(edit_replied)
+        console.log(edited_replied_msgs.docs)
         console.log(msg_before_edit)
+        if(edited_replied_msgs.docs.length>0)
+        {
+            for(let i=0;i<edited_replied_msgs.docs.length;i++)
+            {
+                await updateDoc(edited_replied_msgs.docs[i].ref,{replied_to:edited_replied_msgs.docs[i].data().replied_to.replace(edited_replied_msgs.docs[i].data().replied_to.slice(edited_replied_msgs.docs[i].data().replied_to.indexOf(' ')+1,edited_replied_msgs.docs[i].data().replied_to.lastIndexOf(' ')-4),message)})
+            }
+        }
+        
+
         fetch('/edit_message',
             {
                 method:'POST',
@@ -279,8 +292,6 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            console.log(msgs__deleted)
-            console.log(edited)
             if(edited.length>0)
             {
                 let do_break=false
@@ -295,9 +306,7 @@ function Home()
                             {
                                 if(previous[i][1][j].endsWith(edited[0].createdAt.toDate().toISOString()))
                                 {
-                                    console.log(previous[i][1][j])
                                     previous[i][1][j]=previous[i][1][j].replace(previous[i][1][j].slice(previous[i][1][j].indexOf(' ')+1,previous[i][1][j].lastIndexOf(' ')-4),edited[0].text)
-                                    console.log(previous[i][1][j])
                                     do_break=true
                                     break
                                     
@@ -316,22 +325,19 @@ function Home()
                     setmessages(prev=>
                     {
                         let previous=[...prev]
-                        console.log(previous)
 
                         for(let i=0;i<previous.length;i++)
                         {
                             if(previous[i][0]===msgs__deleted[0].to || previous[i][0]===msgs__deleted[0].from)
                             {
-                                console.log(msgs__deleted)
 
                                 for(let j=0;j<previous[i][1].length;j++)
                                 {
                                     if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
                                     {
-                                        console.log(previous[i][1][j])
                                         if(previous[i][1].filter(x=>x.startsWith('✔') || x.startsWith(' ')).length>1){previous[i][1].splice(j,1);console.log(previous[i][1])}
                                         else{previous.splice(i,1)}
-                                        set_date_change(prev=>prev+1)
+                                        set_msg_removed(prev=>prev+1)
                                         is_break=true
                                         break
                                     }
@@ -366,7 +372,7 @@ function Home()
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
-                                    set_date_change(prev=>prev+1)
+                                    set_msg_transfer(prev=>prev+1)
                                     if(msgs[0].reply===true)
                                     {
                                         set_replies(pre=>
@@ -389,7 +395,7 @@ function Home()
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
-                                    set_date_change(prev=>prev+1)
+                                    set_msg_transfer(prev=>prev+1)
                                     if(msgs[0].reply===true)
                                     {
                                         set_replies(pre=>
@@ -409,7 +415,7 @@ function Home()
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
-                                    set_date_change(prev=>prev+1)
+                                    set_msg_transfer(prev=>prev+1)
                                     return previous;
                                 }
                                 
@@ -425,7 +431,7 @@ function Home()
                                 update_data()
                                 previous.unshift([from,[` ${message_text}     ${time}`]]);
                             }
-                            set_date_change(prev=>prev+1)
+                            set_msg_transfer(prev=>prev+1)
                             return previous;
                         }
                     }
@@ -438,7 +444,7 @@ function Home()
         {
             action();
         }
-    },[index])
+    },[index,indices])
 
 
     useEffect(()=>
@@ -500,7 +506,8 @@ function Home()
         }
     },[indices,index])
 
-        
+    
+    
     useEffect(()=>
     {
         if( !index || indices.includes(index)===false ){return;}
@@ -508,9 +515,9 @@ function Home()
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
         {
-            let msgs=snapshot.docs.map(function(doc)
+            let msgs=snapshot.docChanges().map(function(change)
             {
-                return {id:doc.id,...doc.data()}
+                return {id:change.doc.id,...change.doc.data()}
             })
             
             setmessages(prev=>
@@ -527,7 +534,7 @@ function Home()
                                 if(msgs[j].seen===false && !msgs[j].delete)
                                 {
                                     if(receiver!==msgs[j].from)
-                                    {console.log('hey'); count+=1}
+                                    {count+=1}
                                     else{
                                         let msgref=doc(db,'messages',msgs[j].id)
                                         updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
@@ -542,23 +549,29 @@ function Home()
                     return previous
                 })
         })
+        return()=>seen();
+    },[index,indices,receiver,refreshed])
+    
+    useEffect(()=>
+    {
+        if( !index || indices.includes(index)===false ){return;}
 
         let tick_messages=query(collection(db,'messages'),where("from","==",index),where("seen","==",true))
         let ticked=onSnapshot(tick_messages,(snapshot)=>
         {
-            let msgs=snapshot.docs.map(function(doc)
+            let msgs=snapshot.docChanges().map(function(change)
             {
-                return {id:doc.id,...doc.data()}
+                return {id:change.doc.id,...change.doc.data()}
             })
+            console.log(msgs)
             setmessages(prev=>
                 {
                     let previous=prev.map(m=> [...m])
-                    let seen_time=[]
                     for(let i=0;i<previous.length;i++)
                     {
                         for(let j=0;j<msgs.length;j++)
                         {
-                            if( msgs[j].seen===true && previous[i][0]=== msgs[j].to && msgs[j].createdAt!==null)
+                            if(msgs[j].seen===true && previous[i][0]=== msgs[j].to && msgs[j].createdAt!==null)
                             {
                                 for(let k=0;k<previous[i][1].length;k++)
                                 {
@@ -569,76 +582,41 @@ function Home()
                                             if(!msgs[j].delete)
                                             {
                                                 previous[i][1][k]=`✔✔${previous[i][1][k]}`
+                                                set_seen_at(pre=>
+                                                {
+                                                    let original=[...pre]
+                                                    original[i][k]=new Date(msgs[j].seenAt.toDate().toISOString()).getDate()===new Date().getDate()?"👁️"+' '+'>'+' '+new Date(msgs[j].seenAt.toDate().toISOString()).toLocaleTimeString():"👁️"+' '+'>'+' '+new Date(msgs[j].seenAt.toDate().toISOString()).toLocaleDateString()
+                                                    return original
+                                                }
+                                                )
                                             }
                                         }
                                     }
-                                }
-                                
-                            }
-                            if(msgs[j].to===receiver && !msgs[j].delete)
-                            {
-                                if(msgs[j].seenAt===null){seen_time.push(null)}
-                                else{seen_time.push(msgs[j].seenAt.toDate().toISOString())}
-                                
-                                
-                            }
-                            
+                                } 
+                            }   
                         }
-
-                        seen_time.sort((a,b)=>new Date(a)-new Date(b))
-                        let not_seen=seen_time.filter(x=>x===null)
-                        seen_time=seen_time.filter(x=>x!==null)
-                        seen_time=seen_time.concat(not_seen)
-                        if(seen_time.length>0)
-                        {
-                            for(let i=0;i<previous.length;i++)
-                            {
-                                if(previous[i][0]===receiver)
-                                {
-                                    previous[i][1].forEach(x=>
-                                    {
-                                        if(x.startsWith('✔')===false){seen_time.splice(previous[i][1].indexOf(x),0,'received/date')}
-                                    }
-                                    )
-                                }
-                            }
-
-                        }
-
-                        seen_time=seen_time.map(x=>
-                        {
-                            if(x===null){return '👁️ > ❌'}
-                            else if(x==='received/date'){return 'received/date'}
-                            else{
-                                if(new Date(x).getDate()===new Date().getDate())
-                                {
-                                    return `👁️ > ${new Date(x).toLocaleTimeString()}`
-                                }
-                                else{
-                                    return `👁️ > ${new Date(x).toLocaleDateString()}`
-                                }
-                            }
-                        }
-                        )
-                        console.log(seen_time)
-                        set_seen_at(seen_time)
-                        seen_time=[]
-                        
                     }
                     return previous
                 })
                 if(flag1===true)set_loaded(true)
         })
+        return()=>ticked();
+
+    },[indices,index,refreshed])
+
+    useEffect(()=>
+    {
+        if( !index || indices.includes(index)===false ){return;}
 
         let from_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("from","==",index))
         let to_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("to","==",index))
-        console.log(replies)
         let replied_docs1=onSnapshot(from_replied_msgs,(snapshot)=>
         {
             let msgs=snapshot.docChanges().map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
+            console.log(msgs)
             setmessages(prev=>
             {
                 let previous=[...prev]
@@ -651,17 +629,14 @@ function Home()
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
-                                console.log(k)
                                 if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                 {
-                                    console.log(previous[j][1][k],msgs[i].replied_to)
                                     if(previous[j][1][k].startsWith('✔'))
                                     {
                                         set_replies(pre=>
                                         {
                                             let reply_info=[...pre]
                                             reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-                                            console.log(reply_info)
                                             return reply_info
                                         })
                                     }
@@ -671,7 +646,6 @@ function Home()
                                         {
                                             let reply_info=[...pre]
                                             reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-                                            console.log(reply_info)
 
                                             return reply_info
                                         })
@@ -691,25 +665,24 @@ function Home()
         })
         let replied_docs2=onSnapshot(to_replied_msgs,(snapshot)=>
         {
-            let msgs=snapshot.docs.map(function(doc)
+            let msgs=snapshot.docChanges().map(function(change)
             {
-                return {id:doc.id,...doc.data()}
+                return {id:change.doc.id,...change.doc.data()}
             })
+            console.log(msgs)
+
             setmessages(prev=>
                 {
                     let previous=[...prev]
-                    console.log(msgs)
-                    console.log(previous)
                     for(let i=0;i<msgs.length;i++)
                     {
                         let stop=false
                         for(let j=0;j<previous.length;j++)
                         {
-                            if(previous[j][0]===msgs[i].from && !msgs[i].delete)
+                            if(previous[j][0]===msgs[i].from && !msgs[i].delete && msgs[i].from!==msgs[i].to)
                             {
                                 for(let k=0;k<previous[j][1].length;k++)
                                 {
-                                    console.log(k)
 
                                     if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                         {
@@ -720,7 +693,6 @@ function Home()
                                             {
                                                 let reply_info=[...pre]
                                                 reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-                                                console.log(reply_info)
 
                                                 return reply_info
                                             })                                        
@@ -731,8 +703,6 @@ function Home()
                                             {
                                                 let reply_info=[...pre]
                                                 reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].from)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-                                                console.log(reply_info)
-
                                                 return reply_info
                                             })                                        
                                         }
@@ -749,16 +719,10 @@ function Home()
                 })
 
         })
+        return()=>{replied_docs1();replied_docs2();}
 
-        return()=>
-        {
-            seen();
-            ticked();
-        }
-    
-    },[indices,index,receiver,refreshed])
-    
-    
+    },[indices,index,msg_removed,refreshed])
+
     useEffect(() => {
         for(let i=0;i<3;i++)
         {
@@ -869,12 +833,22 @@ function Home()
             set_replies(prev=>
             {
                 let previous=[...prev]
-                console.log(messages)
                 for(let i=0;i<messages.length;i++)
                 {
                     previous[i]=previous[i]||[]
                 }
-                console.log(previous)
+                return previous
+            })
+        }
+        if(messages.length!==seen_at.length)
+        {
+            set_seen_at(prev=>
+            {
+                let previous=[...prev]
+                for(let i=0;i<messages.length;i++)
+                {
+                    previous[i]=previous[i]||[]
+                }
                 return previous
             })
         }
@@ -908,7 +882,13 @@ function Home()
             return previous
         })
         
-    },[date_change])
+    },[msg_removed,msg_transfer])
+
+    useEffect(()=>
+    {
+        let container=document.getElementsByClassName('part1');
+        if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
+    },[msg_transfer])
 
     useEffect(() => {
         window.addEventListener('resize',()=>
@@ -1148,17 +1128,17 @@ function Home()
                                             (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'270px',padding:'5px',fontSize:'20px'}}>
                                             <select id='options1' value={selectval} onChange={(e)=>
                                                 {console.log(e.target.value); 
-                                                if(e.target.value==='Delete'){set_edit('none');set_reply('none');delete_msg(receiver,text);}
-                                                else if(e.target.value==='Edit'){set_edit('flex');set_reply('none');edit_msg(receiver,text);}
-                                                else if(e.target.value==="Reply"){set_edit('none');set_reply('flex');set_reply_to(text);}
-                                                else{set_edit('none');set_reply('none')}
+                                                if(e.target.value==='Delete'){set_edit('none'); set_msg_value('');set_reply('none');set_reply_to('');delete_msg(receiver,text);}
+                                                else if(e.target.value==='Edit'){set_edit('flex');set_reply('none');set_reply_to('');edit_msg(receiver,text);}
+                                                else if(e.target.value==="Reply"){set_edit('none');set_msg_value('');set_reply('flex');set_reply_to(text);}
+                                                else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
                                                 set_selectval('Select')}}
                                                     style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
                                                 <option value='Select'>Select</option>
                                                 <option value='Edit'>✏️ Edit</option>
                                                 <option value='Delete'>🗑️ Delete</option>
                                                 <option value='Reply'>💬 Reply</option>
-                                                <option value='seen'>{seen_at[ind]===undefined?'👁️ > ❌':seen_at[ind]}</option>
+                                                <option value='seen'>{seen_at[index]?.[ind]===undefined?'👁️ > ❌':seen_at[index]?.[ind]}</option>
                                             </select>
 
                                             <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'darkviolet'}}>
@@ -1175,7 +1155,7 @@ function Home()
                                             <select id='options2' value={selectval} onChange={(e)=>
                                                 {console.log(e.target.value); 
                                                 if(e.target.value==="Reply"){set_reply('flex');set_reply_to(text);}
-                                                else{set_reply('none')}
+                                                else{set_reply('none');set_reply_to('')}
                                                 set_selectval('Select')}}
                                                     style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
                                                 <option value='Select'>Select</option>
