@@ -50,6 +50,9 @@ function Home()
     const [msg_before_edit,set_msg_value]=useState('')
     const [date_change,set_date_change]=useState(0)
     const [seen_at,set_seen_at]=useState([])
+    const [reply_icon,set_reply]=useState('none')
+    const [reply_to,set_reply_to]=useState('')
+    const [replies,set_replies]=useState([])
     let w=-1;
 
     async function set_seen()
@@ -61,7 +64,7 @@ function Home()
         {
             await updateDoc(doc.ref,{seen:true,seenAt:serverTimestamp()})
         })
-    }   
+    } 
     async function delete_msg(user,message)
     {
         if(message.startsWith('✔✔'))
@@ -347,6 +350,7 @@ function Home()
                     let from=msgs[msgs.length-1].from;
                     let message_text=msgs[msgs.length-1].text;
                     let time=msgs[msgs.length-1].createdAt===null?new Date().toISOString():msgs[msgs.length-1].createdAt.toDate().toISOString();                    
+                    
                     setmessages(prev=>
                     {
                         let previous=[...prev]
@@ -363,6 +367,16 @@ function Home()
                                     previous.splice(i,1)
                                     previous.unshift(inter);
                                     set_date_change(prev=>prev+1)
+                                    if(msgs[0].reply===true)
+                                    {
+                                        set_replies(pre=>
+                                        {
+                                            let original=[...pre]
+                                            original[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)]=['flex','You',msgs[0].replied_to.slice(msgs[0].replied_to.indexOf(' ')+1,msgs[0].replied_to.lastIndexOf(' ')-4)]
+                                            return original
+                                        }
+                                        )
+                                    }
                                     return previous;
                                 }
                             }
@@ -376,6 +390,17 @@ function Home()
                                     previous.splice(i,1)
                                     previous.unshift(inter);
                                     set_date_change(prev=>prev+1)
+                                    if(msgs[0].reply===true)
+                                    {
+                                        set_replies(pre=>
+                                        {
+                                            let original=[...pre]
+                                            original[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)]=['flex',msgs[0].replied_to.startsWith('✔')?'You': info[indices.indexOf(msgs[0].to)*2],msgs[0].replied_to.slice(msgs[0].replied_to.indexOf(' ')+1,msgs[0].replied_to.lastIndexOf(' ')-4)]
+                                            console.log(info[indices.indexOf(msgs[0].to)*2])
+                                            return original
+                                        }
+                                        )
+                                    }
                                     return previous;
                                 }
                                 else if(to==index && previous[i][0]==from){
@@ -604,6 +629,127 @@ function Home()
                 })
                 if(flag1===true)set_loaded(true)
         })
+
+        let from_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("from","==",index))
+        let to_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("to","==",index))
+        console.log(replies)
+        let replied_docs1=onSnapshot(from_replied_msgs,(snapshot)=>
+        {
+            let msgs=snapshot.docChanges().map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
+            setmessages(prev=>
+            {
+                let previous=[...prev]
+                for(let i=0;i<msgs.length;i++)
+                {
+                    let stop=false
+                    for(let j=0;j<previous.length;j++)
+                    {
+                        if(previous[j][0]===msgs[i].to && !msgs[i].delete)
+                        {
+                            for(let k=0;k<previous[j][1].length;k++)
+                            {
+                                console.log(k)
+                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                {
+                                    console.log(previous[j][1][k],msgs[i].replied_to)
+                                    if(previous[j][1][k].startsWith('✔'))
+                                    {
+                                        set_replies(pre=>
+                                        {
+                                            let reply_info=[...pre]
+                                            reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
+                                            console.log(reply_info)
+                                            return reply_info
+                                        })
+                                    }
+                                    else if(previous[j][1][k].startsWith(' '))
+                                    {
+                                        set_replies(pre=>
+                                        {
+                                            let reply_info=[...pre]
+                                            reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
+                                            console.log(reply_info)
+
+                                            return reply_info
+                                        })
+                                    }
+                                    stop=true
+                                    break
+                                }
+                            }
+                        }
+                        if(stop){break}
+                    }
+
+                }
+                return previous
+            })
+
+        })
+        let replied_docs2=onSnapshot(to_replied_msgs,(snapshot)=>
+        {
+            let msgs=snapshot.docs.map(function(doc)
+            {
+                return {id:doc.id,...doc.data()}
+            })
+            setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    console.log(msgs)
+                    console.log(previous)
+                    for(let i=0;i<msgs.length;i++)
+                    {
+                        let stop=false
+                        for(let j=0;j<previous.length;j++)
+                        {
+                            if(previous[j][0]===msgs[i].from && !msgs[i].delete)
+                            {
+                                for(let k=0;k<previous[j][1].length;k++)
+                                {
+                                    console.log(k)
+
+                                    if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                        {
+                                        
+                                        if(previous[j][1][k].startsWith('✔'))
+                                        {
+                                        set_replies(pre=>
+                                            {
+                                                let reply_info=[...pre]
+                                                reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
+                                                console.log(reply_info)
+
+                                                return reply_info
+                                            })                                        
+                                        }
+                                        else if(previous[j][1][k].startsWith(' '))
+                                        {
+                                            set_replies(pre=>
+                                            {
+                                                let reply_info=[...pre]
+                                                reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].from)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
+                                                console.log(reply_info)
+
+                                                return reply_info
+                                            })                                        
+                                        }
+                                        stop=true
+                                        break
+                                    }
+                                }
+                            }
+                            if(stop){break}
+                        }
+    
+                    }
+                    return previous
+                })
+
+        })
+
         return()=>
         {
             seen();
@@ -712,13 +858,27 @@ function Home()
     useEffect(() => {
         let container=document.getElementsByClassName('part1');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
-    },[messages,receiver])
-
-    useEffect(()=>
-    {
         document.getElementById('message').value=''
         set_edit('none')
     },[receiver])
+
+    useEffect(()=>
+    {
+        if(messages.length!==replies.length)
+        {
+            set_replies(prev=>
+            {
+                let previous=[...prev]
+                console.log(messages)
+                for(let i=0;i<messages.length;i++)
+                {
+                    previous[i]=previous[i]||[]
+                }
+                console.log(previous)
+                return previous
+            })
+        }
+    },[messages])
 
     useEffect(()=>
     {
@@ -856,15 +1016,24 @@ function Home()
     async function Send(message)
     {
         let ids=[]
-        
+        let msg_being_replied=""
+        if(reply_icon==='flex')
+        {
+            set_reply('none')
+            msg_being_replied=reply_to
+            set_reply_to('')
+        }
         let inserted_msg=await addDoc(collection(db,'messages'),{
             from: index,
             to: receiver,
             text: message,
             seen:index===receiver?true:false,
             createdAt: serverTimestamp(),
-            seenAt:index===receiver?serverTimestamp():null
+            seenAt:index===receiver?serverTimestamp():null,
+            replied_to:msg_being_replied===''?null:msg_being_replied,
+            reply: msg_being_replied===''?false:true,
         });
+
         onSnapshot(inserted_msg,(document)=>
         {
             let data=document.data()
@@ -976,11 +1145,13 @@ function Home()
                                         {value[1].map((text,ind)=>
                                         (
                                             text.startsWith('✔')?
-                                            (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
-                                            <select id='options' value={selectval} onChange={(e)=>
+                                            (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'270px',padding:'5px',fontSize:'20px'}}>
+                                            <select id='options1' value={selectval} onChange={(e)=>
                                                 {console.log(e.target.value); 
-                                                if(e.target.value==='Delete'){delete_msg(receiver,text);console.log(value)};
-                                                if(e.target.value==='Edit'){set_edit('flex');edit_msg(receiver,text);console.log(value)};
+                                                if(e.target.value==='Delete'){set_edit('none');set_reply('none');delete_msg(receiver,text);}
+                                                else if(e.target.value==='Edit'){set_edit('flex');set_reply('none');edit_msg(receiver,text);}
+                                                else if(e.target.value==="Reply"){set_edit('none');set_reply('flex');set_reply_to(text);}
+                                                else{set_edit('none');set_reply('none')}
                                                 set_selectval('Select')}}
                                                     style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
                                                 <option value='Select'>Select</option>
@@ -989,16 +1160,37 @@ function Home()
                                                 <option value='Reply'>💬 Reply</option>
                                                 <option value='seen'>{seen_at[ind]===undefined?'👁️ > ❌':seen_at[ind]}</option>
                                             </select>
+
+                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'darkviolet'}}>
+                                                <span style={{fontWeight:'bold'}}>{replies[index]?.[ind]?.[1]===undefined?'':replies[index][ind][1]}</span>
+                                                <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{replies[index]?.[ind]?.[2]===undefined?'':replies[index][ind][2]}</span>
+                                            </span>
+
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             
                                             text.startsWith(' ')?
                                             (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
+                                            <select id='options2' value={selectval} onChange={(e)=>
+                                                {console.log(e.target.value); 
+                                                if(e.target.value==="Reply"){set_reply('flex');set_reply_to(text);}
+                                                else{set_reply('none')}
+                                                set_selectval('Select')}}
+                                                    style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
+                                                <option value='Select'>Select</option>
+                                                <option value='Reply'>💬 Reply</option>
+                                            </select>
+
+                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'darkviolet'}}>
+                                                <span style={{fontWeight:'bold'}}>{replies[index]?.[ind]?.[1]===undefined?'':replies[index][ind][1]}</span>
+                                                <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{replies[index]?.[ind]?.[2]===undefined?'':replies[index][ind][2]}</span>
+                                            </span>
+                                            
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span></span>):
 
-                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'darkmagenta',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
+                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'darkviolet',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
                                         )
                                         )}
                                     </div>
@@ -1108,7 +1300,9 @@ function Home()
             </div>
             
             <div className='msg_div' style={{display:disp}}>
-                <i  style={{display:edit_icon}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>❌</i>
+                <i  style={{display:edit_icon}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</i>
+                <i  style={{display:reply_icon}} onClick={()=>{set_reply('none');set_reply_to('')}}>💬❌</i>
+
                 <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...'
                 onChange={()=>
                 {

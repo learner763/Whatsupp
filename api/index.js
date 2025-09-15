@@ -132,14 +132,16 @@ app.post('/get_messages',(req,res)=>
                 }
                 frontend_messages.push(sent_received);
             }
+            console.log(frontend_messages)
 
-            for(let i=0;i<frontend_messages.length;i+=2)
+            for(let i=frontend_messages.length-1;i>=1;i-=2)
             {
-                if(Array.from(frontend_messages[i+1]).length===0)
+                if(Array.from(frontend_messages[i]).length===0)
                 {
-                    frontend_messages.splice(i,2)
+                    frontend_messages.splice(i-1,2)
                 }
             }
+            console.log(frontend_messages)
 
             for(let j=0;j<(frontend_messages.length-2)/2;j++)
             {
@@ -159,7 +161,6 @@ app.post('/get_messages',(req,res)=>
                     
                 }
             }
-            console.log(frontend_messages)
             
             res.json(frontend_messages);
         })
