@@ -56,6 +56,8 @@ function Home()
     const [replies,set_replies]=useState([])
     const [msg_transfer,set_msg_transfer]=useState(0)
     const [is_edited,set_is_edited]=useState([])
+    const [search_value,set_search_value]=useState('')
+    const [search_filter,set_search_filter]=useState([])
     let w=-1;
 
     async function set_seen()
@@ -164,7 +166,7 @@ function Home()
         .then(responce=>responce.json())
         .then(data=>
         {
-            for(let i=0;i<data.length;i++)
+            for(let i=data.length-1;i>=0;i--)
             {
                 ind.push(data[i].index)
                 accounts.push(data[i].name)
@@ -574,7 +576,7 @@ function Home()
                 })
         })
         return()=>seen();
-    },[index,indices,receiver,refreshed])
+    },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
     
     useEffect(()=>
     {
@@ -626,7 +628,7 @@ function Home()
         })
         return()=>ticked();
 
-    },[indices,index,refreshed])
+    },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
 
     useEffect(()=>
     {
@@ -792,7 +794,7 @@ function Home()
         })
         return()=>{replied_docs1();replied_docs2();}
 
-    },[indices,index,msg_removed,refreshed,msg_transfer])
+    },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
 
     useEffect(() => {
         for(let i=0;i<3;i++)
@@ -1006,7 +1008,7 @@ function Home()
                 }
                 if(flag==false){set_flag1(false);set_loaded(false);alert(`No account exists with "${username}"`);localStorage.setItem('root',true);nav2('/');}
                 let ind=[]
-                for(let i=0;i<data.length;i++)
+                for(let i=data.length-1;i>=0;i--)
                 {
                     accounts.push(data[i].name);
                     accounts.push(data[i].bio);
@@ -1026,7 +1028,7 @@ function Home()
             {
                 let accounts=[]
                 let ind=[]
-                for(let i=0;i<data.length;i++)
+                for(let i=data.length-1;i>=0;i--)
                 {
                     accounts.push(data[i].name);
                     accounts.push(data[i].bio);
@@ -1177,11 +1179,35 @@ function Home()
             });
         }
     }, [info]);
+
+    useEffect(()=>
+    {
+        let values=[]
+        if(search_value!=='')
+        {
+            for(let i=0;i<info.length;i+=2)
+            {
+                if(info[i].toLowerCase().startsWith(search_value.toLowerCase()))
+                {
+                    values[i/2]='flex'
+                }
+                else{values[i/2]='none'}
+            }
+        }
+        else if(search_value==='')
+        {
+            for(let i=0;i<info.length;i+=2)
+            {
+                    values[i/2]='flex'
+            }
+        }
+        set_search_filter(values)
+    },[search_value,info])
     return(
         <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
             <div className='top'>
                 <label><i class='fas fa-phone'></i>Whatsupp</label>
-                <label><i class='fas fa-user'></i>{localStorage.getItem('profile')}</label>
+                <label><i class='fas fa-user'></i>{profile}</label>
             </div>
             <div className='home1' style={{backgroundColor:bgr}} >
                 <div className='home11'>
@@ -1337,19 +1363,29 @@ function Home()
 
                 <div className='home13' >
                     <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:'darkgreen'}}><i id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
+                    <aa style={{display:'flex',justifyContent:'center',width:'100%'}}>
+                        <input placeholder='Search ...' value={search_value} 
+                        onChange={(e)=>
+                            {
+                                if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+                                set_search_value(e.target.value.replace(/[^a-zA-Z0-9_ ]/g, ''))
+                            }}
+                        style={{display:'flex',justifySelf:'center',alignSelf:'center',borderRadius:'5px',border:'1px solid darkgreen',fontSize:'20px'}}></input>
+                        <button onClick={()=>set_search_value('')} style={{cursor:'pointer', fontSize:'20px',borderRadius:'5px',border:'1px solid darkgreen',backgroundColor:'darkgreen',color:'white'}}>Clear</button>
+                    </aa>
+
                     {info.map((a, index) => {
                         if (index < info.length / 2) {
                             w = w + 1; // Increment w before returning
                             return (
-                                <div className='userinfo' key={index} > 
-                                    <div style={{display:'flex',flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'160px',backgroundColor:'darkgreen',borderRadius:'20px',padding:'5px'}}>
-                                    <i className='fas fa-user'>{info[index + w ]=== up_name ? ` You ${status[index]==='(Online)' || status[index]==='(Typing...)'?'(Online)':''}`: `${status[index]==='(Online)' || status[index]==='(Typing...)'?'(Online)':''}`}</i>                                    
+                                <div className='userinfo' key={index} style={{display:search_filter[index]}}> 
+                                    <div style={{display:search_filter[index],flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'160px',backgroundColor:'darkgreen',borderRadius:'20px',padding:'5px'}}>
+                                    <i className='fas fa-user'>{info[index + w ]=== profile ? ` You ${status[index]==='(Online)' || status[index]==='(Typing...)'?'(Online)':''}`: `${status[index]==='(Online)' || status[index]==='(Typing...)'?'(Online)':''}`}</i>                                    
                                     <span className='connect_people' >{info[index + w ]}</span> 
                                     <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
                                     <button onClick={()=>
                                         {
                                             update_receiver(indices[index])
-                                                console.log(receiver)
                                         }
                                     } className='connect_buttons' data-indexid={indices[index]}><i className='fas fa-envelope'></i>Message</button>
                                     </div>
