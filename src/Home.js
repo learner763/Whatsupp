@@ -55,6 +55,7 @@ function Home()
     const [reply_to,set_reply_to]=useState('')
     const [replies,set_replies]=useState([])
     const [msg_transfer,set_msg_transfer]=useState(0)
+    const [is_edited,set_is_edited]=useState([])
     let w=-1;
 
     async function set_seen()
@@ -75,7 +76,20 @@ function Home()
             deleted=deleted.docs.filter(x=>!x.data().delete)
             if(deleted.length>0){const doc=deleted[0]
             await updateDoc(doc.ref,{delete:message.slice(message.lastIndexOf(' ')+1,message.length)})}
-            
+
+            let deleted_replied_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'✔')));
+            let deleted_replied=await getDocs(deleted_replied_msgs)
+            console.log(message)
+            if(deleted_replied.docs.length>0)
+            {
+                for(let i=0;i<deleted_replied.docs.length;i++)
+                {
+                    console.log(deleted_replied.docs[i].data().replied_to)  
+
+                    await updateDoc(deleted_replied.docs[i].ref,{replied_to:'deleted'+deleted_replied.docs[i].data().replied_to})
+                }
+            }
+            console.log(reply_to)
             fetch('/delete_msg',
                 {
                 method:'POST',
@@ -87,10 +101,20 @@ function Home()
 
     }
 
+    function reply_msg(user,message)
+    {
+        if(message.startsWith('✔✔') || message.startsWith(' '))
+        {
+            set_reply('flex');
+            set_reply_to(message)
+        }
+   
+    }
     function edit_msg(user,message)
     {
         if(message.startsWith('✔✔'))
         {
+            set_edit('flex');
             document.getElementById('message').value=message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)
             set_msg_value(message)
         }
@@ -106,7 +130,7 @@ function Home()
         if(edited_msgs.docs.length>0){const edit_doc=edited_msgs.docs[0]
         await updateDoc(edit_doc.ref,{edit:true,text:message})}
 
-        let edit_replied=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("reply","==",true));
+        let edit_replied=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("replied_to","==",msg_before_edit.replace(msg_before_edit.slice(0,msg_before_edit.indexOf(' ')),'✔')));
         let edited_replied_msgs=await getDocs(edit_replied)
         console.log(edited_replied_msgs.docs)
         console.log(msg_before_edit)
@@ -625,7 +649,7 @@ function Home()
                     let stop=false
                     for(let j=0;j<previous.length;j++)
                     {
-                        if(previous[j][0]===msgs[i].to && !msgs[i].delete)
+                        if(previous[j][0]===msgs[i].to && !msgs[i].delete && msgs[i].replied_to.startsWith('d')===false)
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
@@ -655,6 +679,29 @@ function Home()
                                 }
                             }
                         }
+                        else if(msgs[i].replied_to.startsWith('d'))
+                            {
+                                for(let k=0;k<previous[j][1].length;k++)
+                                    {
+                                        if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                        {
+                                            
+                                                set_replies(pre=>
+                                                {
+                                                    let reply_info=[...pre]
+                                                    reply_info[j][k]=['none','','']
+                                                    return reply_info
+                                                })
+                                            
+                                            stop=true
+                                            break
+                                        }
+                                    }
+                                
+
+                                
+                                
+                            }
                         if(stop){break}
                     }
 
@@ -679,7 +726,7 @@ function Home()
                         let stop=false
                         for(let j=0;j<previous.length;j++)
                         {
-                            if(previous[j][0]===msgs[i].from && !msgs[i].delete && msgs[i].from!==msgs[i].to)
+                            if(previous[j][0]===msgs[i].from && !msgs[i].delete && msgs[i].from!==msgs[i].to && msgs[i].replied_to.startsWith('d')===false)
                             {
                                 for(let k=0;k<previous[j][1].length;k++)
                                 {
@@ -711,7 +758,31 @@ function Home()
                                     }
                                 }
                             }
+                            else if(msgs[i].replied_to.startsWith('d') && msgs[i].from!==msgs[i].to)
+                                {
+                                    for(let k=0;k<previous[j][1].length;k++)
+                                        {
+                                            if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                            {
+                                                
+                                                    set_replies(pre=>
+                                                    {
+                                                        let reply_info=[...pre]
+                                                        reply_info[j][k]=['none','','']
+                                                        return reply_info
+                                                    })
+                                                
+                                                stop=true
+                                                break
+                                            }
+                                        }
+                                    
+    
+                                    
+                                    
+                                }
                             if(stop){break}
+                            
                         }
     
                     }
@@ -721,7 +792,7 @@ function Home()
         })
         return()=>{replied_docs1();replied_docs2();}
 
-    },[indices,index,msg_removed,refreshed])
+    },[indices,index,msg_removed,refreshed,msg_transfer])
 
     useEffect(() => {
         for(let i=0;i<3;i++)
@@ -843,6 +914,18 @@ function Home()
         if(messages.length!==seen_at.length)
         {
             set_seen_at(prev=>
+            {
+                let previous=[...prev]
+                for(let i=0;i<messages.length;i++)
+                {
+                    previous[i]=previous[i]||[]
+                }
+                return previous
+            })
+        }
+        if(messages.length!==is_edited.length)
+        {
+            set_is_edited(prev=>
             {
                 let previous=[...prev]
                 for(let i=0;i<messages.length;i++)
@@ -1010,7 +1093,7 @@ function Home()
             seen:index===receiver?true:false,
             createdAt: serverTimestamp(),
             seenAt:index===receiver?serverTimestamp():null,
-            replied_to:msg_being_replied===''?null:msg_being_replied,
+            replied_to:msg_being_replied.startsWith('✔')? msg_being_replied.replace(msg_being_replied.slice(0,msg_being_replied.indexOf(' ')),'✔'):msg_being_replied.startsWith(' ')?msg_being_replied:'',
             reply: msg_being_replied===''?false:true,
         });
 
@@ -1129,8 +1212,8 @@ function Home()
                                             <select id='options1' value={selectval} onChange={(e)=>
                                                 {console.log(e.target.value); 
                                                 if(e.target.value==='Delete'){set_edit('none'); set_msg_value('');set_reply('none');set_reply_to('');delete_msg(receiver,text);}
-                                                else if(e.target.value==='Edit'){set_edit('flex');set_reply('none');set_reply_to('');edit_msg(receiver,text);}
-                                                else if(e.target.value==="Reply"){set_edit('none');set_msg_value('');set_reply('flex');set_reply_to(text);}
+                                                else if(e.target.value==='Edit'){set_reply('none');set_reply_to('');edit_msg(receiver,text);}
+                                                else if(e.target.value==="Reply"){set_edit('none');set_msg_value('');reply_msg(receiver,text);}
                                                 else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
                                                 set_selectval('Select')}}
                                                     style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
@@ -1154,7 +1237,7 @@ function Home()
                                             (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
                                             <select id='options2' value={selectval} onChange={(e)=>
                                                 {console.log(e.target.value); 
-                                                if(e.target.value==="Reply"){set_reply('flex');set_reply_to(text);}
+                                                if(e.target.value==="Reply"){reply_msg(receiver,text);}
                                                 else{set_reply('none');set_reply_to('')}
                                                 set_selectval('Select')}}
                                                     style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
