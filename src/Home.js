@@ -1424,7 +1424,7 @@ function Home()
                                                 </span>
                                         </div>
                                         <div style={{height:'35px'}}>
-                                            <span style={{fontWeight:'normal'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'blue':'lightgreen'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
+                                            <span style={{fontWeight:'normal'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'blue':'lightgreen'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
                                             <span style={{marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
                                         </div>
                                     </div>
