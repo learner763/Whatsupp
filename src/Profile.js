@@ -78,7 +78,7 @@ function Profile() {
       <div className="Profile" >
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <img id="bg" src="bg.png" alt="Background" />
-        <label >Profile Name*</label>
+        <label >Profile Name 🏷️</label>
        <input
           type="text"
           value={name}
@@ -89,7 +89,7 @@ function Profile() {
             setname(e.target.value.replace(/[^a-zA-Z0-9_ ]/g,''))} 
           }
         />
-        <label >About Me*</label>
+        <label >About Me 📝</label>
 
         <input
           type="text"

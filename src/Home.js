@@ -1362,7 +1362,7 @@ function Home()
                                                 else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
                                                 set_selectval('Select')}}
                                                     style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
-                                                <option value='Select'>Select</option>
+                                                <option value='Select'>🧾 Select</option>
                                                 <option value='Edit'>✏️ Edit</option>
                                                 <option value='Delete'>🗑️ Delete</option>
                                                 <option value='Reply'>💬 Reply</option>
@@ -1386,7 +1386,7 @@ function Home()
                                                 else{set_reply('none');set_reply_to('')}
                                                 set_selectval('Select')}}
                                                     style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
-                                                <option value='Select'>Select</option>
+                                                <option value='Select'>🧾 Select</option>
                                                 <option value='Reply'>💬 Reply</option>
                                             </select>
 
@@ -1435,15 +1435,15 @@ function Home()
                     
                     <div className='part2' style={{display:part2}} >
                         <i style={{alignSelf:'center',paddingTop:'30px'}} class='fas fa-user'></i>
-                        <label>Username</label>
+                        <label>Username 🔑</label>
                         <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} style={{alignSelf:'end'}}></input>
-                        <label>Name</label>
+                        <label>Name 🏷️</label>
                         <input onChange={(e)=>
                             {
                             if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
                             setup_name(e.target.value.replace(/[^a-zA-Z0-9_ ]/g, ''))
                             }} value={up_name} style={{alignSelf:'end'}}></input>
-                        <label>About</label>
+                        <label>About 📝</label>
                         <input onChange={(e)=>
                             {
                             if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
@@ -1460,15 +1460,14 @@ function Home()
                     
                     <div className='part3' style={{display:part3}} >
                         <i style={{alignSelf:'center',paddingTop:'30px'}} class='fas fa-user'></i>
-                        <label>Change Password</label>
+                        <label>Change Password 🔒</label>
                         <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
-                        <label>Background Theme</label>
+                        <label>Background Theme 🎨</label>
                         <select value={bgr} style={{ alignSelf:'end'}} onChange={(e)=>setbg(e.target.value)} >
-                            <option style={{color:"white"}} value="white">White</option>
-                            <option style={{color:"gold"}} value="gold">Gold</option>
-                            <option style={{color:"lime"}} value="lime">Lime</option>
-                            <option style={{color:"orange"}} value="orange">Orange</option>
-                            <option style={{color:"pink"}} value="pink">Pink</option>
+                            <option  value="white">White</option>
+                            <option  value="gold">Gold</option>
+                            <option  value="orange">Orange</option>
+                            <option  value="pink">Pink</option>
                         </select>
                         <button onClick={()=>
                             {

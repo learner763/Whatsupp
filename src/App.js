@@ -122,14 +122,14 @@ function App() {
       <div className="App" >
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <img id="bg" src="bg.png" alt="Background" />
-        <label >Username*</label>
+        <label >Username 🔑</label>
        <input
           type="text"
           value={email}
           placeholder='Account Username:'
           onChange={(e) => setemail(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} 
         />
-        <label >Password*</label>
+        <label >Password 🔒</label>
 
         <input
           type="password"
