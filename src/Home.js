@@ -55,9 +55,11 @@ function Home()
     const [reply_to,set_reply_to]=useState('')
     const [replies,set_replies]=useState([])
     const [msg_transfer,set_msg_transfer]=useState(0)
+    const [msg_edit,set_msg_edit]=useState(0)
     const [is_edited,set_is_edited]=useState([])
     const [search_value,set_search_value]=useState('')
     const [search_filter,set_search_filter]=useState([])
+    const [no_match_msg,set_no_match_msg]=useState('none')
     let w=-1;
 
     async function set_seen()
@@ -334,6 +336,7 @@ function Home()
                                 {
                                     previous[i][1][j]=previous[i][1][j].replace(previous[i][1][j].slice(previous[i][1][j].indexOf(' ')+1,previous[i][1][j].lastIndexOf(' ')-4),edited[0].text)
                                     do_break=true
+                                    set_msg_edit(prev=>prev+1)
                                     break
                                     
                                 }
@@ -631,96 +634,19 @@ function Home()
     },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
 
     useEffect(()=>
-    {
-        if( !index || indices.includes(index)===false ){return;}
-
-        let from_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("from","==",index))
-        let to_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("to","==",index))
-        let replied_docs1=onSnapshot(from_replied_msgs,(snapshot)=>
         {
-            let msgs=snapshot.docChanges().map(function(change)
+            if( !index || indices.includes(index)===false ){return;}
+    
+            let from_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("from","==",index))
+            let to_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("to","==",index))
+            let replied_docs1=onSnapshot(from_replied_msgs,(snapshot)=>
             {
-                return {id:change.doc.id,...change.doc.data()}
-            })
-            console.log(msgs)
-            setmessages(prev=>
-            {
-                let previous=[...prev]
-                for(let i=0;i<msgs.length;i++)
+                let msgs=snapshot.docChanges().map(function(change)
                 {
-                    let stop=false
-                    for(let j=0;j<previous.length;j++)
-                    {
-                        if(previous[j][0]===msgs[i].to && !msgs[i].delete && msgs[i].replied_to.startsWith('d')===false)
-                        {
-                            for(let k=0;k<previous[j][1].length;k++)
-                            {
-                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
-                                {
-                                    if(previous[j][1][k].startsWith('✔'))
-                                    {
-                                        set_replies(pre=>
-                                        {
-                                            let reply_info=[...pre]
-                                            reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-                                            return reply_info
-                                        })
-                                    }
-                                    else if(previous[j][1][k].startsWith(' '))
-                                    {
-                                        set_replies(pre=>
-                                        {
-                                            let reply_info=[...pre]
-                                            reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-
-                                            return reply_info
-                                        })
-                                    }
-                                    stop=true
-                                    break
-                                }
-                            }
-                        }
-                        else if(msgs[i].replied_to.startsWith('d'))
-                            {
-                                for(let k=0;k<previous[j][1].length;k++)
-                                    {
-                                        if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
-                                        {
-                                            
-                                                set_replies(pre=>
-                                                {
-                                                    let reply_info=[...pre]
-                                                    reply_info[j][k]=['none','','']
-                                                    return reply_info
-                                                })
-                                            
-                                            stop=true
-                                            break
-                                        }
-                                    }
-                                
-
-                                
-                                
-                            }
-                        if(stop){break}
-                    }
-
-                }
-                return previous
-            })
-
-        })
-        let replied_docs2=onSnapshot(to_replied_msgs,(snapshot)=>
-        {
-            let msgs=snapshot.docChanges().map(function(change)
-            {
-                return {id:change.doc.id,...change.doc.data()}
-            })
-            console.log(msgs)
-
-            setmessages(prev=>
+                    return {id:change.doc.id,...change.doc.data()}
+                })
+                console.log(msgs)
+                setmessages(prev=>
                 {
                     let previous=[...prev]
                     for(let i=0;i<msgs.length;i++)
@@ -728,39 +654,37 @@ function Home()
                         let stop=false
                         for(let j=0;j<previous.length;j++)
                         {
-                            if(previous[j][0]===msgs[i].from && !msgs[i].delete && msgs[i].from!==msgs[i].to && msgs[i].replied_to.startsWith('d')===false)
+                            if(previous[j][0]===msgs[i].to && !msgs[i].delete && msgs[i].replied_to.startsWith('d')===false)
                             {
                                 for(let k=0;k<previous[j][1].length;k++)
                                 {
-
                                     if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
-                                        {
-                                        
+                                    {
                                         if(previous[j][1][k].startsWith('✔'))
                                         {
-                                        set_replies(pre=>
+                                            set_replies(pre=>
                                             {
                                                 let reply_info=[...pre]
                                                 reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-
                                                 return reply_info
-                                            })                                        
+                                            })
                                         }
                                         else if(previous[j][1][k].startsWith(' '))
                                         {
                                             set_replies(pre=>
                                             {
                                                 let reply_info=[...pre]
-                                                reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].from)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
+                                                reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
+    
                                                 return reply_info
-                                            })                                        
+                                            })
                                         }
                                         stop=true
                                         break
                                     }
                                 }
                             }
-                            else if(msgs[i].replied_to.startsWith('d') && msgs[i].from!==msgs[i].to)
+                            else if(msgs[i].replied_to.startsWith('d'))
                                 {
                                     for(let k=0;k<previous[j][1].length;k++)
                                         {
@@ -784,16 +708,188 @@ function Home()
                                     
                                 }
                             if(stop){break}
-                            
                         }
     
                     }
                     return previous
                 })
+    
+            })
+            let replied_docs2=onSnapshot(to_replied_msgs,(snapshot)=>
+            {
+                let msgs=snapshot.docChanges().map(function(change)
+                {
+                    return {id:change.doc.id,...change.doc.data()}
+                })
+                console.log(msgs)
+    
+                setmessages(prev=>
+                    {
+                        let previous=[...prev]
+                        for(let i=0;i<msgs.length;i++)
+                        {
+                            let stop=false
+                            for(let j=0;j<previous.length;j++)
+                            {
+                                if(previous[j][0]===msgs[i].from && !msgs[i].delete && msgs[i].from!==msgs[i].to && msgs[i].replied_to.startsWith('d')===false)
+                                {
+                                    for(let k=0;k<previous[j][1].length;k++)
+                                    {
+    
+                                        if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                            {
+                                            
+                                            if(previous[j][1][k].startsWith('✔'))
+                                            {
+                                            set_replies(pre=>
+                                                {
+                                                    let reply_info=[...pre]
+                                                    reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
+    
+                                                    return reply_info
+                                                })                                        
+                                            }
+                                            else if(previous[j][1][k].startsWith(' '))
+                                            {
+                                                set_replies(pre=>
+                                                {
+                                                    let reply_info=[...pre]
+                                                    reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].from)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
+                                                    return reply_info
+                                                })                                        
+                                            }
+                                            stop=true
+                                            break
+                                        }
+                                    }
+                                }
+                                else if(msgs[i].replied_to.startsWith('d') && msgs[i].from!==msgs[i].to)
+                                    {
+                                        for(let k=0;k<previous[j][1].length;k++)
+                                            {
+                                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                                {
+                                                    
+                                                        set_replies(pre=>
+                                                        {
+                                                            let reply_info=[...pre]
+                                                            reply_info[j][k]=['none','','']
+                                                            return reply_info
+                                                        })
+                                                    
+                                                    stop=true
+                                                    break
+                                                }
+                                            }
+                                        
+        
+                                        
+                                        
+                                    }
+                                if(stop){break}
+                                
+                            }
+        
+                        }
+                        return previous
+                    })
+    
+            })
+            return()=>{replied_docs1();replied_docs2();}
+    
+        },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
 
+    useEffect(()=>
+    {
+        if(!index || indices.includes(index)===false){return;}
+
+        let from_edited=query(collection(db,'messages'),where("edit","==",true),where("from","==",index))
+        let to_edited=query(collection(db,'messages'),where("edit","==",true),where("to","==",index))
+        let edit_from=onSnapshot(from_edited,(snapshot)=>
+        {
+            let msgs=snapshot.docChanges().map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
+            console.log(msgs)
+            setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    for(let i=0;i<msgs.length;i++)
+                    {
+                        let stop=false
+                        for(let j=0;j<previous.length;j++)
+                        {
+                            if(previous[j][0]===msgs[i].to && !msgs[i].delete && msgs[i].from!==msgs[i].to )
+                            {
+                                for(let k=0;k<previous[j][1].length;k++)
+                                {
+                                    if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                    {
+                                        set_is_edited(pre=>
+                                        {
+                                            let original=[...pre]
+                                            original[j][k]='Edited'
+                                            return original
+
+                                        }
+                                        )
+                                        stop=true
+                                        break
+                                    }
+                                }
+                            }
+                            if(stop){break}
+                        }
+                    }
+                    return previous
+                })
+        }) 
+
+        let edit_to=onSnapshot(to_edited,(snapshot)=>
+        {
+            let msgs=snapshot.docChanges().map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
+            console.log(msgs)
+            setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    for(let i=0;i<msgs.length;i++)
+                    {
+                        let stop=false
+                        for(let j=0;j<previous.length;j++)
+                        {
+                            if(previous[j][0]===msgs[i].from && !msgs[i].delete)
+                            {
+                                for(let k=0;k<previous[j][1].length;k++)
+                                {
+                                    if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                    {
+                                        set_is_edited(pre=>
+                                        {
+                                            let original=[...pre]
+                                            original[j][k]='Edited'
+                                            return original
+                                        }
+                                        )
+                                        stop=true
+                                        break
+                                    }
+                                }
+                            }
+                            if(stop){break}
+                        }
+                    }
+                    return previous
+                })
         })
-        return()=>{replied_docs1();replied_docs2();}
-
+        return()=>
+        {
+            edit_from();
+            edit_to();
+        }
     },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
 
     useEffect(() => {
@@ -947,6 +1043,7 @@ function Home()
             let months=['January','February','March','April','May','June','July','August','September','October','November','December']
             for(let i=0;i<previous.length;i++)
             {
+                let dates=[]
                 for(let j=0;j<previous[i][1].length;j++)
                 {
                     if(previous[i][1][j].startsWith(' ') || previous[i][1][j].startsWith('✔'))
@@ -962,6 +1059,19 @@ function Home()
                             previous[i][1].splice(j,0,present_date)
                         }
                     }
+                    else{dates.push(j)}
+                }
+                for(let k=0;k<dates.length-1;k++)
+                {
+                    if(dates[k+1]-dates[k]==1)
+                    {
+                        previous[i][1].splice(dates[k],1)
+                    }
+                    
+                }
+                if(dates[dates.length-1]===previous[i][1].length-1)
+                {
+                    previous[i][1].splice(dates[dates.length-1],1)
                 }
             }
             return previous
@@ -1193,6 +1303,14 @@ function Home()
                 }
                 else{values[i/2]='none'}
             }
+            let found_result=false
+            values.forEach(x=>
+            {
+                if(x==='flex'){found_result=true;return}
+            })
+            if(found_result){set_no_match_msg('none')}
+            else{set_no_match_msg('flex')}
+
         }
         else if(search_value==='')
         {
@@ -1200,6 +1318,7 @@ function Home()
             {
                     values[i/2]='flex'
             }
+            set_no_match_msg('none')
         }
         set_search_filter(values)
     },[search_value,info])
@@ -1250,13 +1369,13 @@ function Home()
                                                 <option value='seen'>{seen_at[index]?.[ind]===undefined?'👁️ > ❌':seen_at[index]?.[ind]}</option>
                                             </select>
 
-                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'darkviolet'}}>
+                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'cadetblue'}}>
                                                 <span style={{fontWeight:'bold'}}>{replies[index]?.[ind]?.[1]===undefined?'':replies[index][ind][1]}</span>
                                                 <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{replies[index]?.[ind]?.[2]===undefined?'':replies[index][ind][2]}</span>
                                             </span>
 
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'skyblue':'white'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
-                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
+                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{is_edited[index]?.[ind]===undefined?'':is_edited[index]?.[ind]} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             
                                             text.startsWith(' ')?
@@ -1271,15 +1390,15 @@ function Home()
                                                 <option value='Reply'>💬 Reply</option>
                                             </select>
 
-                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'darkviolet'}}>
+                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'cadetblue'}}>
                                                 <span style={{fontWeight:'bold'}}>{replies[index]?.[ind]?.[1]===undefined?'':replies[index][ind][1]}</span>
                                                 <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{replies[index]?.[ind]?.[2]===undefined?'':replies[index][ind][2]}</span>
                                             </span>
                                             
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
-                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span></span>):
+                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{is_edited[index]?.[ind]===undefined?'':is_edited[index]?.[ind]} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span></span>):
 
-                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'darkviolet',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
+                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'cadetblue',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
                                         )
                                         )}
                                     </div>
@@ -1305,7 +1424,7 @@ function Home()
                                                 </span>
                                         </div>
                                         <div style={{height:'35px'}}>
-                                            <span style={{fontWeight:'normal'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'skyblue':'lightgreen'}`}}>{value[1][value[1].length-1].startsWith('✔✔')?'✔✔':''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
+                                            <span style={{fontWeight:'normal'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'blue':'lightgreen'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
                                             <span style={{marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
                                         </div>
                                     </div>
@@ -1368,12 +1487,13 @@ function Home()
                         onChange={(e)=>
                             {
                                 if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+                                if(e.target.value.length>12){e.target.value=e.target.value.slice(0,12)}
                                 set_search_value(e.target.value.replace(/[^a-zA-Z0-9_ ]/g, ''))
                             }}
                         style={{display:'flex',justifySelf:'center',alignSelf:'center',borderRadius:'5px',border:'1px solid darkgreen',fontSize:'20px'}}></input>
                         <button onClick={()=>set_search_value('')} style={{cursor:'pointer', fontSize:'20px',borderRadius:'5px',border:'1px solid darkgreen',backgroundColor:'darkgreen',color:'white'}}>Clear</button>
                     </aa>
-
+                    <span style={{display:no_match_msg,justifyContent:'center',alignItems:'center',fontWeight:'bold'}}>No match for '{search_value}'</span>
                     {info.map((a, index) => {
                         if (index < info.length / 2) {
                             w = w + 1; // Increment w before returning
@@ -1399,8 +1519,8 @@ function Home()
             </div>
             
             <div className='msg_div' style={{display:disp}}>
-                <i  style={{display:edit_icon}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</i>
-                <i  style={{display:reply_icon}} onClick={()=>{set_reply('none');set_reply_to('')}}>💬❌</i>
+                <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
+                <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer'}} onClick={()=>{set_reply('none');set_reply_to('')}}>💬❌</button>
 
                 <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...'
                 onChange={()=>
