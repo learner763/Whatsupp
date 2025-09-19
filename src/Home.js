@@ -1445,7 +1445,7 @@ function Home()
                         <input onChange={(e)=>
                             {
                             if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
-                            setup_name(e.target.value.replace(/[^a-zA-Z0-9_ ]/g, ''))
+                            setup_name(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
                             }} value={up_name} style={{alignSelf:'end'}}></input>
                         <label>About 📝</label>
                         <input onChange={(e)=>

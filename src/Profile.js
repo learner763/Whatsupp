@@ -86,7 +86,7 @@ function Profile() {
           onChange={(e) => 
           {
             if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
-            setname(e.target.value.replace(/[^a-zA-Z0-9_ ]/g,''))} 
+            setname(e.target.value.replace(/[^a-zA-Z0-9_]/g,''))} 
           }
         />
         <label >About Me 📝</label>
