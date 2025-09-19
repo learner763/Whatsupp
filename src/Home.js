@@ -514,11 +514,11 @@ function Home()
                         }
                     }
                     else if(active_users[indices[i]].lastseen && active_users[indices[i]].online==false){
-                        statuses.push(new Date(active_users[indices[i]].lastseen).toLocaleDateString()
+                        statuses.push('('+new Date(active_users[indices[i]].lastseen).toLocaleDateString()
                         .slice(new Date(active_users[indices[i]].lastseen).toLocaleDateString().indexOf('/')+1,
                         new Date(active_users[indices[i]].lastseen).toLocaleDateString().lastIndexOf('/')
                         ).includes(new Date().getDate())?new Date(active_users[indices[i]].lastseen).toLocaleTimeString():
-                        new Date(active_users[indices[i]].lastseen).toLocaleDateString())
+                        new Date(active_users[indices[i]].lastseen).toLocaleDateString()+')')
                         }
                 }
                 else{statuses.push('')}
@@ -754,7 +754,7 @@ function Home()
                                                 set_replies(pre=>
                                                 {
                                                     let reply_info=[...pre]
-                                                    reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].from)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
+                                                    reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?info[indices.indexOf(msgs[i].from)*2]:'You',msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
                                                     return reply_info
                                                 })                                        
                                             }
@@ -1357,7 +1357,7 @@ function Home()
                                         {value[1].map((text,ind)=>
                                         (
                                             text.startsWith('✔')?
-                                            (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'270px',padding:'5px',fontSize:'20px'}}>
+                                            (<span style={{marginRight:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'270px',padding:'5px',fontSize:'20px'}}>
                                             <select id='options1' value={selectval} onChange={(e)=>
                                                 {console.log(e.target.value); 
                                                 if(e.target.value==='Delete'){set_edit('none'); set_msg_value('');set_reply('none');set_reply_to('');delete_msg(receiver,text);}
@@ -1383,7 +1383,7 @@ function Home()
                                             </span>):
                                             
                                             text.startsWith(' ')?
-                                            (<span style={{display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
+                                            (<span style={{marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
                                             <select id='options2' value={selectval} onChange={(e)=>
                                                 {console.log(e.target.value); 
                                                 if(e.target.value==="Reply"){reply_msg(receiver,text);}
@@ -1411,15 +1411,15 @@ function Home()
                         })}
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
-                        <label id="connect_msg"><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
+                        <label id="connect_msg" style={{display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
 
                         {messages.map((value,index)=>
                             {
                                 return(
                                     <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');update_receiver(value[0]);console.log(receiver);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
-                                            <span style={{paddingLeft:'5px'}}><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
-                                            <span style={{paddingRight:'5px',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
+                                            <span style={{paddingLeft:'5px',paddingTop:'5px'}}><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
+                                            <span style={{paddingRight:'5px',fontSize:'12px',paddingTop:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
                                                 {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().slice
                                                 (new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().indexOf('/')+1,
                                                 new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().lastIndexOf('/')).includes( new Date().getDate())?
@@ -1482,7 +1482,7 @@ function Home()
                 
 
                 <div className='home13' >
-                    <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:'darkgreen'}}><i id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
+                    <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:'darkgreen'}}><i style={{marginTop:'2.5px'}} id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
                     <aa style={{display:'flex',justifyContent:'center',width:'100%'}}>
                         <input placeholder='Search ...' value={search_value} 
                         onChange={(e)=>

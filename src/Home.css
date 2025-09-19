@@ -295,7 +295,21 @@ body{
     
 }
 @media (max-width:500px) {
-    
+    #connect_msg{
+        font-size: 20px;
+    }
+    #profile_name{
+        font-size: 20px;
+    }
+    .chat_bar span{
+        font-size: 20px;
+    }
+    .top{
+        height: 29px;
+    }
+    .top label{
+        font-size: 20px;
+    }
     .part2 input,.part3 input,.part3 select{
         align-self: center;
         font-size: 21px;

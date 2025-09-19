@@ -55,7 +55,7 @@ function App() {
               
               if (response.data.success===false) {
                 setdisp("block");
-                settext(`"${email}" already exists!`);
+                settext(`'${email}' already exists!`);
               }
               else if(response.data.success===true){
                 setdisp("none");
@@ -104,12 +104,12 @@ function App() {
         .then(data => {
           if(data.length===0)
             {
-              settext(`"${email}" doesn't exist!`);
+              settext(`'${email}' doesn't exist!`);
               setdisp("block");
             }
           else
             {
-              settext(`Password for "${email}" : ${data[0].password}`);
+              settext(`Password for '${email}' : ${data[0].password}`);
               setdisp("block");
             }
         })
