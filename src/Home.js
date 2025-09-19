@@ -1324,7 +1324,7 @@ function Home()
     },[search_value,info])
     return(
         <>
-        <div style={{display:`${loaded==true? 'none':'flex'}`,height:'100vh',justifyContent:'center',alignItems:'center'}}>
+        <div style={{display:`${loaded==true? 'none':'flex'}`,height:'100dvh',justifyContent:'center',alignItems:'center',width:'100%'}}>
             <div><img src='bg.png' style={{width:'300px',display:'flex'}}></img></div>
         </div>
         <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
