@@ -201,9 +201,7 @@ body{
     font-family: sans-serif;
     font-size: 20px;
 }
-.msg_div button{
-    font-size: 25px;
-}
+
 .chats{
     display: flex;
     padding-top: 28px;
