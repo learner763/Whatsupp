@@ -1323,6 +1323,10 @@ function Home()
         set_search_filter(values)
     },[search_value,info])
     return(
+        <>
+        <div style={{display:`${loaded==true? 'none':'flex'}`,height:'100vh',justifyContent:'center',alignItems:'center'}}>
+            <img src='bg.png' style={{width:'300px'}}></img>
+        </div>
         <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
             <div className='top'>
                 <label><i class='fas fa-phone'></i>Whatsupp</label>
@@ -1544,6 +1548,7 @@ function Home()
                 <label  id="people"><i class='fas fa-users'></i>People</label>
             </div>
         </div>
+        </>
     );
 }
 export default Home;
