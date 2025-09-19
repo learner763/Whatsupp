@@ -1325,7 +1325,7 @@ function Home()
     return(
         <>
         <div style={{display:`${loaded==true? 'none':'flex'}`,height:'100vh',justifyContent:'center',alignItems:'center'}}>
-            <img src='bg.png' style={{width:'300px'}}></img>
+            <div><img src='bg.png' style={{width:'300px'}}></img></div>
         </div>
         <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
             <div className='top'>
