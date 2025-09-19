@@ -1522,8 +1522,8 @@ function Home()
             </div>
             
             <div className='msg_div' style={{display:disp}}>
-                <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
-                <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer'}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
+                <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer',border:'1px black solid'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
+                <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer',border:'1px black solid'}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
 
                 <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...'
                 onChange={()=>
