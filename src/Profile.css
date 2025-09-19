@@ -10,6 +10,7 @@ body{
   background:darkgreen; 
   width: auto;
   height: 100dvh;
+  overflow-y: scroll;
 
 }
 #bg{

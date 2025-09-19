@@ -1,62 +1,62 @@
 body{
-  margin: 0;
-  scroll-behavior: smooth;
+    margin: 0;
+    scroll-behavior: smooth;
 }
 .App{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color:darkgreen; 
-  width: auto;
-  height: 100dvh;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color:darkgreen; 
+    width: auto;
+    height: 100dvh;
+    overflow-y: scroll;
 }
 #bg{
-  width: 150px;
-  align-self: center;
+    width: 150px;
+    align-self: center;
 }
 .App label{
-  align-self: center;
-  justify-self: center;
-  font-weight: bold;
-  color: green;
-  font-size: 20px;
-  margin: 10px;
+    align-self: center;
+    justify-self: center;
+    font-weight: bold;
+    color: green;
+    font-size: 20px;
+    margin: 10px;
 }
 .App input{
-  align-items: center;
-  margin: 10px;
-  justify-self: center;
-  border-radius: 5px;
-  border: none;
-  font-size: 20px;
+    align-items: center;
+    margin: 10px;
+    justify-self: center;
+    border-radius: 5px;
+    border: none;
+    font-size: 20px;
 }
 .App button{
-  margin: 10px;
-  background-color: white;
-  color: green;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 20px;
-  transition: all 0.3s;
+    margin: 10px;
+    background-color: white;
+    color: green;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s;
 
 }
 .App button:hover{
-  background-color: green;
-  color: white;
+    background-color: green;
+    color: white;
 }
 #s{
-  text-decoration: underline;
-  cursor: pointer;
+    text-decoration: underline;
+    cursor: pointer;
 }
 #t{
-  font-weight: normal;
+    font-weight: normal;
 }
 @media (max-width:850px)
 {
-  #bg{
-    width: 120px !important;
-  }
+    #bg{
+      width: 120px !important;
+    }
 }
