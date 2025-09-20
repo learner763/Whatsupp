@@ -289,12 +289,15 @@
             width: 222px;
         }
         
-        .part2,.part3,.home13,.chats{
-            padding-bottom: 40px;
+        .part2,.part3,.home13,.chats,.part1{
+            padding-bottom: 30px;
         }
         
     }
     @media (max-width:500px) {
+        .part2,.part3,.home13,.chats,.part1{
+            padding-bottom: 40px;
+        }
         #connect_msg{
             font-size: 20px;
         }
