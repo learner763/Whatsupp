@@ -1,338 +1,319 @@
 .home{
+display: flex;
+flex-direction: column;
+background-color: darkgreen;
+
+}
+body{
+    font-family: sans-serif;
+    margin: 0;
+}
+.top label
+{
+    font-weight: bold;
+    font-size: 25px;
+    justify-self: center;
+    align-self: center;
+    color: white;
+}
+.top
+{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    background-color:  darkgreen;
+    flex-wrap: wrap;
+}
+#connect_people{
+    padding-left: 3px;
+    padding-top: 3px;
+}
+.home1{
+    display:flex;    
+    background-color: white;
+}
+.home1 div{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+}
+.home11{
+    flex: .25 ;
+    border: darkgreen solid ;
+    border-width: 0px 1px 0px 0px;
+    flex-direction: column;
+    overflow-y: scroll;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+.home11 label{
+    color: darkgreen;
+    cursor: pointer;
+    background-color: lightgreen;
+    width: 100%;
+    text-align: center;
+    border: darkgreen solid;
+    border-width: 1px 0px 1px 0px;
+    border-radius: 30px;
+    font-size: 25px;
+    font-weight: bolder;
+    
+}
+.home11 label:first-child{
+    background-color: darkgreen;
+    color: white;
+}
+.home12
+{
+    flex: 1 ;
+    border: darkgreen solid ;
+    border-width: 0px 1px 0px 0px;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+.home13
+{
+    overflow-y: scroll;
+    flex: .5 ;
+    flex-direction: column;
+}
+
+.userinfo{
     display: flex;
     flex-direction: column;
-    background-color: darkgreen;
+    color: white;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: start;
+    margin-top: 10px;
+    margin-bottom: 10px;
     
-    }
-    body{
-        font-family: sans-serif;
-        margin: 0;
-    }
-    .top label
-    {
-        font-weight: bold;
-        font-size: 25px;
-        justify-self: center;
-        align-self: center;
-        color: white;
-    }
-    .top
-    {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        width: 100%;
-        position: fixed;
-        top: 0;
-        background-color:  darkgreen;
-        flex-wrap: wrap;
-    }
-    #connect_people{
-        padding-left: 3px;
-        padding-top: 3px;
-    }
-    .home1{
-        display:flex;    
-        background-color: white;
-    }
-    .home1 div{
-        height: 100vh;
-        width: 100%;
-        display: flex;
-    }
+}
+.userinfo button{
+    background-color: lightgreen;
+    color: darkgreen;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+}
+.userinfo i, .userinfo button, .userinfo span{
+    font-weight: bold;
+    font-size: 25px;
+}
+.home13 span ,.home11,.home13{
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+
+#youmayknow{
+    font-size: 25px;
+    padding-top: 28px;
+}
+.part2,.part3{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: start;
+    overflow-y: scroll;
+}
+.part2 i, .part2 button, .part2 label, .part2 input,
+.part3 i, .part3 button, .part3 label, .part3 input,.part3 select{
+    color: darkgreen;
+}
+.part2 i,.part3 i{
+    font-size: 60px;
+}
+.part2 label,.part3 label{
+    font-size: 25px;
+    font-weight: bolder;
+    padding-left: 5px;
+}
+.part2 input,.part3 input,.part3 select{
+    font-size: 25px;
+    border: darkgreen solid;
+    border-width: 1px 0px 1px 0px;
+    border-radius: 20px;
+    margin-right: 5px;
+}
+.part2 button,.part3 button{
+    background-color: lightgreen;
+    color: darkgreen;
+    cursor: pointer;
+    border: darkgreen solid;
+    border-width: 1px 0px 1px 0px;
+    border-radius: 20px;
+    align-self: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.part1{
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    align-items: center;
+    flex: .85;
+    padding-top: 28px;
+}
+.chats{
+    display: flex;
+    padding-top: 28px;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+.part1 label,.chats label{
+    font-weight: bold;
+    font-size: 25px;
+    align-self: center;
+    justify-self: center;
+    color: darkgreen;
+}
+
+#profile_name{
+    background-color: lightgreen;
+    width: 50%;
+    text-align: center;
+    position: fixed;
+    border-radius: 0 0px 30px 30px;
+
+}
+#refresh_people{
+    cursor: pointer;
+}
+.msg_div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    flex: .1;
+    cursor: pointer;
+    position: fixed;
+    align-self: center;
+    bottom: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 30px 30px 0px 0px;
+}
+.msg_div textarea{
+    width: 336px;
+    height: 60px;
+    font-family: sans-serif;
+    font-size: 20px;
+}
+
+.chats{
+    display: flex;
+    padding-top: 28px;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+.chat_bar{
+    border-width: 0px 0px 1px 0px !important;
+    flex: .1;
+    justify-content: center;
+    align-items: start;
+    cursor: pointer;
+}
+.chat_bar span{
+    font-size: 25px;
+    color: darkgreen;
+    overflow-x: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+#connect_msg{
+    border-width: 0px 0px 1px 0px !important;
+    width: 100%;
+}
+.home11_pro{
+    color: white;
+}
+.chat_detail{
+    padding-top: 28px;
+}
+.chat_detail:hover{
+    cursor: pointer;
+}
+.home11_pro label{
+    border-radius: 6px;
+}
+@media (max-width: 1100px)
+{
     .home11{
-        flex: .25 ;
-        border: darkgreen solid ;
-        border-width: 0px 1px 0px 0px;
-        flex-direction: column;
-        overflow-y: scroll;
-        justify-content: space-around;
-        align-items: center;
-        height: 100%;
-    }
-    .home11 label{
-        color: darkgreen;
-        cursor: pointer;
-        background-color: lightgreen;
-        width: 100%;
-        text-align: center;
-        border: darkgreen solid;
-        border-width: 1px 0px 1px 0px;
-        border-radius: 30px;
-        font-size: 25px;
-        font-weight: bolder;
-        
-    }
-    .home11 label:first-child{
-        background-color: darkgreen;
-        color: white;
-    }
-    .home12
-    {
-        flex: 1 ;
-        border: darkgreen solid ;
-        border-width: 0px 1px 0px 0px;
-        flex-direction: column;
-        overflow-x: hidden;
-    }
-    .home13
-    {
-        overflow-y: scroll;
-        flex: .5 ;
-        flex-direction: column;
-    }
-    
-    .userinfo{
-        display: flex;
-        flex-direction: column;
-        color: white;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: start;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        
-    }
-    .userinfo button{
-        background-color: lightgreen;
-        color: darkgreen;
-        cursor: pointer;
-        border: none;
-        border-radius: 10px;
-    }
-    .userinfo i, .userinfo button, .userinfo span{
-        font-weight: bold;
-        font-size: 25px;
-    }
-    .home13 span ,.home11,.home13{
-        word-wrap: break-word;
-        word-break: break-word;
-    }
-    
-    
-    #youmayknow{
-        font-size: 25px;
-        padding-top: 28px;
-    }
-    .part2,.part3{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        align-items: start;
-        overflow-y: scroll;
-    }
-    .part2 i, .part2 button, .part2 label, .part2 input,
-    .part3 i, .part3 button, .part3 label, .part3 input,.part3 select{
-        color: darkgreen;
-    }
-    .part2 i,.part3 i{
-        font-size: 60px;
-    }
-    .part2 label,.part3 label{
-        font-size: 25px;
-        font-weight: bolder;
-        padding-left: 5px;
-    }
-    .part2 input,.part3 input,.part3 select{
-        font-size: 25px;
-        border: darkgreen solid;
-        border-width: 1px 0px 1px 0px;
-        border-radius: 20px;
-        margin-right: 5px;
-    }
-    .part2 button,.part3 button{
-        background-color: lightgreen;
-        color: darkgreen;
-        cursor: pointer;
-        border: darkgreen solid;
-        border-width: 1px 0px 1px 0px;
-        border-radius: 20px;
-        align-self: center;
-        font-size: 20px;
-    }
-    
-    .part3 select option{
-        font-Weight:bold;
-    }
-    .part1{
-        display: flex;
-        flex-direction: column;
-        overflow-y: scroll;
-        align-items: center;
-        flex: .85;
-        padding-top: 28px;
-    }
-    .chats{
-        display: flex;
-        padding-top: 28px;
-        flex-direction: column;
-        overflow-y: scroll;
-    }
-    .part1 label,.chats label{
-        font-weight: bold;
-        font-size: 25px;
-        align-self: center;
-        justify-self: center;
-        color: darkgreen;
-    }
-    
-    #profile_name{
-        background-color: lightgreen;
-        width: 50%;
-        text-align: center;
-        position: fixed;
-        border-radius: 0 0px 30px 30px;
-    
-    }
-    #refresh_people{
-        cursor: pointer;
-    }
-    .msg_div{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: auto;
-        flex: .1;
-        cursor: pointer;
-        position: fixed;
-        align-self: center;
-        bottom: 0px;
-        padding-left: 5px;
-        padding-right: 5px;
-        border-radius: 30px 30px 0px 0px;
-    }
-    .msg_div textarea{
-        width: 336px;
-        height: 60px;
-        font-family: sans-serif;
-        font-size: 20px;
-    }
-    
-    .chats{
-        display: flex;
-        padding-top: 28px;
-        flex-direction: column;
-        overflow-y: scroll;
-    }
-    .chat_bar{
-        border: darkgreen solid;
-        border-width: 0px 0px 1px 0px;
-        flex: .1;
-        justify-content: center;
-        align-items: start;
-        cursor: pointer;
-    }
-    .chat_bar span{
-        font-size: 25px;
-        color: darkgreen;
-        overflow-x: hidden; 
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-    #connect_msg{
-        border: solid darkgreen;
-        border-width: 0px 0px 1px 0px;
-        width: 100%;
+        display: none !important;
     }
     .home11_pro{
+        display: flex !important;
+        width: 100%;
+        justify-content: space-around;
+        align-items: center;
+        justify-self: flex-end;
+        bottom: 0 !important;
+        position: fixed;
+        background-color: darkgreen;
+        height: 30px;
         color: white;
-    }
-    .chat_detail{
-        padding-top: 28px;
-    }
-    .chat_detail:hover{
+        font-weight: bold;
+    }   
+    .home11_pro label {
         cursor: pointer;
     }
-    .home11_pro label{
-        border-radius: 6px;
+    #profile_name,.msg_div{
+        width: 100%;
     }
-    @media (max-width: 1100px)
-    {
-        .part2 label,.part3 label{
-            font-size: 20px;
-        }
-        .part2 input,.part3 input,.part3 select{
-            font-size: 21px;
-        }
-        
-        .home11{
-            display: none !important;
-        }
-        .home11_pro{
-            display: flex !important;
-            width: 100%;
-            justify-content: space-around;
-            align-items: center;
-            justify-self: flex-end;
-            bottom: 0 !important;
-            position: fixed;
-            background-color: darkgreen;
-            height: 30px;
-            color: white;
-            font-weight: bold;
-        }   
-        .home11_pro label {
-            cursor: pointer;
-        }
-        #profile_name,.msg_div{
-            width: 100%;
-        }
-        .msg_div{
-            justify-self:flex-start;
-            position: fixed;
-            bottom: 30px;
-        }
-        .msg_div{
-            background-color: lightgreen;
-        }
-        .msg_div textarea{
-            width: 222px;
-        }
-        
-        .part2,.part3,.home13,.chats,.part1{
-            padding-bottom: 30px;
-        }
-        
+    .msg_div{
+        justify-self:flex-start;
+        position: fixed;
+        bottom: 30px;
     }
-    @media (max-width:500px) {
-        .part2,.part3,.home13,.chats,.part1{
-            padding-bottom: 40px;
-        }
-        #connect_msg{
-            font-size: 20px;
-        }
-        #profile_name{
-            font-size: 20px;
-        }
-        .chat_bar span{
-            font-size: 20px;
-        }
-        .top{
-            height: 29px;
-        }
-        .top label{
-            font-size: 20px;
-        }
-        .part2 input,.part3 input,.part3 select{
-            align-self: center;
-            font-size: 21px;
-        }
-        .home11_pro{
-            height: auto;
-        }
-        .msg_div{
-            bottom: 40px;
-        }
-        .home11_pro label {
-            font-size: 0px;
-            padding: 5px;
-            border-radius: 10px !important;
-        }
-        .home11_pro label sup{
-            font-size: 15px;
-        }
-        .home11_pro label i{
-            font-size: 30px;
-        }
+    .msg_div{
+        background-color: lightgreen;
+    }
+    .msg_div textarea{
+        width: 222px;
     }
     
+    .part2,.part3,.home13,.chats,.part1{
+        padding-bottom: 30px;
+    }
+    
+}
+@media (max-width:500px) {
+    
+    .top label,#youmayknow,.part2 label,.part3 label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
+        font-size: 20px;
+    }
+    .part2 input,.part3 input,.part3 select{
+        font-size: 20px;
+        align-self: center;
+    }
+    .part2,.part3,.home13,.chats,.part1{
+        padding-bottom: 40px;
+    }
+    .top{
+        height: 29px;
+    }
+    
+    .home11_pro{
+        height: auto;
+    }
+    .msg_div{
+        bottom: 40px;
+    }
+    .home11_pro label {
+        font-size: 0px;
+        padding: 5px;
+        border-radius: 10px !important;
+    }
+    .home11_pro label sup{
+        font-size: 15px;
+    }
+    .home11_pro label i{
+        font-size: 30px;
+    }
+}

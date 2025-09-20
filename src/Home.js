@@ -1385,7 +1385,7 @@ function Home()
                                                 <option value='seen'>{seen_at[index]?.[ind]===undefined?'👁️ > ❌':seen_at[index]?.[ind]}</option>
                                             </select>
 
-                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'cadetblue'}}>
+                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'lightslategray'}}>
                                                 <span style={{fontWeight:'bold'}}>{replies[index]?.[ind]?.[1]===undefined?'':replies[index][ind][1]}</span>
                                                 <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{replies[index]?.[ind]?.[2]===undefined?'':replies[index][ind][2]}</span>
                                             </span>
@@ -1395,7 +1395,7 @@ function Home()
                                             </span>):
                                             
                                             text.startsWith(' ')?
-                                            (<span style={{marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'black',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
+                                            (<span style={{marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:bgr==='#221130'?'lightslategray':'#221130',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
                                             <select id='options2' value={selectval} onChange={(e)=>
                                                 {console.log(e.target.value); 
                                                 if(e.target.value==="Reply"){reply_msg(receiver,text);}
@@ -1406,7 +1406,7 @@ function Home()
                                                 <option value='Reply'>💬 Reply</option>
                                             </select>
 
-                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'cadetblue'}}>
+                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:bgr==='#221130'?'#221130':'lightslategray'}}>
                                                 <span style={{fontWeight:'bold'}}>{replies[index]?.[ind]?.[1]===undefined?'':replies[index][ind][1]}</span>
                                                 <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{replies[index]?.[ind]?.[2]===undefined?'':replies[index][ind][2]}</span>
                                             </span>
@@ -1414,7 +1414,7 @@ function Home()
                                             <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{is_edited[index]?.[ind]===undefined?'':is_edited[index]?.[ind]} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span></span>):
 
-                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'cadetblue',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
+                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'lightslategray',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
                                         )
                                         )}
                                     </div>
@@ -1423,25 +1423,23 @@ function Home()
                         })}
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
-                        <label id="connect_msg" style={{display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fas fa-people-arrows"></i> Start connecting with people.</label>
+                        <label id="connect_msg" style={{border:bgr==='#221130'?'solid white':'solid darkgreen',color:bgr==='#221130'?'white':'darkgreen', display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fas fa-users"></i> Start connecting with people.</label>
 
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');update_receiver(value[0]);console.log(receiver);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column'}} >
+                                    <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');update_receiver(value[0]);console.log(receiver);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='#221130'?'solid white ':'solid darkgreen'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
-                                            <span style={{paddingLeft:'5px',paddingTop:'5px'}}><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
-                                            <span style={{paddingRight:'5px',fontSize:'12px',paddingTop:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
-                                                {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().slice
-                                                (new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().indexOf('/')+1,
-                                                new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString().lastIndexOf('/')).includes( new Date().getDate())?
+                                            <span style={{paddingLeft:'5px',paddingTop:'5px',color:bgr==='#221130'?'lime':'darkgreen'}}><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
+                                            <span style={{color:bgr==='#221130'?'white':'darkgreen',paddingRight:'5px',fontSize:'12px',paddingTop:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
+                                                {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()=== new Date().toLocaleDateString()?
                                                 new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
                                                 new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()}
                                                 </span>
                                         </div>
                                         <div style={{height:'35px'}}>
-                                            <span style={{fontWeight:'normal',paddingLeft:'5px'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
-                                            <span style={{paddingRight:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
+                                            <span style={{fontWeight:'normal',paddingLeft:'5px',color:bgr==='#221130'?'white':'darkgreen'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
+                                            <span style={{color:bgr==='#221130'?'lime':'darkgreen',paddingRight:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
                                         </div>
                                     </div>
                                 );
@@ -1450,16 +1448,16 @@ function Home()
                     </div>
                     
                     <div className='part2' style={{display:part2}} >
-                        <i style={{alignSelf:'center',paddingTop:'30px'}} class='fas fa-user'></i>
-                        <label>Username 🔑</label>
+                        <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='#221130'?'lime':'darkgreen'}} class='fas fa-user'></i>
+                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Username 🔑</label>
                         <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} style={{alignSelf:'end'}}></input>
-                        <label>Name 🏷️</label>
+                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Name 🏷️</label>
                         <input onChange={(e)=>
                             {
                             if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
                             setup_name(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
                             }} value={up_name} style={{alignSelf:'end'}}></input>
-                        <label>About 📝</label>
+                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>About 📝</label>
                         <input onChange={(e)=>
                             {
                             if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
@@ -1475,13 +1473,14 @@ function Home()
                     </div>
                     
                     <div className='part3' style={{display:part3}} >
-                        <i style={{alignSelf:'center',paddingTop:'30px'}} class='fas fa-user'></i>
-                        <label>Change Password 🔒</label>
+                        <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='#221130'?'lime':'darkgreen'}} class='fas fa-user'></i>
+                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Change Password 🔒</label>
                         <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
-                        <label>Background Theme 🎨</label>
-                        <select value={bgr} style={{ alignSelf:'end',color:'black'}} onChange={(e)=>setbg(e.target.value)} >
-                            <option  value="white">White</option>
+                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Background Theme 🎨</label>
+                        <select value={bgr} style={{ alignSelf:'end',color:'#221130'}} onChange={(e)=>setbg(e.target.value)} >
+                            <option  value="white">Light</option>
                             <option  value="yellow">Yellow</option>
+                            <option  value="#221130">Dark</option>
                         </select>
                         <button onClick={()=>
                             {
@@ -1494,7 +1493,7 @@ function Home()
                 
 
                 <div className='home13' >
-                    <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:'darkgreen'}}><i style={{marginTop:'2.5px'}} id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
+                    <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='#221130'?'white':'darkgreen'}}><i style={{marginTop:'2.5px'}} id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
                     <aa style={{display:'flex',justifyContent:'center',width:'100%'}}>
                         <input placeholder='Search ...' value={search_value} 
                         onChange={(e)=>
@@ -1503,10 +1502,10 @@ function Home()
                                 if(e.target.value.length>12){e.target.value=e.target.value.slice(0,12)}
                                 set_search_value(e.target.value.replace(/[^a-zA-Z0-9_ ]/g, ''))
                             }}
-                        style={{display:'flex',width:'200px',justifySelf:'center',alignSelf:'center',borderRadius:'5px',border:'1px solid darkgreen',fontSize:'20px'}}></input>
+                        style={{ display:'flex',width:'200px',justifySelf:'center',alignSelf:'center',borderRadius:'5px',border:'1px solid darkgreen',fontSize:'20px'}}></input>
                         <button onClick={()=>set_search_value('')} style={{cursor:'pointer', fontSize:'20px',borderRadius:'5px',border:'1px solid darkgreen',backgroundColor:'darkgreen',color:'white'}}>Clear</button>
                     </aa>
-                    <span style={{display:no_match_msg, color:'darkgreen',justifyContent:'center',alignItems:'center',fontWeight:'bold'}}>No match for '{search_value}'</span>
+                    <span style={{display:no_match_msg, color:bgr==='#221130'?'white':'darkgreen',justifyContent:'center',alignItems:'center',fontWeight:'bold'}}>No match for '{search_value}'</span>
                     {info.map((a, index) => {
                         if (index < info.length / 2) {
                             w = w + 1; // Increment w before returning
@@ -1532,10 +1531,10 @@ function Home()
             </div>
             
             <div className='msg_div' style={{display:disp}}>
-                <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer',border:'1px black solid'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
-                <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer',border:'1px black solid'}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
+                <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer',border:'1px #221130 solid'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
+                <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer',border:'1px #221130 solid'}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
 
-                <textarea id="message" style={{resize:"none", border:"black solid 1px",borderRadius:"5px"}} placeholder='Type...'
+                <textarea id="message" style={{resize:"none", border:"#221130 solid 1px",borderRadius:"5px"}} placeholder='Type...'
                 onChange={()=>
                 {
                     if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
