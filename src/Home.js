@@ -994,9 +994,11 @@ function Home()
 
         let home1=document.querySelector('.home1')
         let home12=document.querySelector('.home12')
-        if(innerwidth<=1100 && innerwidth>500){home1.style.height=(window.innerHeight-30)+'px';home12.style.height=(window.innerHeight-30)+'px'}
-        else if(innerwidth<=500){home1.style.height=(window.innerHeight-40)+'px';home12.style.height=(window.innerHeight-40)+'px'}
-        else if(innerwidth>1100){home1.style.height=(window.innerHeight)+'px';home12.style.height=(window.innerHeight)+'px'}
+        let home13=document.querySelector('.home13')
+
+        if(innerwidth<=1100 && innerwidth>500){home1.style.height=(window.innerHeight-30)+'px';home12.style.height=(window.innerHeight-30)+'px';home13.style.height=(window.innerHeight-30)+'px'}
+        else if(innerwidth<=500){home1.style.height=(window.innerHeight-40)+'px';home12.style.height=(window.innerHeight-40)+'px';home13.style.height=(window.innerHeight-40)+'px'}
+        else if(innerwidth>1100){home1.style.height=(window.innerHeight)+'px';home12.style.height=(window.innerHeight)+'px';home13.style.height=(window.innerHeight)+'px'}
     },[innerheight,innerwidth])
     useEffect(() => {
         let container=document.getElementsByClassName('part1');
