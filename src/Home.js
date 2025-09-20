@@ -60,6 +60,7 @@ function Home()
     const [search_value,set_search_value]=useState('')
     const [search_filter,set_search_filter]=useState([])
     const [no_match_msg,set_no_match_msg]=useState('none')
+    const [innerheight,set_innerheight]=useState(window.innerHeight)
     let w=-1;
 
     async function set_seen()
@@ -988,6 +989,15 @@ function Home()
     
     },[innerwidth])
         
+    useEffect(()=>
+    {
+
+        let home1_div=document.querySelectorAll('.home1 div')
+        console.log(home1_div)
+        if(innerwidth<=1100 && innerwidth>500){home1_div[1].style.height=(window.innerHeight-30)+'px';}
+        else if(innerwidth<=500){home1_div[1].style.height=(window.innerHeight-40)+'px';}
+        else if(innerwidth>1100){home1_div[1].style.height=(window.innerHeight)+'px';}
+    },[innerheight,innerwidth])
     useEffect(() => {
         let container=document.getElementsByClassName('part1');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
@@ -1089,6 +1099,7 @@ function Home()
         window.addEventListener('resize',()=>
         {
             set_innerwidth(window.innerWidth);
+            set_innerheight(window.innerHeight);
         })
 
         fetch("/accounts")
