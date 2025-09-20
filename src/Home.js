@@ -515,16 +515,15 @@ function Home()
                         }
                     }
                     else if(active_users[indices[i]].lastseen && active_users[indices[i]].online==false){
-                        statuses.push('('+new Date(active_users[indices[i]].lastseen).toLocaleDateString()
-                        .slice(new Date(active_users[indices[i]].lastseen).toLocaleDateString().indexOf('/')+1,
-                        new Date(active_users[indices[i]].lastseen).toLocaleDateString().lastIndexOf('/')
-                        ).includes(new Date().getDate())?new Date(active_users[indices[i]].lastseen).toLocaleTimeString():
-                        new Date(active_users[indices[i]].lastseen).toLocaleDateString()+')')
+                        statuses.push('('+(new Date(active_users[indices[i]].lastseen).toLocaleDateString()
+                        ===new Date().toLocaleDateString()?new Date(active_users[indices[i]].lastseen).toLocaleTimeString():
+                        new Date(active_users[indices[i]].lastseen).toLocaleDateString())+')')
                         }
                 }
                 else{statuses.push('')}
 
             }
+            console.log(statuses)
             set_status(statuses)
         })
         return()=>
