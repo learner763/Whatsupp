@@ -992,11 +992,10 @@ function Home()
     useEffect(()=>
     {
 
-        let home1_div=document.querySelectorAll('.home1 div')
-        console.log(home1_div)
-        if(innerwidth<=1100 && innerwidth>500){home1_div[1].style.height=(window.innerHeight-30)+'px';}
-        else if(innerwidth<=500){home1_div[1].style.height=(window.innerHeight-40)+'px';}
-        else if(innerwidth>1100){home1_div[1].style.height=(window.innerHeight)+'px';}
+        let home1=document.querySelector('.home1')
+        if(innerwidth<=1100 && innerwidth>500){home1.style.height=(window.innerHeight-30)+'px'}
+        else if(innerwidth<=500){home1.style.height=(window.innerHeight-40)+'px'}
+        else if(innerwidth>1100){home1.style.height=(window.innerHeight)+'px'}
     },[innerheight,innerwidth])
     useEffect(() => {
         let container=document.getElementsByClassName('part1');
