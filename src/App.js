@@ -15,13 +15,43 @@ function App() {
   const [msg,cmsg]=useState("New to this app?");
   const [f,df]=useState("none");
   const nav=useNavigate();
-  
+  const [proceed,set_proceed]=useState('none')
+  const [root,set_root]=useState(localStorage.getItem("root"))
+  const [email_key,set_email_key]=useState(localStorage.getItem("email"))
+  const [profile_key,set_profile_key]=useState(localStorage.getItem("profile"))
+
   useEffect(()=>
-    {if(localStorage.getItem("email")!==null && (!localStorage.getItem("root") || localStorage.getItem("root")==="false"))
     {
-      console.log(6)
-      nav('/home');
-    }},[])
+      console.log(root,email_key,profile_key) 
+      if(!root || root==="false")
+      {
+        let a=0
+        if(email_key!==null && profile_key!==null)
+        {
+          set_proceed('none')
+          a=1
+          console.log(a)
+          nav('/home');
+        }
+        else if(!profile_key && email_key!==null)
+        {
+          set_proceed('none')
+          a=2
+          console.log(a)
+          nav('/profile');
+        }
+        else if(!email_key && !profile_key)
+        {
+          a=3
+          console.log(a)
+          set_proceed('flex');
+        }
+      }
+      else if(root==='true')
+      {
+        set_proceed('flex')
+      }
+    },[root,email_key,profile_key])
   
       async function post(email, password,bt) {
         if (email.length<13 && password.length<13)
@@ -119,7 +149,7 @@ function App() {
       }
 
   return (
-      <div className="App" >
+      <div className="App" style={{display:proceed}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <img id="bg" src="bg.png" alt="Background" />
         <label >Username 🔑</label>

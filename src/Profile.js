@@ -6,8 +6,14 @@ function Profile() {
   const [name, setname] = useState('');
   const [bio, setbio] = useState('');
   const nav1=useNavigate();
-  const index=localStorage.getItem("index")
+  const [email_key,set_email_key]=useState(localStorage.getItem("email"))
+  const [proceed,set_proceed]=useState('none')
 
+    useEffect(()=>
+    {
+      if(!localStorage.getItem("email")){set_proceed('none');alert('Please register yourself first!');nav1('/')}
+      else{set_proceed('flex')}
+    },[email_key])
     function personal_info(name,bio)
     {
       let flag=false
@@ -18,7 +24,7 @@ function Profile() {
         .then(data=>{
           for(let i=0;i<data.length;i++)
           {
-            if(data[i].name===name && data[i].index!==index)
+            if(data[i].name===name && data[i].email!==email_key)
             {
               flag=true;
               alert(`${name} is taken by another user!Choose different.`)
@@ -32,7 +38,7 @@ function Profile() {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ username: index, name: name,bio:bio }),
+              body: JSON.stringify({ username: email_key, name: name,bio:bio }),
             })
             .then(response => response.json())
             .then(data => {
@@ -61,21 +67,23 @@ function Profile() {
       .then(data=>{
         for(let i=0;i<data.length;i++)
         {
-          if(data[i].email===index)
+          if(data[i].email===email_key)
           {
-            if(data[i].name===null){data[i].name=''}setname(data[i].name);
-            if(data[i].bio===null){data[i].bio=''}setbio(data[i].bio);
+            if(data[i].name===null){data[i].name=''}
+            else{setname(data[i].name);}
+            if(data[i].bio===null){data[i].bio=''}
+            else{setbio(data[i].bio);}
           }
         }
       })
-    },[index]
+    },[email_key]
     )
       
       
 
   
   return (
-      <div className="Profile" >
+      <div className="Profile" style={{display:proceed}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <img id="bg" src="bg.png" alt="Background" />
         <label >Profile Name 🏷️</label>

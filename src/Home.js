@@ -1107,7 +1107,7 @@ function Home()
         .then(response => response.json())
         .then(data => 
             {
-                let flag=false
+                let flag=[false,null]
                 let accounts=[] 
                 for(let i=0;i<data.length;i++)
                 {
@@ -1118,7 +1118,7 @@ function Home()
                         change_profile(localStorage.getItem('profile'))
                         change_index(localStorage.getItem('index'))
                         retrieve_messages(data[i].index)
-                        flag=true
+                        flag=[true,data[i].name===null?localStorage.getItem('profile'):data[i].name]
                         set_flag1(true)
                         setup_user(data[i].email);
                         setup_name(data[i].name);
@@ -1128,7 +1128,8 @@ function Home()
                         setbg(data[i].bg);
                     }
                 }
-                if(flag==false){set_flag1(false);set_loaded(false);alert(`No account exists with "${username}"`);localStorage.setItem('root',true);nav2('/');}
+                if(flag[0]===false){set_flag1(false);set_loaded(false);alert(`No account exists with '${username}'`);localStorage.setItem('root',true);nav2('/');}
+                else if(flag[1]===null){set_flag1(false);set_loaded(false);alert(`Please submit profile details!`);nav2('/profile')}
                 let ind=[]
                 for(let i=data.length-1;i>=0;i--)
                 {
@@ -1198,7 +1199,7 @@ function Home()
             });
         }
         
-    }, []);
+    }, [profile]);
     
     async function Send(message)
     {

@@ -1,1 +1,1 @@
-console.log('ee'.toLowerCase().startsWith('E'.toLowerCase()))
+console.log(null=='null')

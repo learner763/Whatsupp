@@ -9,8 +9,8 @@ body{
   align-items: center;
   background:darkgreen; 
   width: auto;
-  height: 100dvh;
-  overflow-y: scroll;
+  min-height: 100dvh;
+  overflow-y: auto;
 
 }
 #bg{

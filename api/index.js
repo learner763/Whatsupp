@@ -73,7 +73,8 @@ app.post("/login", (req, res) => {
 
 app.post("/personal", (req, res) => {
     const { username, name,bio } = req.body;
-    pool.query("update public.users set name=$1,bio=$2 where index=$3", [name,bio,username], (err, results) => {   
+    console.log(username,name,bio)
+    pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,username], (err, results) => {   
         return res.json({success:true}); 
     });
 });
