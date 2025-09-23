@@ -360,13 +360,36 @@ function Home()
                         {
                             if(previous[i][0]===msgs__deleted[0].to || previous[i][0]===msgs__deleted[0].from)
                             {
-
                                 for(let j=0;j<previous[i][1].length;j++)
                                 {
                                     if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
                                     {
-                                        if(previous[i][1].filter(x=>x.startsWith('✔') || x.startsWith(' ')).length>1){previous[i][1].splice(j,1);console.log(previous[i][1])}
-                                        else{previous.splice(i,1)}
+                                        if(previous[i][1].filter(x=>x.startsWith('✔') || x.startsWith(' ')).length>1)
+                                        {
+                                            previous[i][1].splice(j,1);console.log(previous[i][1])
+                                        }
+                                        else
+                                        {
+                                            previous.splice(i,1)
+                                        }
+                                        if(msgs__deleted[0].edit)
+                                        {
+                                            set_is_edited(pre=>
+                                            {
+                                                let original=[...pre]
+                                                original[i][j]=''
+                                                return original
+                                            })
+                                        }
+                                        if(msgs__deleted[0].reply)
+                                        {
+                                            set_replies(pre=>
+                                            {
+                                                let original=[...pre]
+                                                original[i][j]=['none','','']
+                                                return original
+                                            })
+                                        }
                                         set_msg_removed(prev=>prev+1)
                                         is_break=true
                                         break
@@ -552,6 +575,7 @@ function Home()
             setmessages(prev=>
                 {
                     let previous=[...prev]
+                    console.log(previous)
                     let unread_chats=0
                     for(let i=0;i<previous.length;i++)
                     {
@@ -562,12 +586,19 @@ function Home()
                             {
                                 if(msgs[j].seen===false && !msgs[j].delete)
                                 {
-                                    if(receiver!==msgs[j].from)
-                                    {count+=1}
-                                    else{
-                                        let msgref=doc(db,'messages',msgs[j].id)
-                                        updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
+                                    for(let k=0;k<previous[i][1].length;k++)
+                                    {
+                                        if(previous[i][1][k].slice(previous[i][1][k].indexOf(' ')+1,previous[i][1][k].lastIndexOf(' ')-4)===msgs[j].text && msgs[j].createdAt.toDate().toISOString()===previous[i][1][k].slice(previous[i][1][k].lastIndexOf(' ')+1,previous[i][1][k].length))
+                                        {
+                                            if(receiver!==msgs[j].from)
+                                            {count+=1}
+                                            else{
+                                                let msgref=doc(db,'messages',msgs[j].id)
+                                                updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
+                                            }
+                                        }
                                     }
+                                    
                                 }
                             } 
                         }
@@ -575,6 +606,8 @@ function Home()
                         if(count>0){unread_chats+=1}
                     }
                     set_unread(unread_chats)
+                    console.log(previous)
+
                     return previous
                 })
         })
@@ -592,10 +625,11 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            console.log(msgs)
             setmessages(prev=>
                 {
                     let previous=prev.map(m=> [...m])
+                    console.log(previous)
+
                     for(let i=0;i<previous.length;i++)
                     {
                         for(let j=0;j<msgs.length;j++)
@@ -625,6 +659,8 @@ function Home()
                             }   
                         }
                     }
+                    console.log(previous)
+
                     return previous
                 })
         })
@@ -644,10 +680,12 @@ function Home()
                 {
                     return {id:change.doc.id,...change.doc.data()}
                 })
-                console.log(msgs)
                 setmessages(prev=>
                 {
                     let previous=[...prev]
+
+                    console.log(previous)
+
                     for(let i=0;i<msgs.length;i++)
                     {
                         let stop=false
@@ -710,6 +748,8 @@ function Home()
                         }
     
                     }
+                    console.log(previous)
+
                     return previous
                 })
     
@@ -725,6 +765,8 @@ function Home()
                 setmessages(prev=>
                     {
                         let previous=[...prev]
+                        console.log(previous)
+
                         for(let i=0;i<msgs.length;i++)
                         {
                             let stop=false
@@ -790,6 +832,8 @@ function Home()
                             }
         
                         }
+                        console.log(previous)
+
                         return previous
                     })
     
@@ -810,7 +854,6 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            console.log(msgs)
             setmessages(prev=>
                 {
                     let previous=[...prev]
@@ -884,17 +927,18 @@ function Home()
                     return previous
                 })
         })
-        let already_deleted=''
+
         if(msg_removed<1)
         {
-            already_deleted=query(collection(db,'messages'),or(where("from",'==',index),where('to','==',index)))
+            let already_deleted=query(collection(db,'messages'),or(where("from",'==',index),where('to','==',index)))
         
             let deleted_docs=onSnapshot(already_deleted,(snapshot)=>
             {
-                let msgs=snapshot.docChanges().filter(x=>x.doc.data().deleted).map(function(change)
+                let msgs=snapshot.docChanges().filter(x=>x.doc.data().delete).map(function(change)
                 {
                     return {id:change.doc.id,...change.doc.data()}
                 })
+                console.log(msgs)
                 setmessages(prev=>
                 {
                     let previous=[...prev]
@@ -931,7 +975,6 @@ function Home()
         {
             edit_from();
             edit_to();
-            
         }
     },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
 
