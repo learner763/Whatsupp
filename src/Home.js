@@ -539,7 +539,7 @@ function Home()
     
     useEffect(()=>
     {
-        if( !index || indices.includes(index)===false ){return;}
+        if( !index || indices.includes(index)===false || !refreshed){return;}
     
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
@@ -583,7 +583,7 @@ function Home()
     
     useEffect(()=>
     {
-        if( !index || indices.includes(index)===false ){return;}
+        if( !index || indices.includes(index)===false || !refreshed){return;}
 
         let tick_messages=query(collection(db,'messages'),where("from","==",index),where("seen","==",true))
         let ticked=onSnapshot(tick_messages,(snapshot)=>
@@ -635,7 +635,7 @@ function Home()
 
     useEffect(()=>
         {
-            if( !index || indices.includes(index)===false ){return;}
+            if( !index || indices.includes(index)===false || !refreshed){return;}
     
             let from_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("from","==",index))
             let to_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("to","==",index))
@@ -801,7 +801,7 @@ function Home()
 
     useEffect(()=>
     {
-        if(!index || indices.includes(index)===false){return;}
+        if( !index || indices.includes(index)===false || !refreshed){return;}
 
         let from_edited=query(collection(db,'messages'),where("edit","==",true),where("from","==",index))
         let to_edited=query(collection(db,'messages'),where("edit","==",true),where("to","==",index))
@@ -1211,6 +1211,7 @@ function Home()
             msg_being_replied=reply_to
             set_reply_to('')
         }
+        console.log(reply_to)
         let inserted_msg=await addDoc(collection(db,'messages'),{
             from: index,
             to: receiver,
