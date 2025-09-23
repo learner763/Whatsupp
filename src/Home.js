@@ -888,10 +888,10 @@ function Home()
         if(msg_removed<1)
         {
             already_deleted=query(collection(db,'messages'),or(where("from",'==',index),where('to','==',index)))
-        }
+        
             let deleted_docs=onSnapshot(already_deleted,(snapshot)=>
             {
-                let msgs=snapshot.docChanges().filter(x=>x.doc.data().delete).map(function(change)
+                let msgs=snapshot.docChanges().filter(x=>x.doc.data().deleted).map(function(change)
                 {
                     return {id:change.doc.id,...change.doc.data()}
                 })
@@ -926,12 +926,12 @@ function Home()
                 )
                 if(flag1===true)set_loaded(true)
             })
-        
+        }
         return()=>
         {
             edit_from();
             edit_to();
-            deleted_docs()
+            
         }
     },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
 
