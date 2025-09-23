@@ -627,7 +627,6 @@ function Home()
                     }
                     return previous
                 })
-                if(flag1===true)set_loaded(true)
         })
         return()=>ticked();
 
@@ -885,10 +884,54 @@ function Home()
                     return previous
                 })
         })
+        let already_deleted=''
+        if(msg_removed<1)
+        {
+            already_deleted=query(collection(db,'messages'),or(where("from",'==',index),where('to','==',index)))
+        }
+            let deleted_docs=onSnapshot(already_deleted,(snapshot)=>
+            {
+                let msgs=snapshot.docChanges().filter(x=>x.doc.data().delete).map(function(change)
+                {
+                    return {id:change.doc.id,...change.doc.data()}
+                })
+                setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    
+                    {
+                        for(let i=0;i<msgs.length;i++)
+                        {
+                            let stop=false
+                            for(let j=0;j<previous.length;j++)
+                            {
+                                if(previous[j][0]===msgs[i].from || previous[j][0]===msgs[i].to)
+                                {
+                                    for(let k=0;k<previous.length;k++)
+                                    {
+                                        if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                        {
+                                            previous[j][1].splice(k,1)
+                                            stop=true
+                                            break
+                                        }
+                                    }
+                                }
+                                if(stop){break}
+                            }
+                        }
+                    }
+                    return previous
+                }
+                )
+                if(flag1===true)set_loaded(true)
+            })
+        
         return()=>
         {
             edit_from();
             edit_to();
+            deleted_docs()
         }
     },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
 
