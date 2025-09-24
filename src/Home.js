@@ -951,7 +951,7 @@ function Home()
                             {
                                 if(previous[j][0]===msgs[i].from || previous[j][0]===msgs[i].to)
                                 {
-                                    for(let k=0;k<previous.length;k++)
+                                    for(let k=0;k<previous[j][1].length;k++)
                                     {
                                         if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                         {
