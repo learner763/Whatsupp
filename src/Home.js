@@ -1393,10 +1393,10 @@ function Home()
     },[search_value,info])
     return(
         <>
-        <div style={{display:`${loaded==true? 'flex':'flex'}`,height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
-            <div><label style={{padding:'5px', color:'white',backgroundColor:'darkgreen',borderRadius:'5px'}}><i class="fas fa-mobile-alt"></i> Whatsupp</label></div>
+        <div style={{display:`${loaded==true? 'none':'flex'}`,height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
+            <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> Whatsupp</label></div>
         </div>
-        <div className='home' style={{display:`${loaded==true? 'none':'none'}`}}>
+        <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
             <div className='top'>
                 <label><i class='fas fa-mobile-alt'></i>Whatsupp</label>
                 <label><i class='fas fa-user'></i>{profile}</label>
