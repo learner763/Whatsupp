@@ -533,6 +533,13 @@ function Home()
 
             }
             set_status(statuses)
+            window.addEventListener('beforeunload',()=>
+            {
+                set(online_status,{
+                    online:false,
+                    lastseen:rtdb_time()
+                })
+            })
         })
         return()=>
         {
