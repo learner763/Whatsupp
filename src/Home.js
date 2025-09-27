@@ -536,12 +536,11 @@ function Home()
         })
         return()=>
         {
-            current_status()
             set(online_status,{
                 online:false,
                 lastseen:rtdb_time()
             })
-            disconnect.cancel()
+            current_status()
         }
     },[indices,index])
 
