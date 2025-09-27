@@ -139,6 +139,13 @@ body{
     border-radius: 20px;
     margin-right: 5px;
 }
+.part3 a{
+    font-size: 25px;
+    color: darkgreen;
+    text-decoration: underline;
+    margin-right: 5px;
+    align-self: flex-end;
+}
 .part2 button,.part3 button{
     background-color: lightgreen;
     color: darkgreen;
@@ -283,7 +290,7 @@ body{
 }
 @media (max-width:500px) {
     
-    .top label,#youmayknow,.part2 label,.part3 label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
+    .part3 a.top label,#youmayknow,.part2 label,.part3 label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
         font-size: 20px;
     }
     .part2 input,.part3 input,.part3 select{

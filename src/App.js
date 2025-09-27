@@ -151,10 +151,10 @@ function App() {
   return (
       <div className="App" style={{display:proceed}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
-        <a href='https://github.com/learner763/Whatsupp/#readme' style={{fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
+        <a href='https://github.com/learner763/Whatsupp/#readme' style={{margin:'10px',fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
         <img id="bg" src="bg.png" alt="Background" />
         <label >Username 🔑</label>
-       <input
+        <input
           type="text"
           value={email}
           placeholder='Account Username:'

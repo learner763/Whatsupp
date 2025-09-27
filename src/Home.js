@@ -1539,6 +1539,8 @@ function Home()
                             <option  value="yellow">Yellow</option>
                             <option  value="#221130">Dark</option>
                         </select>
+                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Read More 👉</label>
+                        <a href='https://github.com/learner763/Whatsupp/#readme' style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Documentation</a>
                         <button onClick={()=>
                             {
                                 if(pass.length>0 && pass.length<13){update_settings(pass,bgr)}
