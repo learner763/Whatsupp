@@ -169,7 +169,12 @@ function App() {
           onChange={(e) => setpassword(e.target.value.replace(' ',''))}
         />
         <hr style={{display:f, width: 'auto',  borderTop: "1px solid white", margin: "10px 0" }} />        
-        <input placeholder='Enter Account Username:' style={{display:f}} type='text' value={email1} onChange={(e) => setemail1(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}></input>
+        <input placeholder='Enter Account Username:' style={{display:f}} type='text' value={email1} 
+        onChange={(e) => 
+        {
+          if(e.target.value.length>12){e.target.value=e.target.value.slice(0,12)}
+          setemail1(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
+        }}></input>
         <button style={{display:f}} onClick={()=>forget(email1)}>Find My Password</button>
         <label style={{display:disp,maxWidth:'270px'}}>{text}</label>
         <hr style={{display:f, width: 'auto',  borderTop: "1px solid white", margin: "10px 0" }} />        
