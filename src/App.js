@@ -19,7 +19,7 @@ function App() {
   const [root,set_root]=useState(localStorage.getItem("root"))
   const [email_key,set_email_key]=useState(localStorage.getItem("email"))
   const [profile_key,set_profile_key]=useState(localStorage.getItem("profile"))
-
+  const [load,set_load]=useState(false)
   useEffect(()=>
     {
       console.log(root,email_key,profile_key) 
@@ -149,10 +149,10 @@ function App() {
       }
 
   return (
-      <div className="App" style={{display:proceed}}>
+      <div className="App" style={{display:load?proceed:'none'}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <a href='https://github.com/learner763/Whatsupp/#readme' style={{margin:'10px',fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
-        <img id="bg" src="bg.png" alt="Background" />
+        <img id="bg" src="bg.png" alt="Background" onLoad={()=>set_load(true)} />
         <label >Username 🔑</label>
         <input
           type="text"
