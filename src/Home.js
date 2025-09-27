@@ -490,12 +490,12 @@ function Home()
     {
         if(!index || indices.includes(index)===false){return;}
         let online_status=ref(real_time_db,`online_status/${index}`);
-        
+        let disconnect=onDisconnect(online_status)
         set(online_status,{
             online:true,
             lastseen:rtdb_time()
         })
-        let disconnect=onDisconnect(online_status).update(
+        onDisconnect(online_status).update(
         {
             online:false,
             lastseen:rtdb_time()
