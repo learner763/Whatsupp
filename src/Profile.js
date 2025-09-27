@@ -85,6 +85,7 @@ function Profile() {
   return (
       <div className="Profile" style={{display:proceed}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
+        <a href='https://github.com/learner763/Whatsupp/#readme' style={{fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
         <img id="bg" src="bg.png" alt="Background" />
         <label >Profile Name 🏷️</label>
        <input
