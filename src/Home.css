@@ -290,7 +290,7 @@ body{
 }
 @media (max-width:500px) {
     
-    .part3 a.top label,#youmayknow,.part2 label,.part3 label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
+    .part3 a,.top label,#youmayknow,.part2 label,.part3 label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
         font-size: 20px;
     }
     .part2 input,.part3 input,.part3 select{
