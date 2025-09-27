@@ -1394,7 +1394,7 @@ function Home()
     return(
         <>
         <div style={{display:`${loaded==true? 'none':'flex'}`,height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
-            <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> Whatsupp</label></div>
+            <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen',fontStyle:'italic'}}><i class="fas fa-mobile-alt"></i> Whatsupp</label></div>
         </div>
         <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
             <div className='top'>
