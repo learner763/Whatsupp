@@ -144,8 +144,7 @@ body{
     background-color: lightgreen;
     color: darkgreen;
     cursor: pointer;
-    border: darkgreen solid;
-    border-width: 1px 0px 1px 0px;
+    border: none;
     border-radius: 20px;
     align-self: center;
     font-size: 20px;
