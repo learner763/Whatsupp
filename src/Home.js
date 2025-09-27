@@ -536,10 +536,10 @@ function Home()
             window.addEventListener('beforeunload',()=>
             {
                 navigator.sendBeacon(
-                    `https://aaaa-90493-default-rtdb.firebaseio.com/online_status/${index}`,
+                    `https://aaaa-90493-default-rtdb.firebaseio.com/online_status/${index}.json`,
                     JSON.stringify({
-                      online: false,
-                      lastseen: Date.now()
+                        online: false,
+                        lastseen: Date.now()
                     }))
             })
         })
