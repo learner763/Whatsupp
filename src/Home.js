@@ -644,6 +644,7 @@ function Home()
                             }   
                         }
                     }
+                    console.log(previous)
 
                     return previous
                 })
