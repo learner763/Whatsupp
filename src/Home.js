@@ -1398,7 +1398,7 @@ function Home()
         </div>
         <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
             <div className='top'>
-                <label><i class='fas fa-phone'></i>Whatsupp</label>
+                <label><i class='fas fa-mobile-alt'></i>Whatsupp</label>
                 <label><i class='fas fa-user'></i>{profile}</label>
             </div>
             <div className='home1' style={{backgroundColor:bgr}} >
