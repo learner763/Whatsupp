@@ -9,6 +9,7 @@ function Profile() {
   const [email_key,set_email_key]=useState(localStorage.getItem("email"))
   const [proceed,set_proceed]=useState('none')
   const [load,set_load]=useState(false)
+  const [load1,set_load1]=useState(false)
     useEffect(()=>
     {
       if(!localStorage.getItem("email")){set_proceed('none');alert('Please register yourself first!');nav1('/')}
@@ -73,6 +74,8 @@ function Profile() {
             else{setname(data[i].name);}
             if(data[i].bio===null){data[i].bio=''}
             else{setbio(data[i].bio);}
+            set_load1(true)
+            break
           }
         }
       })
@@ -83,7 +86,7 @@ function Profile() {
 
   
   return (
-      <div className="Profile" style={{display:load?proceed:'none'}}>
+      <div className="Profile" style={{display:load && load1?proceed:'none'}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <a href='https://github.com/learner763/Whatsupp/#readme' style={{margin:'10px',fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
         <img id="bg" src="bg.png" alt="Background" onLoad={()=>set_load(true)}/>
