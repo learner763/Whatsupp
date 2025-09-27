@@ -535,10 +535,12 @@ function Home()
             set_status(statuses)
             window.addEventListener('beforeunload',()=>
             {
-                set(online_status,{
-                    online:false,
-                    lastseen:rtdb_time()
-                })
+                navigator.sendBeacon(
+                    `https://aaaa-90493-default-rtdb.firebaseio.com/online_status/${index}`,
+                    JSON.stringify({
+                      online: false,
+                      lastseen: Date.now()
+                    }))
             })
         })
         return()=>
