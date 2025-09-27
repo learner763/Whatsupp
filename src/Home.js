@@ -495,7 +495,7 @@ function Home()
             online:true,
             lastseen:rtdb_time()
         })
-        onDisconnect(online_status).update(
+        let disconnect=onDisconnect(online_status).update(
         {
             online:false,
             lastseen:rtdb_time()
@@ -504,7 +504,7 @@ function Home()
         
         
         let online_users=ref(real_time_db,'/online_status')
-        onValue(online_users,(snapshot)=>
+        let current_status=onValue(online_users,(snapshot)=>
         {
             let active_users=snapshot.val()
             let statuses=[]
@@ -536,10 +536,12 @@ function Home()
         })
         return()=>
         {
+            current_status()
             set(online_status,{
                 online:false,
                 lastseen:rtdb_time()
             })
+            disconnect.cancel()
         }
     },[indices,index])
 
