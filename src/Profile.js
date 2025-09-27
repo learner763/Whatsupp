@@ -8,7 +8,6 @@ function Profile() {
   const nav1=useNavigate();
   const [email_key,set_email_key]=useState(localStorage.getItem("email"))
   const [proceed,set_proceed]=useState('none')
-  const [load,set_load]=useState(false)
   const [load1,set_load1]=useState(false)
     useEffect(()=>
     {
@@ -86,7 +85,7 @@ function Profile() {
 
   
   return (
-      <div className="Profile" style={{display:load && load1?proceed:'none'}}>
+      <div className="Profile" style={{display:load1?proceed:'none'}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <a href='https://github.com/learner763/Whatsupp/#readme' style={{margin:'10px',fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
         <label style={{padding:'5px', color:'white',backgroundColor:'darkgreen',borderRadius:'5px'}}><i class="fas fa-mobile-alt"></i> Whatsupp</label>

@@ -19,7 +19,6 @@ function App() {
   const [root,set_root]=useState(localStorage.getItem("root"))
   const [email_key,set_email_key]=useState(localStorage.getItem("email"))
   const [profile_key,set_profile_key]=useState(localStorage.getItem("profile"))
-  const [load,set_load]=useState(false)
   useEffect(()=>
     {
       console.log(root,email_key,profile_key) 
