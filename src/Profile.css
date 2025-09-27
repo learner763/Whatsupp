@@ -13,10 +13,6 @@ body{
   overflow-y: auto;
 
 }
-#bg{
-  width: 150px;
-  align-self: center;
-}
 .Profile label{
   align-self: center;
   justify-self: center;
@@ -48,10 +44,4 @@ body{
 .Profile button:hover{
   background-color: green;
   color: white;
-}
-@media (max-width:850px)
-{
-  #bg{
-    width: 120px !important;
-  }
 }

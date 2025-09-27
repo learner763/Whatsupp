@@ -12,10 +12,6 @@ body{
     min-height: 100dvh;
     overflow-y: auto;
 }
-#bg{
-    width: 150px;
-    align-self: center;
-}
 .App label{
     align-self: center;
     justify-self: center;
@@ -53,10 +49,4 @@ body{
 }
 #t{
     font-weight: normal;
-}
-@media (max-width:850px)
-{
-    #bg{
-      width: 120px !important;
-    }
 }
