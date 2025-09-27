@@ -56,8 +56,7 @@ body{
     background-color: lightgreen;
     width: 100%;
     text-align: center;
-    border: darkgreen solid;
-    border-width: 1px 0px 1px 0px;
+    border: none;
     border-radius: 30px;
     font-size: 25px;
     font-weight: bolder;
