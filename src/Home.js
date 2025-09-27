@@ -533,15 +533,7 @@ function Home()
 
             }
             set_status(statuses)
-            window.addEventListener('beforeunload',()=>
-            {
-                navigator.sendBeacon(
-                    `https://aaaa-90493-default-rtdb.firebaseio.com/online_status/${index}.json`,
-                    JSON.stringify({
-                        online: false,
-                        lastseen: Date.now()
-                    }))
-            })
+        
         })
         return()=>
         {
@@ -557,16 +549,13 @@ function Home()
     
     useEffect(()=>
     {
-        console.log(index,indices,refreshed,receiver,msg_transfer,msg_removed)
 
         if( !index || indices.includes(index)===false || !refreshed || msg_transfer===null || receiver===null || msg_removed===null){return;}
-        console.log(index,indices,refreshed,receiver,msg_transfer,msg_removed)
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
         {
             let msgs=snapshot.docChanges().map(function(change)
             {
-                console.log(change.type)
                 return {id:change.doc.id,...change.doc.data()}
             })
             
@@ -621,6 +610,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
+            console.log(msgs)
             setmessages(prev=>
                 {
                     let previous=prev.map(m=> [...m])
