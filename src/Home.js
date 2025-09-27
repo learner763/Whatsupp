@@ -1446,7 +1446,7 @@ function Home()
                                                 <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{replies[index]?.[ind]?.[2]===undefined?'':replies[index][ind][2]}</span>
                                             </span>
 
-                                            <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
+                                            <span style={{minWidth:'100px',maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{is_edited[index]?.[ind]===undefined?'':is_edited[index]?.[ind]} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             
@@ -1467,7 +1467,7 @@ function Home()
                                                 <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{replies[index]?.[ind]?.[2]===undefined?'':replies[index][ind][2]}</span>
                                             </span>
                                             
-                                            <span style={{maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
+                                            <span style={{minWidth:'100px', maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
                                             <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{is_edited[index]?.[ind]===undefined?'':is_edited[index]?.[ind]} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span></span>):
 
                                             (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'lightslategray',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
