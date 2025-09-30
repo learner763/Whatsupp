@@ -61,10 +61,7 @@ function Home()
     const [search_filter,set_search_filter]=useState([])
     const [no_match_msg,set_no_match_msg]=useState('none')
     const [innerheight,set_innerheight]=useState(window.innerHeight)
-    /*const [ran1,set_ran1]=useRef(false)
-    const [ran2,set_ran2]=useRef(false)
-    const [ran3,set_ran3]=useRef(false)
-    const [ran4,set_ran4]=useRef(false)*/
+    const ran=useRef(false)
 
     let w=-1;
 
@@ -556,6 +553,8 @@ function Home()
     {
 
         if( !index || indices.includes(index)===false || !refreshed || msg_transfer===null || receiver===null || msg_removed===null){return;}
+        if(ran.current){ran.current=false;return;}
+        ran.current=true
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
         {
@@ -931,10 +930,11 @@ function Home()
                     }
                     return previous
 
-                })
+                }
+                )
+                if(flag1===true)set_loaded(true)
             })
-            if(flag1===true)set_loaded(true)
-
+        
         return()=>
         {
             seen()
