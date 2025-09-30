@@ -590,6 +590,7 @@ function Home()
                             } 
                         }
                         previous[i][2]=count
+                        console.log(count)
                         if(count>0){unread_chats+=1}
                     }
                     set_unread(unread_chats)
