@@ -61,6 +61,11 @@ function Home()
     const [search_filter,set_search_filter]=useState([])
     const [no_match_msg,set_no_match_msg]=useState('none')
     const [innerheight,set_innerheight]=useState(window.innerHeight)
+    const [ran1,set_ran1]=useRef(false)
+    const [ran2,set_ran2]=useRef(false)
+    const [ran3,set_ran3]=useRef(false)
+    const [ran4,set_ran4]=useRef(false)
+
     let w=-1;
 
     async function set_seen()
@@ -596,12 +601,6 @@ function Home()
                     return previous
                 })
         })
-        return()=>seen();
-    },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
-    
-    useEffect(()=>
-    {
-        if( !index || indices.includes(index)===false || !refreshed || msg_transfer===null || receiver===null || msg_removed===null){return;}
 
         let tick_messages=query(collection(db,'messages'),where("from","==",index),where("seen","==",true))
         let ticked=onSnapshot(tick_messages,(snapshot)=>
@@ -649,14 +648,7 @@ function Home()
                     return previous
                 })
         })
-        return()=>ticked();
 
-    },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
-
-    useEffect(()=>
-        {
-            if( !index || indices.includes(index)===false || !refreshed || msg_transfer===null || receiver===null || msg_removed===null){return;}
-    
             let from_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("from","==",index))
             let to_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("to","==",index))
             let replied_docs1=onSnapshot(from_replied_msgs,(snapshot)=>
@@ -802,10 +794,6 @@ function Home()
                                                     break
                                                 }
                                             }
-                                        
-        
-                                        
-                                        
                                     }
                                 if(stop){break}
                                 
@@ -816,13 +804,6 @@ function Home()
                     })
     
             })
-            return()=>{replied_docs1();replied_docs2();}
-    
-        },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
-
-    useEffect(()=>
-    {
-        if( !index || indices.includes(index)===false || !refreshed || msg_transfer===null || receiver===null || msg_removed===null){return;}
 
         let from_edited=query(collection(db,'messages'),where("edit","==",true),where("from","==",index))
         let to_edited=query(collection(db,'messages'),where("edit","==",true),where("to","==",index))
@@ -950,13 +931,16 @@ function Home()
                     }
                     return previous
 
-                }
-                )
-                if(flag1===true)set_loaded(true)
+                })
             })
-        
+            if(flag1===true)set_loaded(true)
+
         return()=>
         {
+            seen()
+            ticked()
+            replied_docs1()
+            replied_docs2()
             edit_from();
             edit_to();
             deleted_docs()
@@ -1394,7 +1378,7 @@ function Home()
     return(
         <>
         <div style={{display:`${loaded==true? 'none':'flex'}`,height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
-            <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen',fontStyle:'italic'}}><i class="fas fa-mobile-alt"></i> Whatsupp</label></div>
+            <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> Whatsupp</label></div>
         </div>
         <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
             <div className='top'>
