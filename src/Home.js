@@ -590,10 +590,10 @@ function Home()
                             } 
                         }
                         previous[i][2]=count
-                        console.log(count)
                         if(count>0){unread_chats+=1}
                     }
                     set_unread(unread_chats)
+                    console.log(previous)
 
                     return previous
                 })
@@ -639,6 +639,7 @@ function Home()
                             }   
                         }
                     }
+                    console.log(previous)
 
                     return previous
                 })
@@ -718,6 +719,7 @@ function Home()
                         }
     
                     }
+                    console.log(previous)
 
                     return previous
                 })
@@ -795,6 +797,8 @@ function Home()
                             }
         
                         }
+                        console.log(previous)
+
                         return previous
                     })
     
@@ -838,6 +842,8 @@ function Home()
                             if(stop){break}
                         }
                     }
+                    console.log(previous)
+
                     return previous
                 })
         }) 
@@ -877,6 +883,8 @@ function Home()
                             if(stop){break}
                         }
                     }
+                    console.log(previous)
+
                     return previous
                 })
         })
@@ -1465,7 +1473,6 @@ function Home()
 
                         {messages.map((value,index)=>
                             {
-                                console.log(value)
                                 return(
                                     <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='#221130'?'solid white ':'solid darkgreen'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
