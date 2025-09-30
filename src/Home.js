@@ -61,7 +61,6 @@ function Home()
     const [search_filter,set_search_filter]=useState([])
     const [no_match_msg,set_no_match_msg]=useState('none')
     const [innerheight,set_innerheight]=useState(window.innerHeight)
-    const ran=useRef(false)
 
     let w=-1;
 
@@ -553,12 +552,10 @@ function Home()
     {
 
         if( !index || indices.includes(index)===false || !refreshed || msg_transfer===null || receiver===null || msg_removed===null){return;}
-        if(ran.current){ran.current=false;return;}
-        ran.current=true
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
         {
-            let msgs=snapshot.docChanges().map(function(change)
+            let msgs=snapshot.docs.map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
