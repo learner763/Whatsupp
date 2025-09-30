@@ -605,7 +605,6 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            console.log(msgs)
             setmessages(prev=>
                 {
                     let previous=prev.map(m=> [...m])
@@ -639,7 +638,6 @@ function Home()
                             }   
                         }
                     }
-                    console.log(previous)
 
                     return previous
                 })
@@ -925,6 +923,7 @@ function Home()
         
                         })
                     }
+                    console.log(previous)
                     return previous
 
                 }
