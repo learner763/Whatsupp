@@ -193,7 +193,7 @@ function Home()
                         let frontend_messages=[]
                         for(let i=0;i<data.length;i+=2)
                         {
-                            frontend_messages.push([data[i],data[i+1]])
+                            frontend_messages.push([data[i],data[i+1],0])
                         }
                         let dates=[]
                         let months=['January','February','March','April','May','June','July','August','September','October','November','December']
