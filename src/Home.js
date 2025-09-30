@@ -559,7 +559,7 @@ function Home()
             {
                 return {id:doc.id,...doc.data()}
             })
-            
+            console.log(msgs)
             setmessages(prev=>
                 {
                     let previous=[...prev]
@@ -593,7 +593,6 @@ function Home()
                         if(count>0){unread_chats+=1}
                     }
                     set_unread(unread_chats)
-                    console.log(previous)
 
                     return previous
                 })
@@ -606,6 +605,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
+
             setmessages(prev=>
                 {
                     let previous=[...prev]
@@ -639,7 +639,7 @@ function Home()
                             }   
                         }
                     }
-                    console.log(previous)
+                    
 
                     return previous
                 })
@@ -719,7 +719,7 @@ function Home()
                         }
     
                     }
-                    console.log(previous)
+                    
 
                     return previous
                 })
@@ -797,7 +797,7 @@ function Home()
                             }
         
                         }
-                        console.log(previous)
+                        
 
                         return previous
                     })
@@ -842,7 +842,7 @@ function Home()
                             if(stop){break}
                         }
                     }
-                    console.log(previous)
+                    
 
                     return previous
                 })
@@ -883,7 +883,7 @@ function Home()
                             if(stop){break}
                         }
                     }
-                    console.log(previous)
+                    
 
                     return previous
                 })
@@ -932,7 +932,7 @@ function Home()
         
                         })
                     }
-                    console.log(previous)
+                    
                     return previous
 
                 }
