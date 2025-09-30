@@ -1410,6 +1410,7 @@ function Home()
                         {
                             if(receiver==messages[index][0])
                             {
+                                
                                 return(
                                     <div key={index} className='chat_detail' style={{display:'flex',flexDirection:'column'}} >
                                         {value[1].map((text,ind)=>
@@ -1473,6 +1474,7 @@ function Home()
 
                         {messages.map((value,index)=>
                             {
+                                console.log(value)
                                 return(
                                     <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='#221130'?'solid white ':'solid darkgreen'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
