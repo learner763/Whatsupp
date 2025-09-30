@@ -555,9 +555,9 @@ function Home()
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
         {
-            let msgs=snapshot.docs.map(function(change)
+            let msgs=snapshot.docs.map(function(doc)
             {
-                return {id:change.doc.id,...change.doc.data()}
+                return {id:doc.id,...doc.data()}
             })
             
             setmessages(prev=>
