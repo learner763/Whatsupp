@@ -608,7 +608,7 @@ function Home()
             })
             setmessages(prev=>
                 {
-                    let previous=prev.map(m=> [...m])
+                    let previous=[...prev]
 
                     for(let i=0;i<previous.length;i++)
                     {
