@@ -1110,7 +1110,7 @@ function Home()
 
     useEffect(()=>
     {
-        if(msg_removed===null || msg_transfer===null || refreshed===null){return}
+        if(!msg_removed || !msg_transfer || !refreshed){return}
         setmessages(prev=>
         {
             let previous=[...prev]
