@@ -188,6 +188,7 @@ function Home()
             .then(response => response.json())
             .then(data => 
                 {
+                    console.log(data)
                     if(data.error){}
                     else{
                         let frontend_messages=[]
