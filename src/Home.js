@@ -61,7 +61,7 @@ function Home()
     const [search_filter,set_search_filter]=useState([])
     const [no_match_msg,set_no_match_msg]=useState('none')
     const [innerheight,set_innerheight]=useState(window.innerHeight)
-
+    let execute=0
     let w=-1;
 
     async function set_seen()
@@ -188,7 +188,6 @@ function Home()
             .then(response => response.json())
             .then(data => 
                 {
-                    console.log(data)
                     if(data.error){}
                     else{
                         let frontend_messages=[]
@@ -216,7 +215,6 @@ function Home()
                             }
                             dates=[]
                         }
-                        console.log(frontend_messages)
                         setmessages(frontend_messages);
                         set_refresh(true)
                     }
@@ -554,6 +552,8 @@ function Home()
     {
 
         if( !index || indices.includes(index)===false || !refreshed || msg_transfer===null || receiver===null || msg_removed===null){return;}
+        execute+=1
+        if(execute>1 && (!msg_transfer && !msg_removed && receiver==='-')){return}
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
         {
@@ -940,7 +940,7 @@ function Home()
                 }
                 )
             })
-            if(flag1===true){set_loaded(true);console.log('hey')}
+            if(flag1===true){set_loaded(true);}
 
         return()=>
         {
@@ -1111,7 +1111,6 @@ function Home()
     useEffect(()=>
     {
         if(!msg_removed || !msg_transfer || !refreshed){return}
-        console.log('hey')
         setmessages(prev=>
         {
             let previous=[...prev]
@@ -1170,7 +1169,6 @@ function Home()
                         change_index(localStorage.getItem('index'))
                         retrieve_messages(data[i].index)
                         flag=[true,data[i].name===null?localStorage.getItem('profile'):data[i].name]
-                        console.log(flag)
                         set_flag1(true)
                         setup_user(data[i].email);
                         setup_name(data[i].name);
@@ -1478,7 +1476,6 @@ function Home()
 
                         {messages.map((value,index)=>
                             {
-                                console.log(value)
                                 return(
                                     <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='#221130'?'solid white ':'solid darkgreen'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
