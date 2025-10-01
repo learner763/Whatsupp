@@ -1111,6 +1111,7 @@ function Home()
     useEffect(()=>
     {
         if(!msg_removed || !msg_transfer || !refreshed){return}
+        console.log('hey')
         setmessages(prev=>
         {
             let previous=[...prev]
