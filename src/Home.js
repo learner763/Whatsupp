@@ -215,7 +215,7 @@ function Home()
                             }
                             dates=[]
                         }
-                        console.log()
+                        console.log(frontend_messages)
                         setmessages(frontend_messages);
                         set_refresh(true)
                     }
@@ -939,7 +939,7 @@ function Home()
                 }
                 )
             })
-            if(flag1===true)set_loaded(true)
+            if(flag1===true){set_loaded(true);console.log('hey')}
 
         return()=>
         {
