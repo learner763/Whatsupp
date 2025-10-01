@@ -939,8 +939,9 @@ function Home()
 
                 }
                 )
+                if(flag1===true){set_loaded(true);}
+
             })
-            if(flag1===true){set_loaded(true);}
 
         return()=>
         {
