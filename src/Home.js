@@ -1168,6 +1168,7 @@ function Home()
                         change_index(localStorage.getItem('index'))
                         retrieve_messages(data[i].index)
                         flag=[true,data[i].name===null?localStorage.getItem('profile'):data[i].name]
+                        console.log(flag)
                         set_flag1(true)
                         setup_user(data[i].email);
                         setup_name(data[i].name);
