@@ -553,7 +553,9 @@ function Home()
 
         if( !index || indices.includes(index)===false || !refreshed || msg_transfer===null || receiver===null || msg_removed===null){return;}
         execute+=1
+        
         if(execute>1 && (!msg_transfer && !msg_removed && receiver==='-')){return}
+        console.log(execute,msg_removed,msg_transfer,receiver)
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
         {
