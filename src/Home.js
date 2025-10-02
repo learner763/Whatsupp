@@ -29,8 +29,8 @@ function Home()
     const [up_user,setup_user]=useState('');
     const [up_name,setup_name]=useState('');
     const [up_bio,setup_bio]=useState('');
-    const [part2,setpart2]=useState('none');
-    const [part3,setpart3]=useState('none');
+    const [profile_section,setprofile_section]=useState('none');
+    const [settings_section,setsettings_section]=useState('none');
     const [pass,setpass]=useState('')
     const [bgr,setbg]=useState('white')
     const [disp,setdisp]=useState("none")
@@ -49,19 +49,20 @@ function Home()
     const [edit_icon,set_edit]=useState('none')
     const [selectval,set_selectval]=useState('Select')
     const [msg_before_edit,set_msg_value]=useState('')
-    const [msg_removed,set_msg_removed]=useState(0)
     const [seen_at,set_seen_at]=useState([])
     const [reply_icon,set_reply]=useState('none')
     const [reply_to,set_reply_to]=useState('')
     const [replies,set_replies]=useState([])
     const [msg_transfer,set_msg_transfer]=useState(0)
-    const [msg_edit,set_msg_edit]=useState(0)
     const [is_edited,set_is_edited]=useState([])
     const [search_value,set_search_value]=useState('')
     const [search_filter,set_search_filter]=useState([])
     const [no_match_msg,set_no_match_msg]=useState('none')
     const [innerheight,set_innerheight]=useState(window.innerHeight)
     const execute=useRef(0)
+    const something_sent=useRef(false)
+    const something_edited=useRef(false)
+
     let w=-1;
 
     async function set_seen()
@@ -125,7 +126,7 @@ function Home()
     
     async function write_edit(message)
     {
-        
+        something_edited.current=true
         set_edit('none')
         let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4)));
         let edited_msgs=await getDocs(edit_this_msg)
@@ -193,7 +194,7 @@ function Home()
                         let frontend_messages=[]
                         for(let i=0;i<data.length;i+=2)
                         {
-                            frontend_messages.push([data[i],data[i+1],0])
+                            frontend_messages.push([data[i],data[i+1]])
                         }
                         let dates=[]
                         let months=['January','February','March','April','May','June','July','August','September','October','November','December']
@@ -305,11 +306,9 @@ function Home()
         let action=onSnapshot(q,(snapshot)=>
         {
             if(first_snapshot){first_snapshot=false;return;}
+            if(!something_sent.current && !something_edited.current){return}
+            console.log('hehe')
             let msgs=snapshot.docChanges().filter(change=>change.type==='added').map(function(change)
-            {
-                return {id:change.doc.id,...change.doc.data()}
-            })
-            let msgs__deleted=snapshot.docChanges().filter(change=>change.type==='modified' && change.doc.data().delete).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
@@ -333,7 +332,6 @@ function Home()
                                 {
                                     previous[i][1][j]=previous[i][1][j].replace(previous[i][1][j].slice(previous[i][1][j].indexOf(' ')+1,previous[i][1][j].lastIndexOf(' ')-4),edited[0].text)
                                     do_break=true
-                                    set_msg_edit(prev=>prev+1)
                                     break
                                     
                                 }
@@ -345,53 +343,7 @@ function Home()
                 }
                 )
             }
-            if(msgs__deleted.length>0)
-                {
-                    let is_break=false
-                    setmessages(prev=>
-                    {
-                        let previous=[...prev]
-
-                        for(let i=0;i<previous.length;i++)
-                        {
-                            if(previous[i][0]===msgs__deleted[0].to || previous[i][0]===msgs__deleted[0].from)
-                            {
-                                for(let j=0;j<previous[i][1].length;j++)
-                                {
-                                    if(previous[i][1][j].endsWith(msgs__deleted[0].delete))
-                                    {
-                                        
-                                        if(msgs__deleted[0].edit)
-                                        {
-                                            set_is_edited(pre=>
-                                            {
-                                                let original=[...pre]
-                                                original[i][j]=''
-                                                return original
-                                            })
-                                        }
-                                        if(msgs__deleted[0].reply)
-                                        {
-                                            set_replies(pre=>
-                                            {
-                                                let original=[...pre]
-                                                original[i][j]=['none','','']
-                                                return original
-                                            })
-                                        }
-                                        set_msg_removed(prev=>prev+1)
-                                        is_break=true
-                                        break
-                                    }
-                                }
-                            }
-                            if(is_break){break}
-                            
-                        }
-                        return previous
-
-                    })
-                }
+            
                 if(msgs.length>0 && (msgs[msgs.length-1].from==index || msgs[msgs.length-1].to==index))
                 {
                     let to=msgs[msgs.length-1].to;
@@ -551,9 +503,8 @@ function Home()
     useEffect(()=>
     {
 
-        if( !index || indices.includes(index)===false || !refreshed || msg_transfer===null || receiver===null || msg_removed===null){return;}
+        if( !index || indices.includes(index)===false || !refreshed ){return;}
        
-        console.log(execute,msg_removed,msg_transfer,receiver)
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
         {
@@ -917,6 +868,36 @@ function Home()
                                         previous[j][1].splice(k,1)
                                         if(previous[j][1][k-1]!==undefined){if(!previous[j][1][k-1].startsWith('✔') && !previous[j][1][k-1].startsWith(' ') ){previous[j][1].splice(k-1,1)}}
                                         if(previous[j][1].length===0){previous.splice(j,1)}
+                                        if(msgs[i].edit)
+                                        {
+                                            set_is_edited(pre=>
+                                            {
+                                                let original=[...pre]
+                                                original[j].splice(k,1)
+                                                return original
+                                            }
+                                            )
+                                        }
+                                        if(msgs[i].reply)
+                                        {
+                                            set_replies(pre=>
+                                            {
+                                                let original=[...pre]
+                                                original[j].splice(k,1)
+                                                return original
+                                            }
+                                            )
+                                        }
+                                        if(msgs[i].seen===true)
+                                        {
+                                            set_seen_at(pre=>
+                                            {
+                                                let original=[...pre]
+                                                original[j].splice(k,1)
+                                                return original
+                                            }
+                                            )
+                                        }
                                         stop=true
                                         break
                                     }
@@ -925,15 +906,13 @@ function Home()
                             if(stop){break}
                         }
                     }
-                    if(msg_removed>0)
+                    previous.sort((a,b)=>
                     {
-                        previous.sort((a,b)=>
-                        {
-                            return new Date(b[1][b[1].length-1].slice(b[1][b[1].length-1].lastIndexOf(' ')+1,b[1][b[1].length-1].length))-
-                            new Date(a[1][a[1].length-1].slice(a[1][a[1].length-1].lastIndexOf(' ')+1,a[1][a[1].length-1].length))
-        
-                        })
-                    }
+                        return new Date(b[1][b[1].length-1].slice(b[1][b[1].length-1].lastIndexOf(' ')+1,b[1][b[1].length-1].length))-
+                        new Date(a[1][a[1].length-1].slice(a[1][a[1].length-1].lastIndexOf(' ')+1,a[1][a[1].length-1].length))
+    
+                    })
+                    
                     
                     return previous
 
@@ -953,35 +932,35 @@ function Home()
             edit_to();
             deleted_docs()
         }
-    },[indices,index,msg_removed,refreshed,msg_transfer,receiver])
+    },[indices,index,refreshed,receiver])
 
     useEffect(() => {
         for(let i=0;i<3;i++)
         {
-            if(getComputedStyle(document.querySelectorAll('.home11 label')[i]).color=='rgb(255, 255, 255)')
+            if(getComputedStyle(document.querySelectorAll('.desktop_icons label')[i]).color=='rgb(255, 255, 255)')
             {
-                document.querySelectorAll('.home11_pro label')[i].style.color='darkgreen';
-                document.querySelectorAll('.home11_pro label')[i].style.backgroundColor='white';
-                document.querySelectorAll('.home11_pro label')[i].style.borderRadius='6px';
+                document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
+                document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
+                document.querySelectorAll('.phone_icons label')[i].style.borderRadius='6px';
                 for(let j=0;j<3;j++)
                 {
                     if(j!=i)
                     {
-                        document.querySelectorAll('.home11_pro label')[j].style.color='white';
-                        document.querySelectorAll('.home11_pro label')[j].style.backgroundColor='darkgreen';
+                        document.querySelectorAll('.phone_icons label')[j].style.color='white';
+                        document.querySelectorAll('.phone_icons label')[j].style.backgroundColor='darkgreen';
                     }
                 }
             }
-            else if(getComputedStyle(document.querySelectorAll('.home11_pro label')[i]).backgroundColor=='rgb(255, 255, 255)')
+            else if(getComputedStyle(document.querySelectorAll('.phone_icons label')[i]).backgroundColor=='rgb(255, 255, 255)')
             {
-                document.querySelectorAll('.home11 label')[i].style.color='white';
-                document.querySelectorAll('.home11 label')[i].style.backgroundColor='darkgreen';
+                document.querySelectorAll('.desktop_icons label')[i].style.color='white';
+                document.querySelectorAll('.desktop_icons label')[i].style.backgroundColor='darkgreen';
                 for(let j=0;j<3;j++)
                 {
                     if(j!=i)
                     {
-                        document.querySelectorAll('.home11 label')[j].style.color='darkgreen';
-                        document.querySelectorAll('.home11 label')[j].style.backgroundColor='lightgreen';
+                        document.querySelectorAll('.desktop_icons label')[j].style.color='darkgreen';
+                        document.querySelectorAll('.desktop_icons label')[j].style.backgroundColor='lightgreen';
                     }
                 }
             }
@@ -989,29 +968,29 @@ function Home()
         if(window.innerWidth<=1100){
             let people=document.getElementById('people');
             if(window.getComputedStyle(people).color=='rgb(255, 255, 255)')
-                {document.getElementsByClassName('home13')[0].style.flex=0;}
-            else{document.getElementsByClassName('home13')[0].style.flex=1;document.getElementsByClassName('home12')[0].style.flex=0;}
+                {document.getElementsByClassName('people_section')[0].style.flex=0;}
+            else{document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0;}
             
             for(let j=0;j<3;j++)
             {
                 {
-                    document.querySelectorAll('.home11 label')[j].style.color='darkgreen';
-                    document.querySelectorAll('.home11 label')[j].style.backgroundColor='lightgreen';
+                    document.querySelectorAll('.desktop_icons label')[j].style.color='darkgreen';
+                    document.querySelectorAll('.desktop_icons label')[j].style.backgroundColor='lightgreen';
                 }
             }
             for(let i=0;i<3;i++)
                 {
-                    if(getComputedStyle(document.querySelectorAll('.home11 label')[i]).color=='rgb(255, 255, 255)')
+                    if(getComputedStyle(document.querySelectorAll('.desktop_icons label')[i]).color=='rgb(255, 255, 255)')
                     {
-                        document.querySelectorAll('.home11_pro label')[i].style.color='darkgreen';
-                        document.querySelectorAll('.home11_pro label')[i].style.backgroundColor='white';
-                        document.querySelectorAll('.home11_pro label')[i].style.borderRadius='6px';
+                        document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
+                        document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
+                        document.querySelectorAll('.phone_icons label')[i].style.borderRadius='6px';
                         for(let j=0;j<3;j++)
                         {
                             if(j!=i)
                             {
-                                document.querySelectorAll('.home11_pro label')[j].style.color='white';
-                                document.querySelectorAll('.home11_pro label')[j].style.backgroundColor='darkgreen';
+                                document.querySelectorAll('.phone_icons label')[j].style.color='white';
+                                document.querySelectorAll('.phone_icons label')[j].style.backgroundColor='darkgreen';
                             }
                         }
                     }
@@ -1019,30 +998,30 @@ function Home()
                 }
         }
         else{
-            document.getElementsByClassName('home13')[0].style.display='flex';
-            document.getElementsByClassName('home13')[0].style.flex=0.5;
-            document.getElementsByClassName('home12')[0].style.flex=1;
-            document.getElementsByClassName('home12')[0].style.display='flex';
+            document.getElementsByClassName('people_section')[0].style.display='flex';
+            document.getElementsByClassName('people_section')[0].style.flex=0.5;
+            document.getElementsByClassName('main_body_section')[0].style.flex=1;
+            document.getElementsByClassName('main_body_section')[0].style.display='flex';
             for(let j=0;j<5;j++)
             {
                 {
-                    document.querySelectorAll('.home11_pro label')[j].style.color='white';
-                    document.querySelectorAll('.home11_pro label')[j].style.backgroundColor='darkgreen';
+                    document.querySelectorAll('.phone_icons label')[j].style.color='white';
+                    document.querySelectorAll('.phone_icons label')[j].style.backgroundColor='darkgreen';
                 }
             }
             for(let i=0;i<3;i++)
                 {
                     
-                    if(getComputedStyle(document.querySelectorAll('.home11_pro label')[i]).backgroundColor=='rgb(255, 255, 255)')
+                    if(getComputedStyle(document.querySelectorAll('.phone_icons label')[i]).backgroundColor=='rgb(255, 255, 255)')
                     {
-                        document.querySelectorAll('.home11 label')[i].style.color='white';
-                        document.querySelectorAll('.home11 label')[i].style.backgroundColor='darkgreen';
+                        document.querySelectorAll('.desktop_icons label')[i].style.color='white';
+                        document.querySelectorAll('.desktop_icons label')[i].style.backgroundColor='darkgreen';
                         for(let j=0;j<3;j++)
                         {
                             if(j!=i)
                             {
-                                document.querySelectorAll('.home11 label')[j].style.color='darkgreen';
-                                document.querySelectorAll('.home11 label')[j].style.backgroundColor='lightgreen';
+                                document.querySelectorAll('.desktop_icons label')[j].style.color='darkgreen';
+                                document.querySelectorAll('.desktop_icons label')[j].style.backgroundColor='lightgreen';
                             }
                         }
                     }
@@ -1054,16 +1033,16 @@ function Home()
     useEffect(()=>
     {
 
-        let home1=document.querySelector('.home1')
-        let home12=document.querySelector('.home12')
-        let home13=document.querySelector('.home13')
+        let body_section=document.querySelector('.body_section')
+        let main_body_section=document.querySelector('.main_body_section')
+        let people_section=document.querySelector('.people_section')
 
-        if(innerwidth<=1100 && innerwidth>500){home1.style.height=(window.innerHeight-30)+'px';home12.style.height=(window.innerHeight-30)+'px';home13.style.height=(window.innerHeight-30)+'px'}
-        else if(innerwidth<=500){home1.style.height=(window.innerHeight-40)+'px';home12.style.height=(window.innerHeight-40)+'px';home13.style.height=(window.innerHeight-40)+'px'}
-        else if(innerwidth>1100){home1.style.height=(window.innerHeight)+'px';home12.style.height=(window.innerHeight)+'px';home13.style.height=(window.innerHeight)+'px'}
+        if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight-30)+'px';main_body_section.style.height=(window.innerHeight-30)+'px';people_section.style.height=(window.innerHeight-30)+'px'}
+        else if(innerwidth<=500){body_section.style.height=(window.innerHeight-40)+'px';main_body_section.style.height=(window.innerHeight-40)+'px';people_section.style.height=(window.innerHeight-40)+'px'}
+        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
     },[innerheight,innerwidth])
     useEffect(() => {
-        let container=document.getElementsByClassName('part1');
+        let container=document.getElementsByClassName('chat_detail_section');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
         document.getElementById('message').value=''
         set_edit('none')
@@ -1111,7 +1090,7 @@ function Home()
 
     useEffect(()=>
     {
-        if(!msg_removed || !msg_transfer || !refreshed){return}
+        if(!msg_transfer || !refreshed){return}
         setmessages(prev=>
         {
             let previous=[...prev]
@@ -1139,11 +1118,11 @@ function Home()
             return previous
         })
         
-    },[msg_removed,msg_transfer,refreshed])
+    },[msg_transfer,refreshed])
 
     useEffect(()=>
     {
-        let container=document.getElementsByClassName('part1');
+        let container=document.getElementsByClassName('chat_detail_section');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
     },[msg_transfer])
 
@@ -1192,7 +1171,7 @@ function Home()
                 setinfo(accounts);
             }
         );
-        let icons=document.querySelectorAll(".home11 label");
+        let icons=document.querySelectorAll(".desktop_icons label");
         let refresh_people=document.getElementById("refresh_people");
         refresh_people.addEventListener("click",function()
         {
@@ -1212,7 +1191,7 @@ function Home()
                 setinfo(accounts);
             })
         })
-        let phone_icons=document.querySelectorAll(".home11_pro label");
+        let phone_icons=document.querySelectorAll(".phone_icons label");
         for(let i=0;i<phone_icons.length;i++)
         {
             phone_icons[i].addEventListener('click',()=>{
@@ -1226,10 +1205,10 @@ function Home()
             phone_icons[i].style.color='darkgreen';
             phone_icons[i].style.backgroundColor='white';
             phone_icons[i].style.borderRadius='6px';
-            if(i==0){setpart2('none');setpart3('none');setdisp('none');set_disp_chat('flex');document.getElementsByClassName('home13')[0].style.display='none';document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
-            if(i==1){setpart2('flex');setpart3('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('home13')[0].style.display='none';document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
-            if(i==2){setpart2('none');setpart3('flex');setdisp('none');set_disp_chat('none');document.getElementsByClassName('home13')[0].style.display='none';document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
-            if(i==4){setpart2('none');setpart3('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('home13')[0].style.display='flex';document.getElementsByClassName('home13')[0].style.flex=1;document.getElementsByClassName('home12')[0].style.flex=0}
+            if(i==0){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('flex');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
+            if(i==1){setprofile_section('flex');setsettings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
+            if(i==2){setprofile_section('none');setsettings_section('flex');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
+            if(i==4){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='flex';document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0}
             });
         }
 
@@ -1244,9 +1223,9 @@ function Home()
                 }   
                 icons[i].style.backgroundColor='darkgreen';
                 icons[i].style.color='white';
-                if(i==0){setpart2('none');setpart3('none');setdisp('none');set_disp_chat('flex')}
-                if(i==1){setpart2('flex');setpart3('none');setdisp('none');set_disp_chat('none')}
-                if(i==2){setpart2('none');setpart3('flex');setdisp('none');set_disp_chat('none')}
+                if(i==0){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('flex')}
+                if(i==1){setprofile_section('flex');setsettings_section('none');setdisp('none');set_disp_chat('none')}
+                if(i==2){setprofile_section('none');setsettings_section('flex');setdisp('none');set_disp_chat('none')}
             });
         }
         
@@ -1254,6 +1233,7 @@ function Home()
     
     async function Send(message)
     {
+        something_sent.current=true
         let ids=[]
         let msg_being_replied=""
         if(reply_icon==='flex')
@@ -1324,21 +1304,21 @@ function Home()
         {
             connect_buttons[i].addEventListener('click',()=>{
 
-                if(window.innerWidth<=1100){document.getElementsByClassName('home13')[0].style.flex=0;document.getElementsByClassName('home12')[0].style.flex=1}
-                else{document.getElementsByClassName('home13')[0].style.flex=0.5;document.getElementsByClassName('home12')[0].style.flex=1}
+                if(window.innerWidth<=1100){document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
+                else{document.getElementsByClassName('people_section')[0].style.flex=0.5;document.getElementsByClassName('main_body_section')[0].style.flex=1}
                 
                 setdisp("flex");
-                setpart2('none');
-                setpart3('none');
+                setprofile_section('none');
+                setsettings_section('none');
                 set_disp_chat('none');
 
-                document.querySelectorAll('.home11_pro label')[0].style.color='darkgreen';
-                document.querySelectorAll('.home11_pro label')[0].style.backgroundColor='white';
-                document.querySelectorAll('.home11_pro label')[0].style.borderRadius='6px';
-                document.querySelectorAll('.home11_pro label')[4].style.color='white';
-                document.querySelectorAll('.home11_pro label')[4].style.backgroundColor='darkgreen';
+                document.querySelectorAll('.phone_icons label')[0].style.color='darkgreen';
+                document.querySelectorAll('.phone_icons label')[0].style.backgroundColor='white';
+                document.querySelectorAll('.phone_icons label')[0].style.borderRadius='6px';
+                document.querySelectorAll('.phone_icons label')[4].style.color='white';
+                document.querySelectorAll('.phone_icons label')[4].style.backgroundColor='darkgreen';
 
-                let icons=document.querySelectorAll(".home11 label");
+                let icons=document.querySelectorAll(".desktop_icons label");
                 for(let j=0;j<icons.length;j++)
                 {
                     icons[j].style.backgroundColor='lightgreen';
@@ -1393,8 +1373,8 @@ function Home()
                 <label><i class='fas fa-mobile-alt'></i>Whatsupp</label>
                 <label><i class='fas fa-user'></i>{profile}</label>
             </div>
-            <div className='home1' style={{backgroundColor:bgr}} >
-                <div className='home11'>
+            <div className='body_section' style={{backgroundColor:bgr}} >
+                <div className='desktop_icons'>
                     <label><i class='fas fa-comment-dots'></i>Chats<sup>{unread===0?'':unread}</sup></label>
                     <label><i class='fas fa-user'></i>Profile</label>
                     <label><i class='fas fa-cog'></i>Settings</label>
@@ -1403,9 +1383,9 @@ function Home()
                     ><i class='fas fa-user-plus'></i>Add Account</label>
 
                 </div>
-                <div className='home12'>
+                <div className='main_body_section'>
 
-                    <div className='part1' style={{display:disp}} >
+                    <div className='chat_detail_section' style={{display:disp}} >
                         <label  id="profile_name" >
                             <i className='fas fa-user'></i> {info[indices.indexOf(receiver)*2]} {status[indices.indexOf(receiver)]}
                         </label>
@@ -1497,7 +1477,7 @@ function Home()
                         }
                     </div>
                     
-                    <div className='part2' style={{display:part2}} >
+                    <div className='profile_section' style={{display:profile_section}} >
                         <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='#221130'?'lime':'darkgreen'}} class='fas fa-user'></i>
                         <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Username 🔑</label>
                         <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} style={{alignSelf:'end'}}></input>
@@ -1522,7 +1502,7 @@ function Home()
                             }} id="save">Save</button>
                     </div>
                     
-                    <div className='part3' style={{display:part3}} >
+                    <div className='settings_section' style={{display:settings_section}} >
                         <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='#221130'?'lime':'darkgreen'}} class='fas fa-user'></i>
                         <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Change Password 🔒</label>
                         <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
@@ -1544,7 +1524,7 @@ function Home()
                 
                 
 
-                <div className='home13' >
+                <div className='people_section' >
                     <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='#221130'?'white':'darkgreen'}}><i style={{marginTop:'2.5px'}} id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
                     <aa style={{display:'flex',justifyContent:'center',width:'100%'}}>
                         <input placeholder='Search ...' value={search_value} 
@@ -1601,7 +1581,7 @@ function Home()
                     document.getElementById('message').value=''}}} style={{borderRadius:"5px",fontSize:'20px',color:"white",border:"darkgreen solid 1px",cursor:"pointer"}} >⏩⏩</button>
             </div>
 
-            <div className='home11_pro' style={{display:'none'}}>
+            <div className='phone_icons' style={{display:'none'}}>
                 <label ><i class='fas fa-comment-dots'></i>Chats<sup>{unread===0?'':unread}</sup></label>
                 <label ><i class='fas fa-user'></i>Profile</label>
                 <label ><i class='fas fa-cog'></i>Settings</label>

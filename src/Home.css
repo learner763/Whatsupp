@@ -31,16 +31,16 @@ body{
     padding-left: 3px;
     padding-top: 3px;
 }
-.home1{
+.body_section{
     display:flex;    
     background-color: white;
 }
-.home1 div{
+.body_section div{
     height: 100vh;
     width: 100%;
     display: flex;
 }
-.home11{
+.desktop_icons{
     flex: .25 ;
     border: darkgreen solid ;
     border-width: 0px 1px 0px 0px;
@@ -50,7 +50,7 @@ body{
     align-items: center;
     height: 100%;
 }
-.home11 label{
+.desktop_icons label{
     color: darkgreen;
     cursor: pointer;
     background-color: lightgreen;
@@ -62,11 +62,11 @@ body{
     font-weight: bolder;
     
 }
-.home11 label:first-child{
+.desktop_icons label:first-child{
     background-color: darkgreen;
     color: white;
 }
-.home12
+.main_body_section
 {
     flex: 1 ;
     border: darkgreen solid ;
@@ -74,7 +74,7 @@ body{
     flex-direction: column;
     overflow-x: hidden;
 }
-.home13
+.people_section
 {
     overflow-y: scroll;
     flex: .5 ;
@@ -103,7 +103,7 @@ body{
     font-weight: bold;
     font-size: 25px;
 }
-.home13 span ,.home11,.home13{
+.people_section span ,.desktop_icons,.people_section{
     word-wrap: break-word;
     word-break: break-word;
 }
@@ -113,40 +113,40 @@ body{
     font-size: 25px;
     padding-top: 28px;
 }
-.part2,.part3{
+.profile_section,.settings_section{
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: start;
     overflow-y: scroll;
 }
-.part2 i, .part2 button, .part2 label, .part2 input,
-.part3 i, .part3 button, .part3 label, .part3 input,.part3 select{
+.profile_section i, .profile_section button, .profile_section label, .profile_section input,
+.settings_section i, .settings_section button, .settings_section label, .settings_section input,.settings_section select{
     color: darkgreen;
 }
-.part2 i,.part3 i{
+.profile_section i,.settings_section i{
     font-size: 60px;
 }
-.part2 label,.part3 label{
+.profile_section label,.settings_section label{
     font-size: 25px;
     font-weight: bolder;
     padding-left: 5px;
 }
-.part2 input,.part3 input,.part3 select{
+.profile_section input,.settings_section input,.settings_section select{
     font-size: 25px;
     border: darkgreen solid;
     border-width: 1px 0px 1px 0px;
     border-radius: 20px;
     margin-right: 5px;
 }
-.part3 a{
+.settings_section a{
     font-size: 25px;
     color: darkgreen;
     text-decoration: underline;
     margin-right: 5px;
     align-self: flex-end;
 }
-.part2 button,.part3 button{
+.profile_section button,.settings_section button{
     background-color: lightgreen;
     color: darkgreen;
     cursor: pointer;
@@ -157,7 +157,7 @@ body{
     font-weight: bold;
 }
 
-.part1{
+.chat_detail_section{
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
@@ -171,7 +171,7 @@ body{
     flex-direction: column;
     overflow-y: scroll;
 }
-.part1 label,.chats label{
+.chat_detail_section label,.chats label{
     font-weight: bold;
     font-size: 25px;
     align-self: center;
@@ -235,7 +235,7 @@ body{
     border-width: 0px 0px 1px 0px !important;
     width: 100%;
 }
-.home11_pro{
+.phone_icons{
     color: white;
 }
 .chat_detail{
@@ -244,15 +244,15 @@ body{
 .chat_detail:hover{
     cursor: pointer;
 }
-.home11_pro label{
+.phone_icons label{
     border-radius: 6px;
 }
 @media (max-width: 1100px)
 {
-    .home11{
+    .desktop_icons{
         display: none !important;
     }
-    .home11_pro{
+    .phone_icons{
         display: flex !important;
         width: 100%;
         justify-content: space-around;
@@ -265,7 +265,7 @@ body{
         color: white;
         font-weight: bold;
     }   
-    .home11_pro label {
+    .phone_icons label {
         cursor: pointer;
     }
     #profile_name,.msg_div{
@@ -283,42 +283,42 @@ body{
         width: 222px;
     }
     
-    .part2,.part3,.home13,.chats,.part1{
+    .profile_section,.settings_section,.people_section,.chats,.chat_detail_section{
         padding-bottom: 30px;
     }
     
 }
 @media (max-width:500px) {
     
-    .part3 a,.top label,#youmayknow,.part2 label,.part3 label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
+    .settings_section a,.top label,#youmayknow,.profile_section label,.settings_section label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
         font-size: 20px;
     }
-    .part2 input,.part3 input,.part3 select{
+    .profile_section input,.settings_section input,.settings_section select{
         font-size: 20px;
         align-self: center;
     }
-    .part2,.part3,.home13,.chats,.part1{
+    .profile_section,.settings_section,.people_section,.chats,.chat_detail_section{
         padding-bottom: 40px;
     }
     .top{
         height: 29px;
     }
     
-    .home11_pro{
+    .phone_icons{
         height: auto;
     }
     .msg_div{
         bottom: 40px;
     }
-    .home11_pro label {
+    .phone_icons label {
         font-size: 0px;
         padding: 5px;
         border-radius: 10px !important;
     }
-    .home11_pro label sup{
+    .phone_icons label sup{
         font-size: 15px;
     }
-    .home11_pro label i{
+    .phone_icons label i{
         font-size: 30px;
     }
 }
