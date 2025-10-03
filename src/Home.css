@@ -134,6 +134,7 @@ body{
 }
 .profile_section input,.settings_section input,.settings_section select{
     font-size: 25px;
+    color:black;
     border: darkgreen solid;
     border-width: 1px 0px 1px 0px;
     border-radius: 20px;
