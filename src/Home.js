@@ -1563,10 +1563,10 @@ function Home()
             </div>
             
             <div className='msg_div' style={{display:disp}}>
-                <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer',border:'1px #221130 solid'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
-                <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'5px',cursor:'pointer',border:'1px #221130 solid'}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
+                <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'30px',cursor:'pointer',border:'none'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
+                <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'30px',cursor:'pointer',border:'none'}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
 
-                <textarea id="message" style={{resize:"none",borderRadius:"30px",paddingLeft:'12px'}} placeholder='Type...'
+                <textarea id="message" style={{border:'none', resize:"none",borderRadius:"30px",paddingLeft:'12px'}} placeholder='Type...'
                 onChange={()=>
                 {
                     if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
