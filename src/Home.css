@@ -315,13 +315,11 @@ body{
         font-size: 0px;
         padding: 5px;
         border-radius: 10px !important;
-        background-color: darkgreen;
     }
     .phone_icons label sup{
         font-size: 15px;
     }
     .phone_icons label i{
         font-size: 30px;
-        color:lime
     }
 }
