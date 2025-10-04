@@ -62,10 +62,6 @@ body{
     font-weight: bolder;
     
 }
-.desktop_icons label:first-child{
-    background-color: darkgreen;
-    color: white;
-}
 .main_body_section
 {
     flex: 1 ;

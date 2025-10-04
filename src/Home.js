@@ -937,7 +937,7 @@ function Home()
     useEffect(() => {
         for(let i=0;i<3;i++)
         {
-            if(getComputedStyle(document.querySelectorAll('.desktop_icons label')[i]).color=='rgb(255, 255, 255)')
+            /*if(getComputedStyle(document.querySelectorAll('.desktop_icons label')[i]).color=='rgb(255, 255, 255)')
             {
                 document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
                 document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
@@ -963,14 +963,14 @@ function Home()
                         document.querySelectorAll('.desktop_icons label')[j].style.backgroundColor='lightgreen';
                     }
                 }
-            }
+            }*/
         }
         if(window.innerWidth<=1100){
             let people=document.getElementById('people');
             if(window.getComputedStyle(people).color=='rgb(255, 255, 255)')
                 {document.getElementsByClassName('people_section')[0].style.flex=0;}
             else{document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0;}
-            
+            /*
             for(let j=0;j<3;j++)
             {
                 {
@@ -995,14 +995,14 @@ function Home()
                         }
                     }
                     
-                }
+                }*/
         }
         else{
             document.getElementsByClassName('people_section')[0].style.display='flex';
             document.getElementsByClassName('people_section')[0].style.flex=0.5;
             document.getElementsByClassName('main_body_section')[0].style.flex=1;
             document.getElementsByClassName('main_body_section')[0].style.display='flex';
-            for(let j=0;j<5;j++)
+            /*for(let j=0;j<5;j++)
             {
                 {
                     document.querySelectorAll('.phone_icons label')[j].style.color='white';
@@ -1025,7 +1025,7 @@ function Home()
                             }
                         }
                     }
-                }
+                }*/
         }
     
     },[innerwidth])
@@ -1172,6 +1172,8 @@ function Home()
             }
         );
         let icons=document.querySelectorAll(".desktop_icons label");
+        icons[0].style.backgroundColor='darkgreen'
+        icons[0].style.color='white'
         let refresh_people=document.getElementById("refresh_people");
         refresh_people.addEventListener("click",function()
         {
@@ -1192,19 +1194,27 @@ function Home()
             })
         })
         let phone_icons=document.querySelectorAll(".phone_icons label");
+        phone_icons[0].style.color='lime'
         for(let i=0;i<phone_icons.length;i++)
         {
             phone_icons[i].addEventListener('click',()=>{
-                update_receiver('-')
+            update_receiver('-')
             for(let j=0;j<phone_icons.length;j++)
             {   
                 phone_icons[j].style.color='white';
-                phone_icons[j].style.backgroundColor='darkgreen';
-                
+                if(j<3)
+                {
+                    icons[j].style.backgroundColor='lightgreen'
+                    icons[j].style.color='darkgreen'
+                }
             }   
-            phone_icons[i].style.color='darkgreen';
-            phone_icons[i].style.backgroundColor='white';
+            phone_icons[i].style.color='lime';
             phone_icons[i].style.borderRadius='6px';
+            if(i<3)
+            {
+                icons[i].style.backgroundColor='darkgreen'
+                icons[i].style.color='white'
+            }
             if(i==0){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('flex');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
             if(i==1){setprofile_section('flex');setsettings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
             if(i==2){setprofile_section('none');setsettings_section('flex');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
@@ -1220,9 +1230,11 @@ function Home()
                 {
                     icons[j].style.backgroundColor='lightgreen';
                     icons[j].style.color='darkgreen';
+                    phone_icons[j].style.color='white'
                 }   
                 icons[i].style.backgroundColor='darkgreen';
                 icons[i].style.color='white';
+                phone_icons[j].style.color='lime'
                 if(i==0){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('flex')}
                 if(i==1){setprofile_section('flex');setsettings_section('none');setdisp('none');set_disp_chat('none')}
                 if(i==2){setprofile_section('none');setsettings_section('flex');setdisp('none');set_disp_chat('none')}
