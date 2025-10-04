@@ -1037,7 +1037,11 @@ function Home()
                     document.querySelectorAll('.phone_icons label')[i].style.color='lime';
                     document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='darkgreen';
                 }
-                else{
+            }
+            if(getComputedStyle(document.querySelectorAll('.phone_icons label')[i]).color=='rgb(0, 255, 0)')
+            {
+                if(window.innerWidth>500)
+                {
                     document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
                     document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
                 }
