@@ -1027,27 +1027,7 @@ function Home()
                     }
                 }
         }
-        
-        for(let i=0;i<document.querySelectorAll('.phone_icons label').length;i++)
-        {
-            if(getComputedStyle(document.querySelectorAll('.phone_icons label')[i]).backgroundColor=='rgb(255, 255, 255)')
-            {
-                if(window.innerWidth<=500)
-                {
-                    document.querySelectorAll('.phone_icons label')[i].style.color='lime';
-                    document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='darkgreen';
-                }
-            }
-            if(getComputedStyle(document.querySelectorAll('.phone_icons label')[i]).color=='rgb(0, 255, 0)')
-            {
-                if(window.innerWidth>500)
-                {
-                    document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
-                    document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
-                }
-            }
-        }
-        
+    
     },[innerwidth])
         
     useEffect(()=>
@@ -1215,20 +1195,16 @@ function Home()
         for(let i=0;i<phone_icons.length;i++)
         {
             phone_icons[i].addEventListener('click',()=>{
-            update_receiver('-')
+                update_receiver('-')
             for(let j=0;j<phone_icons.length;j++)
             {   
                 phone_icons[j].style.color='white';
                 phone_icons[j].style.backgroundColor='darkgreen';
+                
             }   
-            if(window.innerWidth>500) 
-            {
-                phone_icons[i].style.color='darkgreen';
-                phone_icons[i].style.backgroundColor='white';
-            }
-            else{phone_icons[i].style.color='lime';phone_icons[i].style.backgroundColor='darkgreen';}
+            phone_icons[i].style.color='darkgreen';
+            phone_icons[i].style.backgroundColor='white';
             phone_icons[i].style.borderRadius='6px';
-
             if(i==0){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('flex');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
             if(i==1){setprofile_section('flex');setsettings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
             if(i==2){setprofile_section('none');setsettings_section('flex');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
