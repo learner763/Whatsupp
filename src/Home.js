@@ -971,7 +971,7 @@ function Home()
                 {document.getElementsByClassName('people_section')[0].style.flex=0;}
             else{document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0;}
             
-            /*for(let j=0;j<3;j++)
+            for(let j=0;j<3;j++)
             {
                 {
                     document.querySelectorAll('.desktop_icons label')[j].style.color='darkgreen';
@@ -995,14 +995,14 @@ function Home()
                         }
                     }
                     
-                }*/
+                }
         }
         else{
             document.getElementsByClassName('people_section')[0].style.display='flex';
             document.getElementsByClassName('people_section')[0].style.flex=0.5;
             document.getElementsByClassName('main_body_section')[0].style.flex=1;
             document.getElementsByClassName('main_body_section')[0].style.display='flex';
-            /*for(let j=0;j<5;j++)
+            for(let j=0;j<5;j++)
             {
                 {
                     document.querySelectorAll('.phone_icons label')[j].style.color='white';
@@ -1025,7 +1025,7 @@ function Home()
                             }
                         }
                     }
-                }*/
+                }
         }
     
     },[innerwidth])
