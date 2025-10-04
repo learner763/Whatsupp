@@ -982,15 +982,8 @@ function Home()
                 {
                     if(getComputedStyle(document.querySelectorAll('.desktop_icons label')[i]).color=='rgb(255, 255, 255)')
                     {
-                        if(window.innerWidth>500)
-                        {
-                            document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
-                            document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
-                        }
-                        else{
-                            document.querySelectorAll('.phone_icons label')[i].style.color='lime';
-                            document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='darkgreen';
-                        }
+                        document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
+                        document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
                         document.querySelectorAll('.phone_icons label')[i].style.borderRadius='6px';
                         for(let j=0;j<3;j++)
                         {
@@ -1034,7 +1027,23 @@ function Home()
                     }
                 }
         }
-    
+        
+        for(let i=0;i<document.querySelectorAll('.phone_icons label').length;i++)
+        {
+            if(getComputedStyle(document.querySelectorAll('.phone_icons label')[i]).backgroundColor=='rgb(255, 255, 255)')
+            {
+                if(window.innerWidth<=500)
+                {
+                    document.querySelectorAll('.phone_icons label')[i].style.color='lime';
+                    document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='darkgreen';
+                }
+                else{
+                    document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
+                    document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
+                }
+            }
+        }
+        
     },[innerwidth])
         
     useEffect(()=>
