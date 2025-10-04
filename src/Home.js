@@ -306,8 +306,6 @@ function Home()
         let action=onSnapshot(q,(snapshot)=>
         {
             if(first_snapshot){first_snapshot=false;return;}
-            if(!something_sent.current && !something_edited.current){return}
-            console.log('hehe')
             let msgs=snapshot.docChanges().filter(change=>change.type==='added').map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
@@ -935,97 +933,19 @@ function Home()
     },[indices,index,refreshed,receiver])
 
     useEffect(() => {
-        for(let i=0;i<3;i++)
-        {
-            /*if(getComputedStyle(document.querySelectorAll('.desktop_icons label')[i]).color=='rgb(255, 255, 255)')
-            {
-                document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
-                document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
-                document.querySelectorAll('.phone_icons label')[i].style.borderRadius='6px';
-                for(let j=0;j<3;j++)
-                {
-                    if(j!=i)
-                    {
-                        document.querySelectorAll('.phone_icons label')[j].style.color='white';
-                        document.querySelectorAll('.phone_icons label')[j].style.backgroundColor='darkgreen';
-                    }
-                }
-            }
-            else if(getComputedStyle(document.querySelectorAll('.phone_icons label')[i]).backgroundColor=='rgb(255, 255, 255)')
-            {
-                document.querySelectorAll('.desktop_icons label')[i].style.color='white';
-                document.querySelectorAll('.desktop_icons label')[i].style.backgroundColor='darkgreen';
-                for(let j=0;j<3;j++)
-                {
-                    if(j!=i)
-                    {
-                        document.querySelectorAll('.desktop_icons label')[j].style.color='darkgreen';
-                        document.querySelectorAll('.desktop_icons label')[j].style.backgroundColor='lightgreen';
-                    }
-                }
-            }*/
-        }
+        
         if(window.innerWidth<=1100){
             let people=document.getElementById('people');
             if(window.getComputedStyle(people).color=='rgb(255, 255, 255)')
-                {document.getElementsByClassName('people_section')[0].style.flex=0;}
-            else{document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0;}
-            /*
-            for(let j=0;j<3;j++)
-            {
-                {
-                    document.querySelectorAll('.desktop_icons label')[j].style.color='darkgreen';
-                    document.querySelectorAll('.desktop_icons label')[j].style.backgroundColor='lightgreen';
-                }
-            }
-            for(let i=0;i<3;i++)
-                {
-                    if(getComputedStyle(document.querySelectorAll('.desktop_icons label')[i]).color=='rgb(255, 255, 255)')
-                    {
-                        document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
-                        document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
-                        document.querySelectorAll('.phone_icons label')[i].style.borderRadius='6px';
-                        for(let j=0;j<3;j++)
-                        {
-                            if(j!=i)
-                            {
-                                document.querySelectorAll('.phone_icons label')[j].style.color='white';
-                                document.querySelectorAll('.phone_icons label')[j].style.backgroundColor='darkgreen';
-                            }
-                        }
-                    }
-                    
-                }*/
+            {document.getElementsByClassName('people_section')[0].style.flex=0;}
+            else
+            {document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0;}    
         }
         else{
             document.getElementsByClassName('people_section')[0].style.display='flex';
             document.getElementsByClassName('people_section')[0].style.flex=0.5;
             document.getElementsByClassName('main_body_section')[0].style.flex=1;
             document.getElementsByClassName('main_body_section')[0].style.display='flex';
-            /*for(let j=0;j<5;j++)
-            {
-                {
-                    document.querySelectorAll('.phone_icons label')[j].style.color='white';
-                    document.querySelectorAll('.phone_icons label')[j].style.backgroundColor='darkgreen';
-                }
-            }
-            for(let i=0;i<3;i++)
-                {
-                    
-                    if(getComputedStyle(document.querySelectorAll('.phone_icons label')[i]).backgroundColor=='rgb(255, 255, 255)')
-                    {
-                        document.querySelectorAll('.desktop_icons label')[i].style.color='white';
-                        document.querySelectorAll('.desktop_icons label')[i].style.backgroundColor='darkgreen';
-                        for(let j=0;j<3;j++)
-                        {
-                            if(j!=i)
-                            {
-                                document.querySelectorAll('.desktop_icons label')[j].style.color='darkgreen';
-                                document.querySelectorAll('.desktop_icons label')[j].style.backgroundColor='lightgreen';
-                            }
-                        }
-                    }
-                }*/
         }
     
     },[innerwidth])
@@ -1230,11 +1150,14 @@ function Home()
                 {
                     icons[j].style.backgroundColor='lightgreen';
                     icons[j].style.color='darkgreen';
-                    phone_icons[j].style.color='white'
                 }   
+                for(let k=0;k<phone_icons.length;k++)
+                {
+                    phone_icons[k].style.color='white';
+                }
                 icons[i].style.backgroundColor='darkgreen';
                 icons[i].style.color='white';
-                phone_icons[j].style.color='lime'
+                phone_icons[i].style.color='lime'
                 if(i==0){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('flex')}
                 if(i==1){setprofile_section('flex');setsettings_section('none');setdisp('none');set_disp_chat('none')}
                 if(i==2){setprofile_section('none');setsettings_section('flex');setdisp('none');set_disp_chat('none')}
@@ -1324,11 +1247,9 @@ function Home()
                 setsettings_section('none');
                 set_disp_chat('none');
 
-                document.querySelectorAll('.phone_icons label')[0].style.color='darkgreen';
-                document.querySelectorAll('.phone_icons label')[0].style.backgroundColor='white';
+                document.querySelectorAll('.phone_icons label')[0].style.color='lime';
                 document.querySelectorAll('.phone_icons label')[0].style.borderRadius='6px';
                 document.querySelectorAll('.phone_icons label')[4].style.color='white';
-                document.querySelectorAll('.phone_icons label')[4].style.backgroundColor='darkgreen';
 
                 let icons=document.querySelectorAll(".desktop_icons label");
                 for(let j=0;j<icons.length;j++)

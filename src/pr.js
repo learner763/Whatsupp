@@ -1,2 +1,5 @@
-let r=['4']
-console.log(r[-1])
+let r={e:'df'}
+if(!r.e)
+{
+    console.log(34)
+}
