@@ -982,8 +982,15 @@ function Home()
                 {
                     if(getComputedStyle(document.querySelectorAll('.desktop_icons label')[i]).color=='rgb(255, 255, 255)')
                     {
-                        document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
-                        document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
+                        if(window.innerWidth>500)
+                        {
+                            document.querySelectorAll('.phone_icons label')[i].style.color='darkgreen';
+                            document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='white';
+                        }
+                        else{
+                            document.querySelectorAll('.phone_icons label')[i].style.color='lime';
+                            document.querySelectorAll('.phone_icons label')[i].style.backgroundColor='darkgreen';
+                        }
                         document.querySelectorAll('.phone_icons label')[i].style.borderRadius='6px';
                         for(let j=0;j<3;j++)
                         {
