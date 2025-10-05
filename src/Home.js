@@ -314,6 +314,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
+            console.log(msgs)
             if(edited.length>0)
             {
                 let do_break=false
@@ -386,7 +387,6 @@ function Home()
                                     let inter=previous[i]
                                     previous.splice(i,1)
                                     previous.unshift(inter);
-                                    set_msg_transfer(prev=>prev+1)
                                     if(msgs[0].reply===true)
                                     {
                                         set_replies(pre=>
@@ -397,6 +397,7 @@ function Home()
                                         }
                                         )
                                     }
+                                    set_msg_transfer(prev=>prev+1)
                                     return previous;
                                 }
                                 else if(to==index && previous[i][0]==from){
@@ -1114,7 +1115,7 @@ function Home()
             })
         })
         let phone_icons=document.querySelectorAll(".phone_icons label");
-        phone_icons[0].style.color='yellow'
+        phone_icons[0].style.color='lime'
         for(let i=0;i<phone_icons.length;i++)
         {
             phone_icons[i].addEventListener('click',()=>{
@@ -1128,7 +1129,7 @@ function Home()
                     icons[j].style.color='darkgreen'
                 }
             }   
-            phone_icons[i].style.color='yellow';
+            phone_icons[i].style.color='lime';
             phone_icons[i].style.borderRadius='6px';
             if(i<3)
             {
@@ -1157,14 +1158,14 @@ function Home()
                 }
                 icons[i].style.backgroundColor='darkgreen';
                 icons[i].style.color='white';
-                phone_icons[i].style.color='yellow'
+                phone_icons[i].style.color='lime'
                 if(i==0){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('flex')}
                 if(i==1){setprofile_section('flex');setsettings_section('none');setdisp('none');set_disp_chat('none')}
                 if(i==2){setprofile_section('none');setsettings_section('flex');setdisp('none');set_disp_chat('none')}
             });
         }
         
-    }, [profile]);
+    }, []);
     
     async function Send(message)
     {
