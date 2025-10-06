@@ -3,8 +3,6 @@
 ## Application Link
 https://whatsupp-chat.vercel.app/
 
-*Note: This application is completed 90% and one to one chatting has been implemented.*
-
 ## Frameworks 
 **FrontEnd**- React JS
 
@@ -13,13 +11,6 @@ https://whatsupp-chat.vercel.app/
 **Database**- Postgresql
 
 **Real Time Communication Layer**- Firebase 
-
-
-
-
-
-
-
 
 ## Components
 ### Login Page 
@@ -32,6 +23,6 @@ https://whatsupp-chat.vercel.app/
 - **Settings:** You can change account password and background theme.
 - **Profile Section:** To update your personal info and account username.
 - **Add Account:** You can sign up to multiple accounts.
-- **Add People:** Shows list of people who have joined this platform and you can connect and start chatting with them.
+- **Add People:** Shows list of people who have joined this platform,you can search,connect and start chatting with them.
 
 
