@@ -35,10 +35,10 @@ https://whatsupp-chat.vercel.app/
 
 
 ## Unique Features
-There are three such features that are not implemented in actual Whatsapp but you are able to see here.
+There are three such features that are **not implemented in actual Whatsapp** but you are able to see here.
 - When you delete a message from a conversation ,it is deleted from receiver's side as well without notifying that person like *This message was deleted*.
 - Now consider a message is sent while replying or qouting a certain message.If that qouted message is edited or deleted,then that change is reflected where it is qouted or replied to.
 ## Navigation Notables
-- You must fill and submit information on login and profile pages before going to home page otherwise you will be redirected back.
+- You must fill and submit information while signing up on login and profile pages before going to home page otherwise you will be redirected back.
 - Once you have signed up on this application, you dont have to login again and you will be redirected to home page. 
 
