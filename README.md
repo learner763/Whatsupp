@@ -3,7 +3,7 @@
 ## Application Link
 https://whatsupp-chat.vercel.app/
 
-## Frameworks 
+## Tech Stack 
 **FrontEnd**- React JS
 
 **BackEnd**- Express JS
@@ -26,10 +26,16 @@ https://whatsupp-chat.vercel.app/
     - You **get notified** on application when you receive unread messages.
     - You can **Edit,Delete and Reply** to certain messages.
     - **Date and Time** show when did the conversations happended.
+    - Edited messages would appear with edited label.
     
 - **Settings Section:** You can change account password and background theme.
 - **Profile Section:** To update your personal info and account username.
 - **Add Account:** You can sign up to multiple accounts.
 - **People Section:** Shows list of people who have joined this platform,you can search and start chatting with them.
 
+
+## Unique Features
+There are three such features that are not implemented in actual Whatsapp but you are able to see here.
+- When you delete a message from a conversation ,it is deleted from receiver's side as well without notifying that person like *This message was deleted*.
+- Now consider a message is sent while replying or qouting a certain message.If that qouted message is edited or deleted,then that change is reflected where it is qouted or replied to.
 
