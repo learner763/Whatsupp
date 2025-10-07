@@ -1249,7 +1249,7 @@ function Home()
                 set_disp_chat('none');
 
                 let phone_icons=document.querySelectorAll(".phone_icons label");
-                let desktop_icons=document.querySelectorAll(".desktop_icons label");
+                let icons=document.querySelectorAll(".desktop_icons label");
 
                 for(let j=0;j<phone_icons.length;j++)
                 {
