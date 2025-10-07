@@ -1248,11 +1248,12 @@ function Home()
                 setsettings_section('none');
                 set_disp_chat('none');
 
-                document.querySelectorAll('.phone_icons label')[0].style.color='lime';
-                document.querySelectorAll('.phone_icons label')[0].style.borderRadius='6px';
-                document.querySelectorAll('.phone_icons label')[4].style.color='white';
-
-                let icons=document.querySelectorAll(".desktop_icons label");
+                let phone_icons=document.querySelectorAll(".phone_icons label");
+                for(let j=0;j<phone_icons.length;j++)
+                {
+                    phone_icons[j].style.color='white';
+                } 
+                phone_icons[0].style.color='lime'
                 for(let j=0;j<icons.length;j++)
                 {
                     icons[j].style.backgroundColor='lightgreen';
