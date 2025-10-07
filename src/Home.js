@@ -1512,7 +1512,7 @@ function Home()
                     {
                     if(edit_icon==='none'){Send(document.getElementById('message').value)};
                     if(edit_icon==='flex'){write_edit(document.getElementById('message').value)}
-                    document.getElementById('message').value=''}}} style={{borderRadius:"30px",fontSize:'20px',color:"white",border:"none",cursor:"pointer"}} >⏩⏩</button>
+                    document.getElementById('message').value=''}}} style={{borderRadius:"30px",fontSize:'20px',color:"white",cursor:"pointer"}} >⏩⏩</button>
             </div>
 
             <div className='phone_icons' style={{display:'none'}}>
