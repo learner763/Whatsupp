@@ -209,6 +209,10 @@ body{
     margin-top:2px;
     margin-bottom:2px;
 }
+.msg_div textarea,.msg_div button{
+    border:black solid;
+    border-width: 1px ;
+}
 
 .chats{
     display: flex;
@@ -248,6 +252,9 @@ body{
 }
 @media (max-width: 1100px)
 {
+    .msg_div textarea,.msg_div button{
+        border:none;
+    }
     .desktop_icons{
         display: none !important;
     }
