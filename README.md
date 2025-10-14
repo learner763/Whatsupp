@@ -41,4 +41,8 @@ There are three such features that are **not implemented in actual Whatsapp** bu
 ## Navigation Notables
 - You must fill and submit information while signing up on login and profile pages before going to home page otherwise you will be redirected back.
 - Once you have signed up on this application, you dont have to login again and you will be redirected to home page. 
+- Use icons on home page to navigate between its different sections.
+## Live Status
+- You can view whether other person is online,typing a message to you and person's last active time.
+
 

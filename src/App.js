@@ -21,28 +21,20 @@ function App() {
   const [profile_key,set_profile_key]=useState(localStorage.getItem("profile"))
   useEffect(()=>
     {
-      console.log(root,email_key,profile_key) 
       if(!root || root==="false")
       {
-        let a=0
         if(email_key!==null && profile_key!==null)
         {
           set_proceed('none')
-          a=1
-          console.log(a)
           nav('/home');
         }
         else if(!profile_key && email_key!==null)
         {
           set_proceed('none')
-          a=2
-          console.log(a)
           nav('/profile');
         }
         else if(!email_key && !profile_key)
         {
-          a=3
-          console.log(a)
           set_proceed('flex');
         }
       }
@@ -63,7 +55,6 @@ function App() {
               bt: bt
             });
             df("none");
-            console.log(response)
             if(bt==="Log In")
             {
               setvisibility("block");

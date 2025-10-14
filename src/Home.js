@@ -314,7 +314,6 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            console.log(msgs)
             if(edited.length>0)
             {
                 let do_break=false
@@ -511,7 +510,6 @@ function Home()
             {
                 return {id:doc.id,...doc.data()}
             })
-            console.log(msgs)
             setmessages(prev=>
                 {
                     let previous=[...prev]

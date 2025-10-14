@@ -42,7 +42,6 @@ function Profile() {
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 if(data.success===true)
                 {
                   nav1('/home');
@@ -114,7 +113,6 @@ function Profile() {
         />
         <button onClick={() => 
           {
-            console.log(name,bio)
             if(name.length>0 && bio.length>0){personal_info(name,bio)}
           }}>Save</button>
         <label>Help people find you easily. 

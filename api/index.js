@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
-import { timeStamp } from 'console';
 const app = express();
 
 // Resolve __dirname for ES modules
@@ -73,7 +72,6 @@ app.post("/login", (req, res) => {
 
 app.post("/personal", (req, res) => {
     const { username, name,bio } = req.body;
-    console.log(username,name,bio)
     pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,username], (err, results) => {   
         return res.json({success:true}); 
     });
@@ -133,7 +131,6 @@ app.post('/get_messages',(req,res)=>
                 }
                 frontend_messages.push(sent_received);
             }
-            console.log(frontend_messages)
 
             for(let i=frontend_messages.length-1;i>=1;i-=2)
             {
@@ -142,7 +139,6 @@ app.post('/get_messages',(req,res)=>
                     frontend_messages.splice(i-1,2)
                 }
             }
-            console.log(frontend_messages)
 
             for(let j=0;j<(frontend_messages.length-2)/2;j++)
             {
@@ -170,7 +166,6 @@ app.post('/get_messages',(req,res)=>
 })
 app.post("/save_info", (req, res) => {
     const { previous,username,profile, name,bio } = req.body;
-    console.log(username==previous)
     pool.query("select * from public.users where email=$1 union all select * from public.users where name=$2", [username,name], (err, results) => {
         if(results.rows.length>0)
         {
@@ -235,7 +230,6 @@ app.post("/forpass", (req, res) => {
 app.post('/save_msg',(req,res)=>
 {
     const {from,to,message,time}=req.body;
-    console.log(time)
     pool.query(`select "${from}" as chat from public.chats where chat_with=$1 
                 union all 
                 select "${to}" from public.chats where chat_with=$2`,[to,from],(err,results)=>
@@ -254,11 +248,9 @@ app.post('/save_msg',(req,res)=>
 app.post('/delete_msg',(req,res)=>
 {
     const {from,to,message}=req.body;
-    console.log(message)
     let updated_msg=message.replace(message.slice(0,message.indexOf(' ')),`${from}:`)
     pool.query(`update public.chats set "${from}"=array_remove("${from}",$1) where chat_with=$2 and "${from}" is not null`,[updated_msg,to],(err,results)=>
                 {
-                    console.log(results.rowCount)
                     if(results.rowCount===0)
                     {
                         pool.query(`update public.chats set "${to}"=array_remove("${to}",$1) where chat_with=$2 and "${to}" is not null`,[updated_msg,from],(err,results)=>
@@ -274,7 +266,6 @@ app.post('/edit_message',(req,res)=>
     let original=`${from}: ${original_msg.slice(original_msg.indexOf(' ')+1,original_msg.length)}`
     pool.query(`update public.chats set "${from}"=array_replace("${from}",$1,$2) where chat_with=$3 and "${from}" is not null`,[original,updated_text,to],(err,results)=>
         {
-            console.log(results.rowCount)
             if(results.rowCount===0)
             {
                 pool.query(`update public.chats set "${to}"=array_replace("${to}",$1,$2) where chat_with=$3 and "${to}" is not null`,[original,updated_text,from],(err,results)=>
