@@ -33,6 +33,11 @@ function App() {
           set_proceed('none')
           nav('/profile');
         }
+        else if(!email_key && profile_key!==null)
+        {
+          set_proceed('flex')
+          nav('/');
+        }
         else if(!email_key && !profile_key)
         {
           set_proceed('flex');
@@ -67,7 +72,20 @@ function App() {
                 settext("");
                 localStorage.setItem("email",email);
                 localStorage.setItem('root',false)
-                nav('/home');
+                fetch("/user_in_table",{    
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ username: response.data[0].index})
+                  }
+                )
+                .then(response => response.json())
+                .then(data => 
+                {
+                  localStorage.setItem('root',false)
+                  nav('/home');
+                })
               }
             }
             else if(bt==="Sign Up")

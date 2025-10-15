@@ -1078,7 +1078,7 @@ function Home()
                     }
                 }
                 if(flag[0]===false){set_flag1(false);set_loaded(false);alert(`No account exists with '${username}'`);localStorage.setItem('root',true);nav2('/');}
-                else if(flag[1]===null){set_flag1(false);set_loaded(false);alert(`Please submit profile details!`);nav2('/profile')}
+                else if(flag[1]==='null'){set_flag1(false);set_loaded(false);alert(`Please submit profile details!`);nav2('/profile')}
                 let ind=[]
                 for(let i=data.length-1;i>=0;i--)
                 {
