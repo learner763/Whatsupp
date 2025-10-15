@@ -22,6 +22,7 @@ function App() {
   const [root,set_root]=useState(localStorage.getItem("root"))
   const [email_key,set_email_key]=useState(localStorage.getItem("email"))
   const [profile_key,set_profile_key]=useState(localStorage.getItem("profile"))
+  const [ready,set_is_ready]=useState(false)
   useEffect(()=>
     {
       if(!er)
@@ -54,8 +55,35 @@ function App() {
         }
       }
       else{set_proceed('flex')}
+      
     },[root,email_key,profile_key])
   
+    useEffect(()=>
+    {
+      fetch('/accounts')
+      .then(response=>response.json())
+      .then(data=>
+      {
+        let found=0
+        for(let i=0;i<data.length;i++)
+        {
+          if(data[i].email===email_key)
+          {
+            found=1
+            setemail(data[i].email)
+            setpassword(data[i].password)
+            break
+          }
+        }
+        if(!found)
+        {
+          setemail('')
+          setpassword('')
+        }
+        set_is_ready(true)
+      }
+      )
+    },[proceed])
     
       async function post(email, password,bt) {
         if (email.length<13 && password.length<13)
@@ -165,7 +193,7 @@ function App() {
       }
 
   return (
-      <div className="App" style={{display:proceed}}>
+      <div className="App" style={{display:ready===true?proceed:'none'}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <a href='https://github.com/learner763/Whatsupp/#readme' style={{margin:'10px',fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
         <label style={{padding:'5px', color:'white',backgroundColor:'darkgreen',borderRadius:'5px'}}><i class="fas fa-mobile-alt"></i> Whatsupp</label>
