@@ -4,13 +4,15 @@
 https://whatsupp-chat.vercel.app/
 <code>
 To run locally,execute following commands.
-- Navigate to any directory.
-- git clone https://github.com/learner763/Whatsupp.git Whatsupp
-- cd Whatsupp
-- npm run build
-- cd api
-- node index.js
-- Open http://localhost:8080/
+Navigate to any directory.
+git clone https://github.com/learner763/Whatsupp.git Whatsupp
+cd Whatsupp
+npm install
+npm run build
+cd api
+npm install
+node index.js
+Open http://localhost:8080/
 
 </code>
 ## Tech Stack 
