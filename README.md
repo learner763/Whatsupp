@@ -2,6 +2,7 @@
 # Whatsupp - Online Chatting App
 ## Application Link
 https://whatsupp-chat.vercel.app/
+
 <code>
 To run locally,execute following commands.
 Navigate to any directory.
@@ -15,6 +16,7 @@ node index.js
 Open http://localhost:8080/
 
 </code>
+
 ## Tech Stack 
 **FrontEnd**- React JS
 
