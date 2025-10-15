@@ -93,7 +93,7 @@ app.post('/get_messages',(req,res)=>
     const {username}=req.body;
     pool.query(`select "${username}",chat_with from public.chats `, (err1, results) => {
         pool.query(`select * from public.chats where chat_with=$1`,[username], (err2, results2) => {
-            if( err1 || err2) {return res.json({error:`Internet issue or you left application immediately after registering!`})}
+            if( err1 || err2) {return res.json({error:`Couldn't push your data in database due to slow internet or you leaving application immediately after signing in!`})}
             let a_list=results.rows
             for(let i=0;i<a_list.length;i++)
             {
