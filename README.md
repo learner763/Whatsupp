@@ -3,7 +3,8 @@
 ## Application Link
 https://whatsupp-chat.vercel.app/
 
-<code>
+<bash>
+
 To run locally,execute following commands.
 Navigate to any directory.
 git clone https://github.com/learner763/Whatsupp.git Whatsupp
@@ -15,7 +16,7 @@ npm install
 node index.js
 Open http://localhost:8080/
 
-</code>
+</bash>
 
 ## Tech Stack 
 **FrontEnd**- React JS
