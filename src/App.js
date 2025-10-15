@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios'; 
 import { BrowserRouter , useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 function App() {
+  const location = useLocation();
+  const {er}=location.state==undefined?false:location.state;
   const [email, setemail] = useState('');
   const [email1, setemail1] = useState('');
   const [password, setpassword] = useState('');
@@ -21,34 +24,39 @@ function App() {
   const [profile_key,set_profile_key]=useState(localStorage.getItem("profile"))
   useEffect(()=>
     {
-      if(!root || root==="false")
+      if(!er)
       {
-        if(email_key!==null && profile_key!==null)
+        if(!root || root==="false")
         {
-          set_proceed('none')
-          nav('/home');
+          if(email_key!==null && profile_key!==null )
+          {
+            set_proceed('none')
+            nav('/home');
+          }
+          else if(!profile_key && email_key!==null)
+          {
+            set_proceed('none')
+            nav('/profile');
+          }
+          else if(!email_key && profile_key!==null)
+          {
+            set_proceed('flex')
+            nav('/');
+          }
+          else if(!email_key && !profile_key)
+          {
+            set_proceed('flex');
+          }
         }
-        else if(!profile_key && email_key!==null)
-        {
-          set_proceed('none')
-          nav('/profile');
-        }
-        else if(!email_key && profile_key!==null)
+        else if(root==='true')
         {
           set_proceed('flex')
-          nav('/');
-        }
-        else if(!email_key && !profile_key)
-        {
-          set_proceed('flex');
         }
       }
-      else if(root==='true')
-      {
-        set_proceed('flex')
-      }
+      else{set_proceed('flex')}
     },[root,email_key,profile_key])
   
+    
       async function post(email, password,bt) {
         if (email.length<13 && password.length<13)
         {

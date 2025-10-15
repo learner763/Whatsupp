@@ -189,7 +189,7 @@ function Home()
             .then(response => response.json())
             .then(data => 
                 {
-                    if(data.error){}
+                    if(data.error){alert(data.error);nav2('/',{state:{er:true}})}
                     else{
                         let frontend_messages=[]
                         for(let i=0;i<data.length;i+=2)
