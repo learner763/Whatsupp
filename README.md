@@ -3,20 +3,33 @@
 ## Application Link
 https://whatsupp-chat.vercel.app/
 
-<bash>
+# Navigate to any directory
+cd path/to/your/directory
 
-To run locally,execute following commands.
-Navigate to any directory.
+# Clone the repository
 git clone https://github.com/learner763/Whatsupp.git Whatsupp
-cd Whatsupp
-npm install
-npm run build
-cd api
-npm install
-node index.js
-Open http://localhost:8080/
 
-</bash>
+# Go to the project folder
+cd Whatsupp
+
+# Install frontend dependencies
+npm install
+
+# Build the frontend
+npm run build
+
+# Move to the backend folder
+cd api
+
+# Install backend dependencies
+npm install
+
+# Start the backend server
+node index.js
+
+# Open the app in your browser
+# http://localhost:8080/
+
 
 ## Tech Stack 
 **FrontEnd**- React JS
