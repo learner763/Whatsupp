@@ -3,18 +3,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
 const app = express();
-
-// Resolve __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// Serve static files from the React app's build folder
 const buildPath = path.join(__dirname, '../build');
-
 app.use(express.static(buildPath));
-
 app.use(express.json());
 
-// API route
 app.get('/accounts', (req, res) => {
     pool.query('SELECT email,name,bio,password,bg,index FROM public.users', (err, results) => {
         if (err) {}
@@ -22,7 +16,6 @@ app.get('/accounts', (req, res) => {
     });
 });
 
-// Catch-all route to serve React's index.html
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(buildPath, 'index.html'), {
       headers: {
@@ -31,9 +24,8 @@ app.get('*', (req, res) => {
     });
   });
 
-// PostgreSQL Connection
 const pool = new pkg.Pool({
-    connectionString: 'postgresql://neondb_owner:npg_sw58OFiXJGeC@ep-odd-truth-a5etezja-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require',
+    connectionString: process.env.postgres_db_url
 });
 
 pool.connect((err) => {
@@ -44,30 +36,22 @@ pool.connect((err) => {
     console.log('Connected to PostgreSQL');
 });
 
-// POST route for /api/data
 app.post("/login", (req, res) => {
     const { email, password,bt } = req.body;
-    
-
     if(bt=="Log In")    
         pool.query("select * from public.users where email=$1 and password=$2", [email,password], (err, results) => {
             return res.json(results.rows);
         });
-
     else if(bt=="Sign Up")
         pool.query("select * from public.users where email=$1 union all select * from public.users where index=$1", [email], (err, results) => {
             if (err) {}
             if(results.rows.length>0){return res.json({success:false});}
-            else{
-                
+            else{     
                 pool.query("insert into public.users(email,password,index) values($1,$2,$3)", [email,password,email], (err, results) => {
-                    return res.json({success:true});
-                    
+                    return res.json({success:true});    
                 });
-                
             }
         });
-      
 });
 
 app.post("/personal", (req, res) => {
@@ -76,6 +60,7 @@ app.post("/personal", (req, res) => {
         return res.json({success:true}); 
     });
 });
+
 app.post("/user_in_table", (req, res) => {
     const { username } = req.body;
     pool.query("insert into public.chats(chat_with) values($1) on conflict(chat_with) do nothing;", [username], (err, results) => {
@@ -84,8 +69,8 @@ app.post("/user_in_table", (req, res) => {
         if (err) {console.log(err)}
     });
     res.json({success:true});
-
 })
+
 app.post('/get_messages',(req,res)=>
 {
     let messages={}
@@ -103,7 +88,6 @@ app.post('/get_messages',(req,res)=>
                 }
             }
             let a_list2=results2.rows[0]
-
             for(let i=0;i<Object.keys(a_list2).length;i++)
             {
                 if(Array.isArray(a_list2[Object.keys(a_list2)[i]]) && Object.keys(a_list2)[i]!="chat_with")
@@ -131,7 +115,6 @@ app.post('/get_messages',(req,res)=>
                 }
                 frontend_messages.push(sent_received);
             }
-
             for(let i=frontend_messages.length-1;i>=1;i-=2)
             {
                 if(Array.from(frontend_messages[i]).length===0)
@@ -139,7 +122,6 @@ app.post('/get_messages',(req,res)=>
                     frontend_messages.splice(i-1,2)
                 }
             }
-
             for(let j=0;j<(frontend_messages.length-2)/2;j++)
             {
                 for(let i=1;i<frontend_messages.length-2;i+=2)
@@ -153,17 +135,14 @@ app.post('/get_messages',(req,res)=>
                         temp=frontend_messages[i-1]
                         frontend_messages[i-1]=frontend_messages[i+1]
                         frontend_messages[i+1]=temp;
-
                     }
-                    
                 }
             }
-            
             res.json(frontend_messages);
         })
     })
-        
 })
+
 app.post("/save_info", (req, res) => {
     const { previous,username,profile, name,bio } = req.body;
     pool.query("select * from public.users where email=$1 union all select * from public.users where name=$2", [username,name], (err, results) => {
@@ -204,12 +183,9 @@ app.post("/save_info", (req, res) => {
         else{
             pool.query("update public.users set name=$1,bio=$2,email=$3 where email=$4", [name,bio,username,previous], (err, results) => {   
                 return res.json({success:true})
-            });
-            
-            
+            });            
         }
     });
-    
 });
 
 app.post("/save_settings", (req, res) => {
@@ -219,14 +195,15 @@ app.post("/save_settings", (req, res) => {
         else res.json({success:true}); 
     });
 });
+
 app.post("/forpass", (req, res) => {
     const { email } = req.body;
-
     pool.query("select * from public.users where email=$1", [email], (err, results) => {
         if (err) {}
         else res.json(results.rows);
     });
 });
+
 app.post('/save_msg',(req,res)=>
 {
     const {from,to,message,time}=req.body;
@@ -259,6 +236,7 @@ app.post('/delete_msg',(req,res)=>
                 })
     res.json({success:true});
 })
+
 app.post('/edit_message',(req,res)=>
 {
     const {from,to,text,original_msg}=req.body
@@ -274,7 +252,7 @@ app.post('/edit_message',(req,res)=>
         })
 res.json({success:true})
 })
-// Start the server
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
