@@ -14,7 +14,9 @@
   "dependencies": {
     "connect-history-api-fallback": "^2.0.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^4.21.2",
+    "firebase-admin": "^13.5.0",
     "http": "^0.0.1-security",
     "path": "^0.12.7",
     "pg": "^8.14.1",

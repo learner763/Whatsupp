@@ -3,12 +3,21 @@ import './Home.css';
 import { BrowserRouter ,  useNavigate } from 'react-router-dom';
 import {db} from './firebase';
 import { real_time_db } from './firebase';
-import {getAuth,signInAnonymously } from 'firebase/auth';
 import {
-    collection,addDoc,onSnapshot,query,serverTimestamp,where,getDocs,getDoc,or,updateDoc,doc
-} from "firebase/firestore";
+    collection,
+    addDoc,
+    onSnapshot,
+    query,
+    serverTimestamp,
+    where,
+    getDocs,
+    getDoc,
+    or,
+    updateDoc,
+    doc} from "firebase/firestore";
 import{
-    onDisconnect,set,ref,onValue,update,serverTimestamp as rtdb_time
+    onDisconnect,set,ref,onValue,
+    update,serverTimestamp as rtdb_time
 } from "firebase/database";
 function Home()
 {
@@ -182,9 +191,6 @@ function Home()
                 {
                     if(data.error){alert(data.error);nav2('/',{state:{er:true}})}
                     else{
-                        const auth=getAuth()
-                        signInAnonymously(auth)
-                        .then(() => {})
                         let frontend_messages=[]
                         for(let i=0;i<data.length;i+=2)
                         {
@@ -433,7 +439,7 @@ function Home()
 
     useEffect(()=>
     {
-        if(!index || indices.includes(index)===false || !refreshed){return;}
+        if(!index || indices.includes(index)===false){return;}
         let online_status=ref(real_time_db,`online_status/${index}`);
         let disconnect=onDisconnect(online_status)
         set(online_status,{
@@ -488,7 +494,7 @@ function Home()
             })
             current_status()
         }
-    },[indices,index,refreshed])
+    },[indices,index])
 
     
     
