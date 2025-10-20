@@ -34,6 +34,8 @@ https://whatsupp-chat.vercel.app/
 - **Add Account:** You can sign up to multiple accounts.
 - **People Section:** Shows list of people who have joined this platform,you can search and start chatting with them.
 
+## SQL-NOSQL Combo
+Postgresql and firebase are combined to produce this application.LogIn and profile information is stored in postgresql but messages/chats are stored in both.Messages in postgresql show who is sender/receiver,when was message delivered and message text while messages in firebase (cloud firestore) along side these attributes tell whether a message has been seen/edited/qouted.When home page loads,chats are read from postgresql,scanned by firebase (cloud firestore) and then you can see unread received messages,blue tick on messages which are being read by receiving person etc.
 
 ## Unique Features
 There are three such features that are **not implemented in actual Whatsapp** but you are able to see here.
