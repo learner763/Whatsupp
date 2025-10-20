@@ -19,7 +19,12 @@ function Profile() {
       let flag=false
       if(name.length<13 && bio.length<21)
       {
-        fetch('/accounts')
+        fetch("/accounts",
+        {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({test:'test'})
+        })
         .then(response => response.json())
         .then(data=>{
           for(let i=0;i<data.length;i++)

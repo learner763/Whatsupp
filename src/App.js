@@ -60,7 +60,12 @@ function App() {
   
     useEffect(()=>
     {
-      fetch('/accounts')
+      fetch("/accounts",
+      {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({test:'test'})
+      })
       .then(response=>response.json())
       .then(data=>
       {
