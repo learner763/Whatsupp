@@ -45,5 +45,8 @@ There are three such features that are **not implemented in actual Whatsapp** bu
 - Use icons on home page to navigate between its different sections and not back button.
 ## Live Status
 - You can view whether other person is online,typing a message to you and person's last active time.
+## Database Security
+- Database connection strings/keys for both firebase and postgresql are provided in environment variables and are hidden from this repository.
+- Even if someone gets firebase connection strings/keys from browser's Network tab,its still not possible to read/write data into firebase because of domain restriction and this firebase project/database only accepts apis from this application's url.
 
 
