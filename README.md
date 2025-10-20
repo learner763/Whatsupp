@@ -11,7 +11,7 @@ https://whatsupp-chat.vercel.app/
 
 **Database**- Postgresql
 
-**Real Time Communication Layer**- Firebase 
+**Live Updates**- Firebase (Cloud Firestore & Realtime Database)
 
 ## Components
 ### Login Page 
@@ -46,7 +46,7 @@ There are three such features that are **not implemented in actual Whatsapp** bu
 ## Live Status
 - You can view whether other person is online,typing a message to you and person's last active time.
 ## Database Security
-- Database connection strings/keys for both firebase and postgresql are provided in environment variables and are hidden from this repository.
+- Database connection strings/keys for both firebase and postgresql are provided in environment variables and are hidden from this repository to prevent read/write from other sites.
 - Even if someone gets firebase connection strings/keys from browser's Network tab,its still not possible to read/write data into firebase because of domain restriction and this firebase project/database only accepts apis from this application's url.
 
 
