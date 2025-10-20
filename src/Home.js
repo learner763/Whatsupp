@@ -1,8 +1,8 @@
 import React, {  useEffect, useRef, useState } from 'react';
 import './Home.css';
 import { BrowserRouter ,  useNavigate } from 'react-router-dom';
-import {db} from './firebase';
-import { real_time_db } from './firebase';
+import {db,real_time_db,auth_app} from './firebase';
+import { signInAnonymously } from 'firebase/auth';
 import {
     collection,
     addDoc,
@@ -59,10 +59,9 @@ function Home()
     const [search_filter,set_search_filter]=useState([])
     const [no_match_msg,set_no_match_msg]=useState('none')
     const [innerheight,set_innerheight]=useState(window.innerHeight)
-    const execute=useRef(0)
     const something_sent=useRef(false)
     const something_edited=useRef(false)
-
+    const [verified,set_verified]=useState(false)
     let w=-1;
 
     async function set_seen()
@@ -191,6 +190,8 @@ function Home()
                 {
                     if(data.error){alert(data.error);nav2('/',{state:{er:true}})}
                     else{
+                        signInAnonymously(auth_app)
+                        .then(res=>set_verified(true))
                         let frontend_messages=[]
                         for(let i=0;i<data.length;i+=2)
                         {
@@ -300,7 +301,7 @@ function Home()
 
     useEffect(()=>
     {
-        if(!index || indices.includes(index)===false || !refreshed){return;}
+        if(!index || indices.includes(index)===false || !refreshed || !verified){return;}
         let first_snapshot=true
         let q=query(collection(db,'messages'),or(where('from','==',index),where('to','==',index)));
         let action=onSnapshot(q,(snapshot)=>
@@ -434,12 +435,12 @@ function Home()
         {
             action();
         }
-    },[index,indices,refreshed])
+    },[index,indices,refreshed,verified])
 
 
     useEffect(()=>
     {
-        if(!index || indices.includes(index)===false){return;}
+        if(!index || indices.includes(index)===false || !verified){return;}
         let online_status=ref(real_time_db,`online_status/${index}`);
         let disconnect=onDisconnect(online_status)
         set(online_status,{
@@ -494,14 +495,14 @@ function Home()
             })
             current_status()
         }
-    },[indices,index])
+    },[indices,index,verified])
 
     
     
     useEffect(()=>
     {
 
-        if( !index || indices.includes(index)===false || !refreshed ){return;}
+        if( !index || indices.includes(index)===false || !refreshed || !verified ){return;}
        
         let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
         let seen=onSnapshot(unseen_messages,(snapshot)=>
@@ -929,7 +930,7 @@ function Home()
             edit_to();
             deleted_docs()
         }
-    },[indices,index,refreshed,receiver])
+    },[indices,index,refreshed,receiver,verified])
 
     useEffect(() => {
         
