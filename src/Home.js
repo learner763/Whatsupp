@@ -880,7 +880,7 @@ function Home()
                                             set_is_edited(pre=>
                                             {
                                                 let original=[...pre]
-                                                original[j].splice(k,1)
+                                                original[j][k]=''
                                                 return original
                                             }
                                             )
@@ -890,7 +890,7 @@ function Home()
                                             set_replies(pre=>
                                             {
                                                 let original=[...pre]
-                                                original[j].splice(k,1)
+                                                original[j][k]=['none','','']
                                                 return original
                                             }
                                             )
@@ -900,7 +900,7 @@ function Home()
                                             set_seen_at(pre=>
                                             {
                                                 let original=[...pre]
-                                                original[j].splice(k,1)
+                                                original[j][k]='👁️ > ❌'
                                                 return original
                                             }
                                             )

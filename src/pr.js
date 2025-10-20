@@ -1,5 +1,10 @@
-let a=[3,4]
-if(a[2]===undefined)
+let a=[3,4,5]
+for(let i=0;i<a.length;i++)
 {
-    console.log(a[2])
-}
+    if(a[i]===4)
+    {
+        a.splice(i,1)
+    }
+    console.log(a)
+}   
+console.log(a)
