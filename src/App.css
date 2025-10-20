@@ -37,7 +37,6 @@ body{
     cursor: pointer;
     font-size: 20px;
     transition: all 0.3s;
-
 }
 .App button:hover{
     background-color: green;

@@ -73,6 +73,7 @@ function Home()
             await updateDoc(doc.ref,{seen:true,seenAt:serverTimestamp()})
         })
     } 
+
     async function delete_msg(user,message)
     {
         if(message.startsWith('✔✔'))
@@ -110,7 +111,6 @@ function Home()
             set_reply('flex');
             set_reply_to(message)
         }
-   
     }
     function edit_msg(user,message)
     {
@@ -142,7 +142,6 @@ function Home()
             }
         }
         
-
         fetch('/edit_message',
             {
                 method:'POST',
@@ -150,9 +149,7 @@ function Home()
                 body:JSON.stringify({from:index,to:receiver,text:message,original_msg:msg_before_edit})
             }
         )
-
         set_msg_value('')
-        
     }
 
 
@@ -160,7 +157,13 @@ function Home()
     {
         let ind=[]
         let accounts=[]
-        fetch('/accounts')
+        fetch("/accounts",
+            {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({test:'test'})
+            }
+        )
         .then(responce=>responce.json())
         .then(data=>
         {
@@ -221,7 +224,6 @@ function Home()
                         set_refresh(true)
                     }
                 })
-        
     }
     function update_info(up_user,up_name,up_bio)
     {        
@@ -261,9 +263,7 @@ function Home()
                     alert(data.msg); 
                 }
             }
-            
         });
-        
     }
     
     function update_settings(pass,bg)
@@ -746,13 +746,9 @@ function Home()
                                 if(stop){break}
                                 
                             }
-        
                         }
-                        
-
                         return previous
                     })
-    
             })
 
         let from_edited=query(collection(db,'messages'),where("edit","==",true),where("from","==",index))
@@ -1062,7 +1058,13 @@ function Home()
             set_innerheight(window.innerHeight);
         })
 
-        fetch("/accounts")
+        fetch("/accounts",
+            {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({test:'test'})
+            }
+        )
         .then(response => response.json())
         .then(data => 
             {
@@ -1106,7 +1108,13 @@ function Home()
         let refresh_people=document.getElementById("refresh_people");
         refresh_people.addEventListener("click",function()
         {
-            fetch("/accounts")
+            fetch("/accounts",
+                {
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({test:'test'})
+                }
+            )
             .then(response => response.json())
             .then(data => 
             {

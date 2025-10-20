@@ -9,7 +9,7 @@ const buildPath = path.join(__dirname, '../build');
 app.use(express.static(buildPath));
 app.use(express.json());
 
-app.get('/accounts', (req, res) => {
+app.post('/accounts', (req, res) => {
     pool.query('SELECT email,name,bio,password,bg,index FROM public.users', (err, results) => {
         if (err) {}
         else res.json(results.rows);
@@ -22,7 +22,7 @@ app.get('*', (req, res) => {
         'Cache-Control': 'no-cache, no-store, must-revalidate'
       }
     });
-  });
+});
 
 const pool = new pkg.Pool({
     connectionString: process.env.postgres_db_url
@@ -222,6 +222,7 @@ app.post('/save_msg',(req,res)=>
             })
     res.json({success:true});
 })
+
 app.post('/delete_msg',(req,res)=>
 {
     const {from,to,message}=req.body;
