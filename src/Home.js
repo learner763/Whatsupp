@@ -864,7 +864,7 @@ function Home()
                                     if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                     {
                                         previous[j][1].splice(k,1)
-                                        if(previous[j][1][k-1]!==undefined){if(!previous[j][1][k-1].startsWith('✔') && !previous[j][1][k-1].startsWith(' ') ){previous[j][1].splice(k-1,1)}}
+                                        if(previous[j][1][k-1]!==undefined && previous[j][1][k+1]===undefined){if(!previous[j][1][k-1].startsWith('✔') && !previous[j][1][k-1].startsWith(' ') ){previous[j][1].splice(k-1,1)}}
                                         if(previous[j][1].length===0){previous.splice(j,1)}
                                         if(msgs[i].edit)
                                         {
