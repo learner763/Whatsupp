@@ -1279,7 +1279,6 @@ function Home()
                 }   
                 icons[0].style.backgroundColor='darkgreen';
                 icons[0].style.color='white';
-                set_seen(connect_buttons[i].getAttribute('data-indexid'));
             });
         }
     }, [info]);
@@ -1503,8 +1502,9 @@ function Home()
                                     <button onClick={()=>
                                         {
                                             update_receiver(indices[index])
+                                            set_seen()
                                         }
-                                    } className='connect_buttons' data-indexid={indices[index]}><i className='fas fa-envelope'></i>Message</button>
+                                    } className='connect_buttons'><i className='fas fa-envelope'></i>Message</button>
                                     </div>
                                 </div>
                             );
