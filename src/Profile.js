@@ -94,8 +94,8 @@ function Profile() {
 
   
   return (
-      <div className="Profile" style={{backgroundColor:proceed==false?'white':'darkgreen'}}>
-        <div style={{display:proceed?'none':'flex',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
+      <div className="Profile" style={{backgroundColor:proceed=='none'?'white':'darkgreen'}}>
+        <div style={{display:proceed=='flex'?'none':'flex',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
           <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label></div>
         </div>
         <div style={{display:load1?proceed:'none',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>

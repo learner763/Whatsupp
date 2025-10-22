@@ -197,8 +197,8 @@ function App() {
       }
 
   return (
-      <div className="App" style={{backgroundColor:proceed===false?'white':'darkgreen'}}>
-        <div style={{display:proceed==false? 'flex':'none',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
+      <div className="App" style={{backgroundColor:proceed==='none'?'white':'darkgreen'}}>
+        <div style={{display:proceed=='none'? 'flex':'none',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
             <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label></div>
         </div>
         <div style={{display:ready===true?proceed:'none',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
