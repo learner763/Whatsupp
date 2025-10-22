@@ -94,7 +94,7 @@ function Profile() {
 
   
   return (
-      <div className="Profile" >
+      <div className="Profile" style={{backgroundColor:proceed==false?'white':'darkgreen'}}>
         <div style={{display:proceed?'none':'flex',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
           <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label></div>
         </div>

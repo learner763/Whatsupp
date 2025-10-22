@@ -7,7 +7,6 @@ body{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background:darkgreen; 
   width: auto;
   min-height: 100dvh;
   overflow-y: auto;
