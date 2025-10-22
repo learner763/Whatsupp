@@ -198,7 +198,7 @@ function App() {
 
   return (
       <div className="App" style={{display:ready===true?proceed:'none'}}>
-        <div style={{display:ready==false? 'flex':proceed,height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
+        <div style={{display:proceed==false? 'flex':'none',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
             <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label></div>
         </div>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>

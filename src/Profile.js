@@ -95,7 +95,7 @@ function Profile() {
   
   return (
       <div className="Profile" style={{display:load1?proceed:'none'}}>
-        <div style={{display:load1?'none':proceed,height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
+        <div style={{display:proceed?'none':'flex',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
           <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label></div>
         </div>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
