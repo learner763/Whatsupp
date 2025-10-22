@@ -66,7 +66,13 @@ function Profile() {
     }
     useEffect(()=>
     {
-      fetch('/user_data')
+      fetch('/user_data',
+        {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({username:email_key})
+        }
+      )
       .then(response => response.json())
       .then(data=>{
         
