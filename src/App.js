@@ -197,11 +197,11 @@ function App() {
       }
 
   return (
-      <div className="App" style={{display:ready===true?proceed:'none'}}>
+      <div className="App" >
         <div style={{display:proceed==false? 'flex':'none',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
             <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label></div>
         </div>
-        <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
+        <div style={{display:ready===true?proceed:'none',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <a href='https://github.com/learner763/Whatsupp/#readme' style={{margin:'10px',fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
         <label style={{padding:'5px', color:'white',backgroundColor:'darkgreen',borderRadius:'5px'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
         <label >Username 🔑</label>
