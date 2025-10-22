@@ -43,7 +43,6 @@ function Home()
     const current_timeout=useRef(null)
     const [refreshed,set_refresh]=useState(false);
     const [loaded,set_loaded]=useState(false)
-    const [time_stamp,set_time_stamp]=useState('');
     const [flag1,set_flag1]=useState(false);
     const [unread,set_unread]=useState(0);
     const [edit_icon,set_edit]=useState('none')
@@ -59,8 +58,6 @@ function Home()
     const [search_filter,set_search_filter]=useState([])
     const [no_match_msg,set_no_match_msg]=useState('none')
     const [innerheight,set_innerheight]=useState(window.innerHeight)
-    const something_sent=useRef(false)
-    const something_edited=useRef(false)
     const [verified,set_verified]=useState(false)
     let w=-1;
 
@@ -125,7 +122,6 @@ function Home()
     
     async function write_edit(message)
     {
-        something_edited.current=true
         set_edit('none')
         let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4)));
         let edited_msgs=await getDocs(edit_this_msg)
@@ -1185,7 +1181,6 @@ function Home()
     
     async function Send(message)
     {
-        something_sent.current=true
         let ids=[]
         let msg_being_replied=""
         if(reply_icon==='flex')
@@ -1216,7 +1211,6 @@ function Home()
                     if(ids.includes(document.id)===false)
                     {
                     ids.push(document.id)
-                    set_time_stamp(data.createdAt.toDate().toISOString())
 
                     setmessages(prev=>
                         {
