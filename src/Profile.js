@@ -84,6 +84,7 @@ function Profile() {
             else{setbio(data[0].bio);}
             set_load1(true)
           }
+          else{alert(`No account exists with ${email_key}`);nav1('/')}
         
       })
     },[email_key]
