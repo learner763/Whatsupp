@@ -66,21 +66,19 @@ function Profile() {
     }
     useEffect(()=>
     {
-      fetch('/accounts')
+      fetch('/user_data')
       .then(response => response.json())
       .then(data=>{
-        for(let i=0;i<data.length;i++)
-        {
-          if(data[i].email===email_key)
+        
+          if(data[0].email===email_key)
           {
-            if(data[i].name===null){data[i].name=''}
-            else{setname(data[i].name);}
-            if(data[i].bio===null){data[i].bio=''}
-            else{setbio(data[i].bio);}
+            if(data[0].name===null){data[i].name=''}
+            else{setname(data[0].name);}
+            if(data[0].bio===null){data[i].bio=''}
+            else{setbio(data[0].bio);}
             set_load1(true)
-            break
           }
-        }
+        
       })
     },[email_key]
     )

@@ -71,6 +71,15 @@ app.post("/user_in_table", (req, res) => {
     res.json({success:true});
 })
 
+app.post('/user_data',(req,res)=>
+{
+    const {username}=req.body
+    pool.query('select * from public.users where email=$1',[username],(err,results)=>
+    {
+        res.json(results.rows)
+    })
+})
+
 app.post('/get_messages',(req,res)=>
 {
     let messages={}

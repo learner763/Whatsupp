@@ -60,26 +60,24 @@ function App() {
   
     useEffect(()=>
     {
-      fetch("/accounts",
+      fetch("/user_data",
       {
           method:'POST',
           headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({test:'test'})
+          body:JSON.stringify({username:email_key})
       })
       .then(response=>response.json())
       .then(data=>
       {
         let found=0
-        for(let i=0;i<data.length;i++)
+        
+        if(data[0].email===email_key)
         {
-          if(data[i].email===email_key)
-          {
-            found=1
-            setemail(data[i].email)
-            setpassword(data[i].password)
-            break
-          }
+          found=1
+          setemail(data[i].email)
+          setpassword(data[i].password)
         }
+        
         if(!found)
         {
           setemail('')
