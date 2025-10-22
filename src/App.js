@@ -3,6 +3,7 @@ import './App.css';
 import axios from 'axios'; 
 import { BrowserRouter , useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { flushSync } from 'react-dom';
 
 function App() {
   const location = useLocation();
@@ -56,7 +57,7 @@ function App() {
       }
       else{set_proceed('flex')}
       
-    },[root,email_key,profile_key])
+    },[])
   
     useEffect(()=>
     {
@@ -86,7 +87,7 @@ function App() {
         set_is_ready(true)
       }
       )
-    },[proceed])
+    },[])
     
       async function post(email, password,bt) {
         if (email.length<13 && password.length<13)
@@ -197,6 +198,9 @@ function App() {
 
   return (
       <div className="App" style={{display:ready===true?proceed:'none'}}>
+        <div style={{display:ready==false? 'flex':proceed,height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
+            <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label></div>
+        </div>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <a href='https://github.com/learner763/Whatsupp/#readme' style={{margin:'10px',fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
         <label style={{padding:'5px', color:'white',backgroundColor:'darkgreen',borderRadius:'5px'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>

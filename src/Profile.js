@@ -84,7 +84,7 @@ function Profile() {
             else{setbio(data[0].bio);}
             set_load1(true)
           }
-          else{alert(`No account exists with ${email_key}`);nav1('/')}
+          else{alert(`No account exists with '${email_key}'`);nav1('/')}
         
       })
     },[email_key]
@@ -95,6 +95,9 @@ function Profile() {
   
   return (
       <div className="Profile" style={{display:load1?proceed:'none'}}>
+        <div style={{display:load1?'none':proceed,height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
+          <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label></div>
+        </div>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <a href='https://github.com/learner763/Whatsupp/#readme' style={{margin:'10px',fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
         <label style={{padding:'5px', color:'white',backgroundColor:'darkgreen',borderRadius:'5px'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
