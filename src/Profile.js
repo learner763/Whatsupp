@@ -70,11 +70,11 @@ function Profile() {
       .then(response => response.json())
       .then(data=>{
         
-          if(data[0].email===email_key)
+          if(data.length>0 && data[0].email===email_key)
           {
-            if(data[0].name===null){data[i].name=''}
+            if(data[0].name===null){setname('')}
             else{setname(data[0].name);}
-            if(data[0].bio===null){data[i].bio=''}
+            if(data[0].bio===null){setbio('')}
             else{setbio(data[0].bio);}
             set_load1(true)
           }

@@ -71,11 +71,11 @@ function App() {
       {
         let found=0
         
-        if(data[0].email===email_key)
+        if(data.length>0 && data[0].email===email_key)
         {
           found=1
-          setemail(data[i].email)
-          setpassword(data[i].password)
+          setemail(data[0].email)
+          setpassword(data[0].password)
         }
         
         if(!found)
