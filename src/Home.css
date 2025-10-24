@@ -243,6 +243,9 @@ body{
 .phone_icons label{
     border-radius: 6px;
 }
+select{
+    cursor: pointer;
+}
 @media (max-width: 1100px)
 {
     .msg_div textarea,.msg_div button{
