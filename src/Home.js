@@ -1478,7 +1478,7 @@ function Home()
                             {
                                 if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
                                 if(e.target.value.length>12){e.target.value=e.target.value.slice(0,12)}
-                                set_search_value(e.target.value.replace(/[^a-zA-Z0-9_ ]/g, ''))
+                                set_search_value(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
                             }}
                         style={{ display:'flex',width:'200px',justifySelf:'center',alignSelf:'center',borderRadius:'5px',border:'1px solid darkgreen',fontSize:'20px'}}></input>
                         <button onClick={()=>set_search_value('')} style={{cursor:'pointer', fontSize:'20px',borderRadius:'5px',border:'1px solid darkgreen',backgroundColor:'darkgreen',color:'white'}}>Clear</button>
