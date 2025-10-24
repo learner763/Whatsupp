@@ -859,7 +859,7 @@ function Home()
                                         {
                                             if(!previous[j][1][k-1].startsWith('✔') && !previous[j][1][k-1].startsWith(' '))
                                             {
-                                                if(!previous[j][1][k+1])
+                                                if(!previous[j][1][k+1] || (!previous[j][1][k+1].startsWith(' ') && !previous[j][1][k+1].startsWith('✔')))
                                                 {previous[j][1].splice(k-1,2)}
                                                 else{previous[j][1].splice(k,1)}
                                             }
