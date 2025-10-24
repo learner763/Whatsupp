@@ -162,12 +162,7 @@ body{
     flex: .85;
     padding-top: 28px;
 }
-.chats{
-    display: flex;
-    padding-top: 28px;
-    flex-direction: column;
-    overflow-y: scroll;
-}
+
 .chat_detail_section label,.chats label{
     font-weight: bold;
     font-size: 25px;
@@ -244,9 +239,7 @@ body{
 .chat_detail{
     padding-top: 28px;
 }
-.chat_detail:hover{
-    cursor: pointer;
-}
+
 .phone_icons label{
     border-radius: 6px;
 }
