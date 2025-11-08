@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll Into View Example</title>
+  <style>
+    body {
+      height: 1500px; /* just to make page scrollable */
+    }
+    label {
+      margin-top: 1200px;
+      display: block;
+      font-size: 24px;
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="scrollToLabel()">Scroll to Label</button>
+
+  <label id="target">ffdf</label>
+
+  <script>
+    function scrollToLabel() {
+      document.getElementById('target').scrollIntoView({
+        behavior: 'smooth',   // smooth scrolling
+        block: 'center'       // position label in center of viewport
+      });
+    }
+  </script>
+</body>
+</html>

@@ -11,13 +11,13 @@ import {
     serverTimestamp,
     where,
     getDocs,
-    getDoc,
     or,
     updateDoc,
     doc} from "firebase/firestore";
 import{
     onDisconnect,set,ref,onValue,
-    update,serverTimestamp as rtdb_time
+    update,serverTimestamp as rtdb_time,
+    remove
 } from "firebase/database";
 function Home()
 {
@@ -29,8 +29,8 @@ function Home()
     const [up_user,setup_user]=useState('');
     const [up_name,setup_name]=useState('');
     const [up_bio,setup_bio]=useState('');
-    const [profile_section,setprofile_section]=useState('none');
-    const [settings_section,setsettings_section]=useState('none');
+    const [profile_section,set_profile_section]=useState('none');
+    const [settings_section,set_settings_section]=useState('none');
     const [pass,setpass]=useState('')
     const [bgr,setbg]=useState('white')
     const [disp,setdisp]=useState("none")
@@ -48,17 +48,17 @@ function Home()
     const [edit_icon,set_edit]=useState('none')
     const [selectval,set_selectval]=useState('Select')
     const [msg_before_edit,set_msg_value]=useState('')
-    const [seen_at,set_seen_at]=useState([])
     const [reply_icon,set_reply]=useState('none')
     const [reply_to,set_reply_to]=useState('')
-    const [replies,set_replies]=useState([])
     const [msg_transfer,set_msg_transfer]=useState(0)
-    const [is_edited,set_is_edited]=useState([])
     const [search_value,set_search_value]=useState('')
     const [search_filter,set_search_filter]=useState([])
     const [no_match_msg,set_no_match_msg]=useState('none')
     const [innerheight,set_innerheight]=useState(window.innerHeight)
     const [verified,set_verified]=useState(false)
+    const on_reload=useRef(false)
+    const receiver_again=useRef('-');
+    const [msg_attributes,set_msg_attributes]=useState([])
     let w=-1;
 
     async function set_seen()
@@ -80,7 +80,6 @@ function Home()
             deleted=deleted.docs.filter(x=>!x.data().delete)
             if(deleted.length>0){const doc=deleted[0]
             await updateDoc(doc.ref,{delete:message.slice(message.lastIndexOf(' ')+1,message.length)})}
-
             let deleted_replied_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'✔')));
             let deleted_replied=await getDocs(deleted_replied_msgs)
             if(deleted_replied.docs.length>0)
@@ -91,14 +90,13 @@ function Home()
                 }
             }
             fetch('/delete_msg',
-                {
+            {
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
                 body:JSON.stringify({from:index,to:user,message:message})
             })
             .then(responce=>responce.json())
         }
-
     }
 
     function reply_msg(user,message)
@@ -109,6 +107,7 @@ function Home()
             set_reply_to(message)
         }
     }
+
     function edit_msg(user,message)
     {
         if(message.startsWith('✔✔'))
@@ -117,7 +116,6 @@ function Home()
             document.getElementById('message').value=message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)
             set_msg_value(message)
         }
-       
     }
     
     async function write_edit(message)
@@ -127,7 +125,6 @@ function Home()
         let edited_msgs=await getDocs(edit_this_msg)
         if(edited_msgs.docs.length>0){const edit_doc=edited_msgs.docs[0]
         await updateDoc(edit_doc.ref,{edit:true,text:message})}
-
         let edit_replied=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("replied_to","==",msg_before_edit.replace(msg_before_edit.slice(0,msg_before_edit.indexOf(' ')),'✔')));
         let edited_replied_msgs=await getDocs(edit_replied)
         if(edited_replied_msgs.docs.length>0)
@@ -137,29 +134,25 @@ function Home()
                 await updateDoc(edited_replied_msgs.docs[i].ref,{replied_to:edited_replied_msgs.docs[i].data().replied_to.replace(edited_replied_msgs.docs[i].data().replied_to.slice(edited_replied_msgs.docs[i].data().replied_to.indexOf(' ')+1,edited_replied_msgs.docs[i].data().replied_to.lastIndexOf(' ')-4),message)})
             }
         }
-        
         fetch('/edit_message',
-            {
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({from:index,to:receiver,text:message,original_msg:msg_before_edit})
-            }
-        )
+        {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({from:index,to:receiver,text:message,original_msg:msg_before_edit})
+        })
         set_msg_value('')
     }
-
 
     function update_data()
     {
         let ind=[]
         let accounts=[]
         fetch("/accounts",
-            {
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({test:'test'})
-            }
-        )
+        {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({test:'test'})
+        })
         .then(responce=>responce.json())
         .then(data=>
         {
@@ -171,56 +164,43 @@ function Home()
             }
             set_indices(ind)
             setinfo(accounts)
-        }
-        )
+        })
     }
+
     function retrieve_messages(you)
     {
         fetch('/get_messages',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username:you }),
-            })
-            .then(response => response.json())
-            .then(data => 
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username:you }),
+        })
+        .then(response => response.json())
+        .then(data => 
+        {
+            if(data.error){alert(data.error);nav2('/',{state:{er:true}})}
+            else{
+                signInAnonymously(auth_app)
+                .then(res=>set_verified(true))
+                let frontend_messages=[]
+                let feature_array=[]
+                for(let i=0;i<data.length;i+=2)
                 {
-                    if(data.error){alert(data.error);nav2('/',{state:{er:true}})}
-                    else{
-                        signInAnonymously(auth_app)
-                        .then(res=>set_verified(true))
-                        let frontend_messages=[]
-                        for(let i=0;i<data.length;i+=2)
-                        {
-                            frontend_messages.push([data[i],data[i+1]])
-                        }
-                        let dates=[]
-                        let months=['January','February','March','April','May','June','July','August','September','October','November','December']
-                        for(let i=0;i<frontend_messages.length;i++)
-                        {
-                            for(let j=0;j<frontend_messages[i][1].length;j++)
-                            {
-                                let present_date=new Date(frontend_messages[i][1][j].slice(frontend_messages[i][1][j].lastIndexOf(' ')+1,frontend_messages[i][1][j].length)).toLocaleDateString()
-                                if(present_date.slice(present_date.indexOf('/')+1,present_date.lastIndexOf('/'))!==String(new Date().getDate()))
-                                {present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
-                                present_date=present_date.replace(present_date[present_date.indexOf('/')],' ')
-                                present_date=present_date.replace(present_date[present_date.lastIndexOf('/')],',')}
-                                else{present_date='Today'}
-                                if(dates.includes(present_date)===false)
-                                {
-                                    dates.push(present_date)
-                                    frontend_messages[i][1].splice(j,0,present_date)
-                                }
-                            }
-                            dates=[]
-                        }
-                        setmessages(frontend_messages);
-                        set_refresh(true)
-                    }
-                })
+                    frontend_messages.push([data[i],data[i+1]])
+                }
+                for(let i=0;i<frontend_messages.length;i++)
+                {
+                    feature_array[i]=[]
+                }
+                set_msg_attributes(feature_array.map(arr=>[...arr]))
+                setmessages(frontend_messages);
+                set_refresh(true)
+            }
+        })
     }
+
     function update_info(up_user,up_name,up_bio)
     {        
         fetch('/save_info', {
@@ -272,7 +252,6 @@ function Home()
             body: JSON.stringify({ username: username, password: pass, bg: bg }),
         })
         .then(response => response.json())
-        
     }
 
     function typing_status()
@@ -297,145 +276,6 @@ function Home()
 
     useEffect(()=>
     {
-        if(!index || indices.includes(index)===false || !refreshed || !verified){return;}
-        let first_snapshot=true
-        let q=query(collection(db,'messages'),or(where('from','==',index),where('to','==',index)));
-        let action=onSnapshot(q,(snapshot)=>
-        {
-            if(first_snapshot){first_snapshot=false;return;}
-            let msgs=snapshot.docChanges().filter(change=>change.type==='added').map(function(change)
-            {
-                return {id:change.doc.id,...change.doc.data()}
-            })
-            let edited=snapshot.docChanges().filter(change=>change.type==='modified' && change.doc.data().edit).map(function(change)
-            {
-                return {id:change.doc.id,...change.doc.data()}
-            })
-            if(edited.length>0)
-            {
-                let do_break=false
-                setmessages(prev=>
-                {
-                    let previous=[...prev]
-                    for(let i=0;i<previous.length;i++)
-                    {
-                        if(previous[i][0]===edited[0].to || previous[i][0]===edited[0].from)
-                        {
-                            for(let j=0;j<previous[i][1].length;j++)
-                            {
-                                if(previous[i][1][j].endsWith(edited[0].createdAt.toDate().toISOString()))
-                                {
-                                    previous[i][1][j]=previous[i][1][j].replace(previous[i][1][j].slice(previous[i][1][j].indexOf(' ')+1,previous[i][1][j].lastIndexOf(' ')-4),edited[0].text)
-                                    do_break=true
-                                    break
-                                    
-                                }
-                            }
-                        }
-                        if(do_break){break}
-                    }
-                    return previous
-                }
-                )
-            }
-            
-                if(msgs.length>0 && (msgs[msgs.length-1].from==index || msgs[msgs.length-1].to==index))
-                {
-                    let to=msgs[msgs.length-1].to;
-                    let from=msgs[msgs.length-1].from;
-                    let message_text=msgs[msgs.length-1].text;
-                    let time=msgs[msgs.length-1].createdAt===null?new Date().toISOString():msgs[msgs.length-1].createdAt.toDate().toISOString();                    
-                    
-                    setmessages(prev=>
-                    {
-                        let previous=[...prev]
-                        let found=0
-                        for(let i=0;i<previous.length;i++)
-                        {
-                            if(to===from)
-                            {
-                                if(previous[i][0]===index)
-                                {
-                                    found=1
-                                    previous[i][1].push(`✔ ${message_text}     ${time}`);
-                                    let inter=previous[i]
-                                    previous.splice(i,1)
-                                    previous.unshift(inter);
-                                    set_msg_transfer(prev=>prev+1)
-                                    if(msgs[0].reply===true)
-                                    {
-                                        set_replies(pre=>
-                                        {
-                                            let original=[...pre]
-                                            original[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)]=['flex','You',msgs[0].replied_to.slice(msgs[0].replied_to.indexOf(' ')+1,msgs[0].replied_to.lastIndexOf(' ')-4)]
-                                            return original
-                                        }
-                                        )
-                                    }
-                                    return previous;
-                                }
-                            }
-                            else{
-                                if(from==index && previous[i][0]==to)
-                                {
-                                    found=1
-                                    previous[i][1].push(`✔ ${message_text}     ${time}`)
-                                    let inter=previous[i]
-                                    previous.splice(i,1)
-                                    previous.unshift(inter);
-                                    if(msgs[0].reply===true)
-                                    {
-                                        set_replies(pre=>
-                                        {
-                                            let original=[...pre]
-                                            original[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)]=['flex',msgs[0].replied_to.startsWith('✔')?'You': info[indices.indexOf(msgs[0].to)*2],msgs[0].replied_to.slice(msgs[0].replied_to.indexOf(' ')+1,msgs[0].replied_to.lastIndexOf(' ')-4)]
-                                            return original
-                                        }
-                                        )
-                                    }
-                                    set_msg_transfer(prev=>prev+1)
-                                    return previous;
-                                }
-                                else if(to==index && previous[i][0]==from){
-                                    found=1
-                                    previous[i][1].push(` ${message_text}     ${time}`)
-                                    let inter=previous[i]
-                                    previous.splice(i,1)
-                                    previous.unshift(inter);
-                                    set_msg_transfer(prev=>prev+1)
-                                    return previous;
-                                }
-                                
-                                
-                            }
-                            
-                        }
-                        if(found==0)
-                        {
-                            if(to==from){previous.unshift([from,[`✔ ${message_text}     ${time}`]]);}
-                            else if(from==index){previous.unshift([to,[`✔ ${message_text}     ${time}`]]);}
-                            else if(to==index){
-                                update_data()
-                                previous.unshift([from,[` ${message_text}     ${time}`]]);
-                            }
-                            set_msg_transfer(prev=>prev+1)
-                            return previous;
-                        }
-                    }
-                    );
-                        
-                }
-                            
-        })
-        return()=>
-        {
-            action();
-        }
-    },[index,indices,refreshed,verified])
-
-
-    useEffect(()=>
-    {
         if(!index || indices.includes(index)===false || !verified){return;}
         let online_status=ref(real_time_db,`online_status/${index}`);
         let disconnect=onDisconnect(online_status)
@@ -449,14 +289,11 @@ function Home()
             lastseen:rtdb_time()
         }
         )
-        
-        
         let online_users=ref(real_time_db,'/online_status')
         let current_status=onValue(online_users,(snapshot)=>
         {
             let active_users=snapshot.val()
             let statuses=[]
-            
             for(let i=0;i<indices.length;i++)
             {
                 if(Object.keys(active_users).includes(indices[i] ))
@@ -475,13 +312,11 @@ function Home()
                         statuses.push('('+(new Date(active_users[indices[i]].lastseen).toLocaleDateString()
                         ===new Date().toLocaleDateString()?new Date(active_users[indices[i]].lastseen).toLocaleTimeString():
                         new Date(active_users[indices[i]].lastseen).toLocaleDateString())+')')
-                        }
+                    }
                 }
                 else{statuses.push('')}
-
             }
             set_status(statuses)
-        
         })
         return()=>
         {
@@ -493,448 +328,411 @@ function Home()
         }
     },[indices,index,verified])
 
-    
-    
     useEffect(()=>
     {
-
         if( !index || indices.includes(index)===false || !refreshed || !verified ){return;}
-       
-        let unseen_messages=query(collection(db,'messages'),where("to","==",index),where("seen","==",false))
-        let seen=onSnapshot(unseen_messages,(snapshot)=>
+        let action_query=query(collection(db,'messages'),or(where('from','==',index),where('to','==',index)));
+        let action=onSnapshot(action_query,(snapshot)=>
         {
-            let msgs=snapshot.docs.map(function(doc)
+            let sent_messages=snapshot.docChanges().filter(change=>change.type==='added' && !change.doc.data().delete && on_reload.current).map(function(change)
             {
-                return {id:doc.id,...doc.data()}
+                return {id:change.doc.id,...change.doc.data()}
             })
+            let edited_messages=snapshot.docChanges().filter(change=>change.doc.data().edit && !change.doc.data().delete).map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
+            let unseen_messages=snapshot.docChanges().filter(change=>!change.doc.data().seen && change.doc.data().to===index && !change.doc.data().delete).map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
+            let read_messages=snapshot.docChanges().filter(change=>change.doc.data().seen && change.doc.data().from===index && !change.doc.data().delete).map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
+            let replied_messages=snapshot.docChanges().filter(change=>change.doc.data().reply && !change.doc.data().delete).map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
+            let deleted_messages=snapshot.docChanges().filter(change=>change.doc.data().delete).map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
+            console.log(sent_messages)
+            console.log(read_messages)
+            console.log(unseen_messages)
+            console.log(deleted_messages)
+            console.log(edited_messages)
+            console.log(replied_messages)
+
             setmessages(prev=>
+            {
+                let previous=[...prev]
+                for(let i=0;i<edited_messages.length;i++)
+                {
+                    let stop=false
+                    for(let j=0;j<previous.length;j++)
+                    {
+                        if(previous[j][0]===edited_messages[i].to || previous[j][0]===edited_messages[i].from )
+                        {
+                            for(let k=0;k<previous[j][1].length;k++)
+                            {
+                                if(edited_messages[i].createdAt!==null  && edited_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                {
+                                    previous[j][1][k]=previous[j][1][k].replace(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4),edited_messages[i].text)
+                                    set_msg_attributes(pre_attributes=>
+                                    {
+                                        let previous_attributes=[...pre_attributes]
+                                        if(!previous_attributes[j][k]){previous_attributes[j][k]={}}
+                                        previous_attributes[j][k].edit_info='Edited'
+                                        return previous_attributes
+                                    })
+                                    stop=true
+                                    break
+                                }
+                            }
+                        }
+                        if(stop){break}
+                    }
+                }
+                return previous
+            })
+            if(sent_messages.length>0)
+            {
+                let to=sent_messages[0].to;
+                let from=sent_messages[0].from;
+                let message_text=sent_messages[0].text;
+                let time=sent_messages[0].createdAt===null?new Date().toISOString():sent_messages[0].createdAt.toDate().toISOString();                    
+                setmessages(prev=>
                 {
                     let previous=[...prev]
-                    let unread_chats=0
+                    let found=0
                     for(let i=0;i<previous.length;i++)
                     {
-                        let count=0
-                        for(let j=0;j<msgs.length;j++)
+                        if(to===from)
                         {
-                            if(previous[i][0]===msgs[j].from && previous[i][0]!==index)
+                            if(previous[i][0]===index)
                             {
-                                if(msgs[j].seen===false && !msgs[j].delete)
+                                found=1
+                                previous[i][1].push(`✔ ${message_text}     ${time}`);
+                                let inter=previous[i]
+                                previous.splice(i,1)
+                                previous.unshift(inter);
+                                set_msg_attributes(pre_attributes=>
                                 {
-                                    for(let k=0;k<previous[i][1].length;k++)
+                                    let previous_attributes=[...pre_attributes]
+                                    let spliced_element=previous_attributes[i]
+                                    previous_attributes.splice(i,1)
+                                    previous_attributes.unshift(spliced_element)
+                                    return previous_attributes
+                                })
+                                if(sent_messages[0].reply===true)
+                                {
+                                    set_msg_attributes(pre_attributes=>
                                     {
-                                        if(previous[i][1][k].slice(previous[i][1][k].indexOf(' ')+1,previous[i][1][k].lastIndexOf(' ')-4)===msgs[j].text && msgs[j].createdAt.toDate().toISOString()===previous[i][1][k].slice(previous[i][1][k].lastIndexOf(' ')+1,previous[i][1][k].length))
-                                        {
-                                            if(receiver!==msgs[j].from)
-                                            {count+=1}
-                                            else{
-                                                let msgref=doc(db,'messages',msgs[j].id)
-                                                updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
-                                            }
-                                        }
+                                        let previous_attributes=[...pre_attributes]
+                                        if(!previous_attributes[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)])
+                                        {previous_attributes[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)]={}}
+                                        previous_attributes[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)].reply_info=['flex','You',sent_messages[0].replied_to.slice(sent_messages[0].replied_to.indexOf(' ')+1,sent_messages[0].replied_to.lastIndexOf(' ')-4)]
+                                        return previous_attributes
+                                    })
+                                }
+                                set_msg_transfer(prev=>prev+1)
+                                return previous;
+                            }
+                        }
+                        else{
+                            if(from==index && previous[i][0]==to)
+                            {
+                                found=1
+                                previous[i][1].push(`✔ ${message_text}     ${time}`)
+                                let inter=previous[i]
+                                previous.splice(i,1)
+                                previous.unshift(inter);
+                                set_msg_attributes(pre_attributes=>
+                                {
+                                    let previous_attributes=[...pre_attributes]
+                                    let spliced_element=previous_attributes[i]
+                                    previous_attributes.splice(i,1)
+                                    previous_attributes.unshift(spliced_element)
+                                    return previous_attributes
+                                })
+                                if(sent_messages[0].reply===true)
+                                {
+                                    set_msg_attributes(pre_attributes=>
+                                    {
+                                        let previous_attributes=[...pre_attributes]
+                                        if(!previous_attributes[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)])
+                                        {previous_attributes[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)]={}}
+                                        previous_attributes[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)].reply_info=['flex','You',sent_messages[0].replied_to.slice(sent_messages[0].replied_to.indexOf(' ')+1,sent_messages[0].replied_to.lastIndexOf(' ')-4)]
+                                        return previous_attributes
+                                    })
+                                }
+                                set_msg_transfer(prev=>prev+1)
+                                return previous;
+                            }
+                            else if(to==index && previous[i][0]==from){
+                                found=1
+                                previous[i][1].push(` ${message_text}     ${time}`)
+                                let inter=previous[i]
+                                previous.splice(i,1)
+                                previous.unshift(inter);
+                                set_msg_attributes(pre_attributes=>
+                                {
+                                    let previous_attributes=[...pre_attributes]
+                                    let spliced_element=previous_attributes[i]
+                                    previous_attributes.splice(i,1)
+                                    previous_attributes.unshift(spliced_element)
+                                    return previous_attributes
+                                })
+                                set_msg_transfer(prev=>prev+1)
+                                return previous;
+                            }
+                        }
+                    }
+                    if(found==0)
+                    {
+                        if(to==from){previous.unshift([from,[`✔ ${message_text}     ${time}`]]);}
+                        else if(from==index){previous.unshift([to,[`✔ ${message_text}     ${time}`]]);}
+                        else if(to==index){
+                            update_data()
+                            previous.unshift([from,[` ${message_text}     ${time}`]]);
+                        }
+                        set_msg_attributes(pre_attributes=>
+                        {
+                            let previous_attributes=[...pre_attributes]
+                            previous_attributes.unshift([])
+                            return previous_attributes
+                        })
+                        set_msg_transfer(prev=>prev+1)
+                        return previous;
+                    }
+                });  
+            } 
+            setmessages(prev=>
+            {
+                let previous=[...prev]
+                let unread_chats=0
+                for(let i=0;i<unseen_messages.length;i++)
+                {
+                    let count=0
+                    let stop=false
+                    for(let j=0;j<previous.length;j++)                    
+                    {
+                        if(previous[j][0]===unseen_messages[i].from)
+                        {
+                            for(let k=0;k<previous[j][1].length;k++)
+                            {
+                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===unseen_messages[i].text && unseen_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                {
+                                    if(receiver_again.current!==unseen_messages[i].from)
+                                    {count+=1}
+                                    else{
+                                        let msgref=doc(db,'messages',unseen_messages[i].id)
+                                        updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
                                     }
-                                    
+                                    stop=true
+                                    break
+                                }
+                            }
+                        } 
+                        if(stop){break}
+                    }
+                    previous[i][2]=count
+                    if(count>0){unread_chats+=1}
+                }
+                set_unread(unread_chats)
+                return previous
+            })
+            setmessages(prev=>
+            {
+                let previous=[...prev]
+                for(let i=0;i<read_messages.length;i++)
+                {
+                    let stop=false
+                    for(let j=0;j<previous.length;j++)
+                    {
+                        if(previous[j][0]=== read_messages[i].to && read_messages[i].createdAt!==null)
+                        {
+                            for(let k=0;k<previous[j][1].length;k++)
+                            {
+                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(" ")-4)===read_messages[i].text && read_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(" ")+1,previous[j][1][k].length))
+                                {
+                                    previous[j][1][k]=`✔✔${previous[j][1][k]}`
+                                    set_msg_attributes(pre_attributes=>
+                                    {
+                                        let previous_attributes=[...pre_attributes]
+                                        if(!previous_attributes[j][k]){previous_attributes[j][k]={}}
+                                        previous_attributes[j][k].seen_info=new Date(read_messages[i].seenAt.toDate().toISOString()).getDate()===new Date().getDate()?"👁️"+' '+'>'+' '+new Date(read_messages[i].seenAt.toDate().toISOString()).toLocaleTimeString():"👁️"+' '+'>'+' '+new Date(read_messages[i].seenAt.toDate().toISOString()).toLocaleDateString()
+                                        return previous_attributes
+                                    })
+                                    stop=true
+                                    break
                                 }
                             } 
-                        }
-                        previous[i][2]=count
-                        if(count>0){unread_chats+=1}
+                        }   
+                        if(stop){break}
                     }
-                    set_unread(unread_chats)
-
-                    return previous
-                })
-        })
-
-        let tick_messages=query(collection(db,'messages'),where("from","==",index),where("seen","==",true))
-        let ticked=onSnapshot(tick_messages,(snapshot)=>
-        {
-            let msgs=snapshot.docChanges().map(function(change)
-            {
-                return {id:change.doc.id,...change.doc.data()}
-            })
-
-            setmessages(prev=>
-                {
-                    let previous=[...prev]
-
-                    for(let i=0;i<previous.length;i++)
-                    {
-                        for(let j=0;j<msgs.length;j++)
-                        {
-                            if(msgs[j].seen===true && previous[i][0]=== msgs[j].to && msgs[j].createdAt!==null)
-                            {
-                                for(let k=0;k<previous[i][1].length;k++)
-                                {
-                                    if(previous[i][1][k].startsWith('✔✔✔✔')===false)
-                                    {
-                                        if(previous[i][1][k].slice(previous[i][1][k].indexOf(' ')+1,previous[i][1][k].lastIndexOf(" ")-4)===msgs[j].text && msgs[j].createdAt.toDate().toISOString()===previous[i][1][k].slice(previous[i][1][k].lastIndexOf(" ")+1,previous[i][1][k].length))
-                                        {
-                                            if(!msgs[j].delete)
-                                            {
-                                                previous[i][1][k]=`✔✔${previous[i][1][k]}`
-                                                set_seen_at(pre=>
-                                                {
-                                                    let original=[...pre]
-                                                    original[i][k]=new Date(msgs[j].seenAt.toDate().toISOString()).getDate()===new Date().getDate()?"👁️"+' '+'>'+' '+new Date(msgs[j].seenAt.toDate().toISOString()).toLocaleTimeString():"👁️"+' '+'>'+' '+new Date(msgs[j].seenAt.toDate().toISOString()).toLocaleDateString()
-                                                    return original
-                                                }
-                                                )
-                                            }
-                                        }
-                                    }
-                                } 
-                            }   
-                        }
-                    }
-                    
-
-                    return previous
-                })
-        })
-
-            let from_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("from","==",index))
-            let to_replied_msgs=query(collection(db,'messages'),where("reply","==",true),where("to","==",index))
-            let replied_docs1=onSnapshot(from_replied_msgs,(snapshot)=>
-            {
-                let msgs=snapshot.docChanges().map(function(change)
-                {
-                    return {id:change.doc.id,...change.doc.data()}
-                })
-                setmessages(prev=>
-                {
-                    let previous=[...prev]
-
-                    for(let i=0;i<msgs.length;i++)
-                    {
-                        let stop=false
-                        for(let j=0;j<previous.length;j++)
-                        {
-                            if(previous[j][0]===msgs[i].to && !msgs[i].delete && msgs[i].replied_to.startsWith('d')===false)
-                            {
-                                for(let k=0;k<previous[j][1].length;k++)
-                                {
-                                    if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
-                                    {
-                                        if(previous[j][1][k].startsWith('✔'))
-                                        {
-                                            set_replies(pre=>
-                                            {
-                                                let reply_info=[...pre]
-                                                reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-                                                return reply_info
-                                            })
-                                        }
-                                        else if(previous[j][1][k].startsWith(' '))
-                                        {
-                                            set_replies(pre=>
-                                            {
-                                                let reply_info=[...pre]
-                                                reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-    
-                                                return reply_info
-                                            })
-                                        }
-                                        stop=true
-                                        break
-                                    }
-                                }
-                            }
-                            else if(msgs[i].replied_to.startsWith('d'))
-                                {
-                                    for(let k=0;k<previous[j][1].length;k++)
-                                        {
-                                            if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
-                                            {
-                                                
-                                                    set_replies(pre=>
-                                                    {
-                                                        let reply_info=[...pre]
-                                                        reply_info[j][k]=['none','','']
-                                                        return reply_info
-                                                    })
-                                                
-                                                stop=true
-                                                break
-                                            }
-                                        }
-                                    
-    
-                                    
-                                    
-                                }
-                            if(stop){break}
-                        }
-    
-                    }
-                    
-
-                    return previous
-                })
-    
-            })
-            let replied_docs2=onSnapshot(to_replied_msgs,(snapshot)=>
-            {
-                let msgs=snapshot.docChanges().map(function(change)
-                {
-                    return {id:change.doc.id,...change.doc.data()}
-                })
-    
-                setmessages(prev=>
-                    {
-                        let previous=[...prev]
-
-                        for(let i=0;i<msgs.length;i++)
-                        {
-                            let stop=false
-                            for(let j=0;j<previous.length;j++)
-                            {
-                                if(previous[j][0]===msgs[i].from && !msgs[i].delete && msgs[i].from!==msgs[i].to && msgs[i].replied_to.startsWith('d')===false)
-                                {
-                                    for(let k=0;k<previous[j][1].length;k++)
-                                    {
-    
-                                        if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
-                                            {
-                                            
-                                            if(previous[j][1][k].startsWith('✔'))
-                                            {
-                                            set_replies(pre=>
-                                                {
-                                                    let reply_info=[...pre]
-                                                    reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(msgs[i].to)*2],msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-    
-                                                    return reply_info
-                                                })                                        
-                                            }
-                                            else if(previous[j][1][k].startsWith(' '))
-                                            {
-                                                set_replies(pre=>
-                                                {
-                                                    let reply_info=[...pre]
-                                                    reply_info[j][k]=['flex',msgs[i].replied_to.startsWith('✔')?info[indices.indexOf(msgs[i].from)*2]:'You',msgs[i].replied_to.slice(msgs[i].replied_to.indexOf(' ')+1,msgs[i].replied_to.lastIndexOf(' ')-4)]
-                                                    return reply_info
-                                                })                                        
-                                            }
-                                            stop=true
-                                            break
-                                        }
-                                    }
-                                }
-                                else if(msgs[i].replied_to.startsWith('d') && msgs[i].from!==msgs[i].to)
-                                    {
-                                        for(let k=0;k<previous[j][1].length;k++)
-                                            {
-                                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
-                                                {
-                                                    
-                                                        set_replies(pre=>
-                                                        {
-                                                            let reply_info=[...pre]
-                                                            reply_info[j][k]=['none','','']
-                                                            return reply_info
-                                                        })
-                                                    
-                                                    stop=true
-                                                    break
-                                                }
-                                            }
-                                    }
-                                if(stop){break}
-                                
-                            }
-                        }
-                        return previous
-                    })
-            })
-
-        let from_edited=query(collection(db,'messages'),where("edit","==",true),where("from","==",index))
-        let to_edited=query(collection(db,'messages'),where("edit","==",true),where("to","==",index))
-        let edit_from=onSnapshot(from_edited,(snapshot)=>
-        {
-            let msgs=snapshot.docChanges().map(function(change)
-            {
-                return {id:change.doc.id,...change.doc.data()}
+                }
+                return previous
             })
             setmessages(prev=>
+            {
+                let previous=[...prev]
+                for(let i=0;i<replied_messages.length;i++)
                 {
-                    let previous=[...prev]
-                    for(let i=0;i<msgs.length;i++)
+                    let stop=false
+                    for(let j=0;j<previous.length;j++)
                     {
-                        let stop=false
-                        for(let j=0;j<previous.length;j++)
+                        if((previous[j][0]===replied_messages[i].to || previous[j][0]===replied_messages[i].from) &&  replied_messages[i].replied_to.startsWith('d')===false)
                         {
-                            if(previous[j][0]===msgs[i].to && !msgs[i].delete && msgs[i].from!==msgs[i].to )
+                            for(let k=0;k<previous[j][1].length;k++)
                             {
-                                for(let k=0;k<previous[j][1].length;k++)
+                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===replied_messages[i].text && replied_messages[i].createdAt!==null  && replied_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                 {
-                                    if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                    if(previous[j][1][k].startsWith('✔'))
                                     {
-                                        set_is_edited(pre=>
+                                        set_msg_attributes(pre_attributes=>
                                         {
-                                            let original=[...pre]
-                                            original[j][k]='Edited'
-                                            return original
-
-                                        }
-                                        )
-                                        stop=true
-                                        break
+                                            let previous_attributes=[...pre_attributes]
+                                            if(!previous_attributes[j][k]){previous_attributes[j][k]={}}
+                                            previous_attributes[j][k].reply_info=['flex',replied_messages[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(replied_messages[i].to)*2],replied_messages[i].replied_to.slice(replied_messages[i].replied_to.indexOf(' ')+1,replied_messages[i].replied_to.lastIndexOf(' ')-4)]
+                                            return previous_attributes
+                                        })
                                     }
+                                    else if(previous[j][1][k].startsWith(' '))
+                                    {
+                                        set_msg_attributes(pre_attributes=>
+                                        {
+                                            let previous_attributes=[...pre_attributes]
+                                            if(!previous_attributes[j][k]){previous_attributes[j][k]={}}
+                                            previous_attributes[j][k].reply_info=['flex',replied_messages[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(replied_messages[i].to)*2],replied_messages[i].replied_to.slice(replied_messages[i].replied_to.indexOf(' ')+1,replied_messages[i].replied_to.lastIndexOf(' ')-4)]
+                                            return previous_attributes
+                                        })
+                                    }
+                                    stop=true
+                                    break
                                 }
                             }
-                            if(stop){break}
                         }
+                        else if(replied_messages[i].replied_to.startsWith('d'))
+                        {
+                            for(let k=0;k<previous[j][1].length;k++)
+                            {
+                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===replied_messages[i].text && replied_messages[i].createdAt!==null  && replied_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                {
+                                    set_msg_attributes(pre_attributes=>
+                                    {
+                                        let previous_attributes=[...pre_attributes]
+                                        if(!previous_attributes[j][k]){previous_attributes[j][k]={}}
+                                        previous_attributes[j][k].reply_info=['none','','']
+                                        return previous_attributes
+                                    })
+                                    stop=true
+                                    break
+                                }
+                            }
+                        }
+                        if(stop){break}
                     }
-                    
-
-                    return previous
-                })
-        }) 
-
-        let edit_to=onSnapshot(to_edited,(snapshot)=>
-        {
-            let msgs=snapshot.docChanges().map(function(change)
-            {
-                return {id:change.doc.id,...change.doc.data()}
+                }
+                return previous
             })
             setmessages(prev=>
-                {
-                    let previous=[...prev]
-                    for(let i=0;i<msgs.length;i++)
-                    {
-                        let stop=false
-                        for(let j=0;j<previous.length;j++)
-                        {
-                            if(previous[j][0]===msgs[i].from && !msgs[i].delete)
-                            {
-                                for(let k=0;k<previous[j][1].length;k++)
-                                {
-                                    if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
-                                    {
-                                        set_is_edited(pre=>
-                                        {
-                                            let original=[...pre]
-                                            original[j][k]='Edited'
-                                            return original
-                                        }
-                                        )
-                                        stop=true
-                                        break
-                                    }
-                                }
-                            }
-                            if(stop){break}
-                        }
-                    }
-                    
-
-                    return previous
-                })
-        })
-
-        
-            let already_deleted=query(collection(db,'messages'),or(where("from",'==',index),where('to','==',index)))
-        
-            let deleted_docs=onSnapshot(already_deleted,(snapshot)=>
             {
-                let msgs=snapshot.docChanges().filter(x=>x.doc.data().delete).map(function(change)
+                let previous=[...prev]
+                let remove_elements=0
+                for(let i=0;i<deleted_messages.length;i++)
                 {
-                    return {id:change.doc.id,...change.doc.data()}
-                })
-                setmessages(prev=>
-                {
-                    let previous=[...prev]
-                    for(let i=0;i<msgs.length;i++)
+                    let stop=false
+                    for(let j=0;j<previous.length;j++)
                     {
-                        let stop=false
-                        for(let j=0;j<previous.length;j++)
+                        if(previous[j][0]===deleted_messages[i].from || previous[j][0]===deleted_messages[i].to)
                         {
-                            if(previous[j][0]===msgs[i].from || previous[j][0]===msgs[i].to)
+                            for(let k=0;k<previous[j][1].length;k++)
                             {
-                                for(let k=0;k<previous[j][1].length;k++)
+                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===deleted_messages[i].text && deleted_messages[i].createdAt!==null  && deleted_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                 {
-                                    if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===msgs[i].text && msgs[i].createdAt!==null  && msgs[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                    if(previous[j][1][k-1]!=undefined)
                                     {
-                                        if(previous[j][1][k-1]!==undefined )
+                                        if(!previous[j][1][k-1].startsWith('✔') && !previous[j][1][k-1].startsWith(' '))
                                         {
-                                            if(!previous[j][1][k-1].startsWith('✔') && !previous[j][1][k-1].startsWith(' '))
-                                            {
-                                                if(!previous[j][1][k+1] || (!previous[j][1][k+1].startsWith(' ') && !previous[j][1][k+1].startsWith('✔')))
-                                                {previous[j][1].splice(k-1,2)}
-                                                else{previous[j][1].splice(k,1)}
-                                            }
-                                            else{previous[j][1].splice(k,1)}
+                                            if(!previous[j][1][k+1] || (!previous[j][1][k+1].startsWith('✔') && !previous[j][1][k+1].startsWith(' ')))
+                                            {remove_elements=2
+                                            previous[j][1].splice(k-1,2)}
+                                            else{remove_elements=1;previous[j][1].splice(k,1)}
                                         }
-                                    
-                                        if(previous[j][1].length===0){previous.splice(j,1)}
-                                        if(msgs[i].edit)
-                                        {
-                                            set_is_edited(pre=>
-                                            {
-                                                let original=[...pre]
-                                                original[j][k]=''
-                                                return original
-                                            }
-                                            )
-                                        }
-                                        if(msgs[i].reply)
-                                        {
-                                            set_replies(pre=>
-                                            {
-                                                let original=[...pre]
-                                                original[j][k]=['none','','']
-                                                return original
-                                            }
-                                            )
-                                        }
-                                        if(msgs[i].seen===true)
-                                        {
-                                            set_seen_at(pre=>
-                                            {
-                                                let original=[...pre]
-                                                original[j][k]='👁️ > ❌'
-                                                return original
-                                            }
-                                            )
-                                        }
-                                        stop=true
-                                        break
+                                        else{remove_elements=1;previous[j][1].splice(k,1)}
                                     }
+                                    
+                                    set_msg_attributes(pre_attributes=>
+                                    {
+                                        let previous_attributes=[...pre_attributes]
+                                        if(remove_elements===1){pre_attributes[j].splice(k,1)};if(remove_elements===2){pre_attributes[j].splice(k-1,1)}
+                                        return previous_attributes
+                                    })
+                                    if(previous[j][1].length===0)
+                                    {   
+                                        console.log(previous)
+                                        previous.splice(j,1)
+                                        console.log(previous)
+
+                                        set_msg_attributes(pre_attributes=>
+                                        {
+                                            let previous_attributes=[...pre_attributes]
+                                            previous_attributes.splice(j,1)
+                                            return previous_attributes
+                                        })
+                                    }
+                                    stop=true
+                                    break
                                 }
                             }
-                            if(stop){break}
                         }
+                        if(stop){break}
                     }
+                }
+                if(!on_reload.current || remove_elements>0)
+                {
+                    let friends=previous.map(x=>x[0])
+                    console.log(previous)
                     previous.sort((a,b)=>
                     {
                         return new Date(b[1][b[1].length-1].slice(b[1][b[1].length-1].lastIndexOf(' ')+1,b[1][b[1].length-1].length))-
                         new Date(a[1][a[1].length-1].slice(a[1][a[1].length-1].lastIndexOf(' ')+1,a[1][a[1].length-1].length))
-    
                     })
-                    
-                    
-                    return previous
-
+                    let friends_updated=previous.map(x=>x[0])
+                    set_msg_attributes(pre_attributes=>
+                    {
+                        let previous_attributes=[...pre_attributes]
+                        for(let i=0;i<friends.length;i++)
+                        {
+                            if(friends[i]!==friends_updated[i])
+                            {
+                                let a=previous_attributes[i]
+                                let b=friends.indexOf(friends_updated[i])
+                                previous_attributes[i]=previous_attributes[b]
+                                previous_attributes[b]=a
+                                let temp=friends[i]
+                                friends[i]=friends_updated[i]
+                                friends[b]=temp
+                            }
+                        }
+                        return previous_attributes
+                    })
                 }
-                )
-                if(flag1===true){set_loaded(true);}
-
+                return previous
             })
-
+            if(!on_reload.current){set_msg_transfer(pre_value=>pre_value+1);on_reload.current=true}
+            if(flag1===true){set_loaded(true);}
+        })
         return()=>
         {
-            seen()
-            ticked()
-            replied_docs1()
-            replied_docs2()
-            edit_from();
-            edit_to();
-            deleted_docs()
+            action()
         }
-    },[indices,index,refreshed,receiver,verified])
+    },[indices,index,refreshed,verified])
 
     useEffect(() => {
-        
         if(window.innerWidth<=1100){
             let people=document.getElementById('people');
             if(window.getComputedStyle(people).color=='rgb(255, 255, 255)')
@@ -948,66 +746,32 @@ function Home()
             document.getElementsByClassName('main_body_section')[0].style.flex=1;
             document.getElementsByClassName('main_body_section')[0].style.display='flex';
         }
-    
     },[innerwidth])
         
     useEffect(()=>
     {
+        console.log(msg_attributes)
+    },[msg_attributes])
 
+    useEffect(()=>
+    {
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
-
         if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight-30)+'px';main_body_section.style.height=(window.innerHeight-30)+'px';people_section.style.height=(window.innerHeight-30)+'px'}
         else if(innerwidth<=500){body_section.style.height=(window.innerHeight-40)+'px';main_body_section.style.height=(window.innerHeight-40)+'px';people_section.style.height=(window.innerHeight-40)+'px'}
         else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
     },[innerheight,innerwidth])
+
     useEffect(() => {
         let container=document.getElementsByClassName('chat_detail_section');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
         document.getElementById('message').value=''
         set_edit('none')
+        set_msg_value('')
+        set_reply('none')
+        set_reply_to('')
     },[receiver])
-
-    useEffect(()=>
-    {
-        if(messages.length!==replies.length)
-        {
-            set_replies(prev=>
-            {
-                let previous=[...prev]
-                for(let i=0;i<messages.length;i++)
-                {
-                    previous[i]=previous[i]||[]
-                }
-                return previous
-            })
-        }
-        if(messages.length!==seen_at.length)
-        {
-            set_seen_at(prev=>
-            {
-                let previous=[...prev]
-                for(let i=0;i<messages.length;i++)
-                {
-                    previous[i]=previous[i]||[]
-                }
-                return previous
-            })
-        }
-        if(messages.length!==is_edited.length)
-        {
-            set_is_edited(prev=>
-            {
-                let previous=[...prev]
-                for(let i=0;i<messages.length;i++)
-                {
-                    previous[i]=previous[i]||[]
-                }
-                return previous
-            })
-        }
-    },[messages])
 
     useEffect(()=>
     {
@@ -1015,6 +779,7 @@ function Home()
         setmessages(prev=>
         {
             let previous=[...prev]
+            let days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
             let months=['January','February','March','April','May','June','July','August','September','October','November','December']
             for(let i=0;i<previous.length;i++)
             {
@@ -1024,21 +789,45 @@ function Home()
                     {
                         let present_date=new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).toLocaleDateString()
                         if(present_date!==String(new Date().toLocaleDateString()))
-                        {present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
-                        present_date=present_date.replace(present_date[present_date.indexOf('/')],' ')
-                        present_date=present_date.replace(present_date[present_date.lastIndexOf('/')],',')}
+                        {
+                            if(present_date.slice(0,present_date.indexOf('/'))===String(new Date().getMonth()) && present_date.slice(present_date.lastIndexOf('/')+1,present_date.length)===String(new Date().getFullYear()))
+                            {
+                                let difference=new Date().getDate()-Number(present_date.slice(present_date.indexOf('/')+1,present_date.lastIndexOf('/')))
+                                if(difference===1){present_date='Yesterday'}
+                                else if(difference<7)
+                                {
+                                    let difference_update=new Date().getDay()-difference
+                                    present_date=days[difference_update>1?difference_update:difference_update*-1+new Date().getDay()]
+                                }
+                                else{
+                                present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
+                                present_date=present_date.replace(present_date[present_date.indexOf('/')],' ')
+                                present_date=present_date.replace(present_date[present_date.lastIndexOf('/')],',')
+                                }
+                            }
+                            else
+                            {
+                                present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
+                                present_date=present_date.replace(present_date[present_date.indexOf('/')],' ')
+                                present_date=present_date.replace(present_date[present_date.lastIndexOf('/')],',')
+                            }
+                        }
                         else{present_date='Today'}
                         if(previous[i][1].includes(present_date)===false)
                         {
                             previous[i][1].splice(j,0,present_date)
+                            set_msg_attributes(pre_attributes=>
+                            {
+                                let previous_attributes=[...pre_attributes]
+                                previous_attributes[i].splice(j,0,present_date)
+                                return previous_attributes
+                            })
                         }
                     }
                 }
-                
             }
             return previous
         })
-        
     },[msg_transfer,refreshed])
 
     useEffect(()=>
@@ -1053,51 +842,48 @@ function Home()
             set_innerwidth(window.innerWidth);
             set_innerheight(window.innerHeight);
         })
-
         fetch("/accounts",
-            {
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({test:'test'})
-            }
-        )
+        {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({test:'test'})
+        })
         .then(response => response.json())
         .then(data => 
+        {
+            let flag=[false,null]
+            let accounts=[] 
+            for(let i=0;i<data.length;i++)
             {
-                let flag=[false,null]
-                let accounts=[] 
-                for(let i=0;i<data.length;i++)
+                if(data[i].email===username)
                 {
-                    if(data[i].email===username)
-                    {
-                        localStorage.setItem('profile',data[i].name)
-                        localStorage.setItem('index',data[i].index)
-                        change_profile(localStorage.getItem('profile'))
-                        change_index(localStorage.getItem('index'))
-                        retrieve_messages(data[i].index)
-                        flag=[true,data[i].name===null?localStorage.getItem('profile'):data[i].name]
-                        set_flag1(true)
-                        setup_user(data[i].email);
-                        setup_name(data[i].name);
-                        setup_bio(data[i].bio);
-                        setpass(data[i].password);
-                        if(data[i].bg===null){data[i].bg='white'}
-                        setbg(data[i].bg);
-                    }
+                    localStorage.setItem('profile',data[i].name)
+                    localStorage.setItem('index',data[i].index)
+                    change_profile(localStorage.getItem('profile'))
+                    change_index(localStorage.getItem('index'))
+                    retrieve_messages(data[i].index)
+                    flag=[true,data[i].name===null?localStorage.getItem('profile'):data[i].name]
+                    set_flag1(true)
+                    setup_user(data[i].email);
+                    setup_name(data[i].name);
+                    setup_bio(data[i].bio);
+                    setpass(data[i].password);
+                    if(data[i].bg===null){data[i].bg='white'}
+                    setbg(data[i].bg);
                 }
-                if(flag[0]===false){set_flag1(false);set_loaded(false);alert(`No account exists with '${username}'`);localStorage.setItem('root',true);nav2('/');}
-                else if(flag[1]==='null'){set_flag1(false);set_loaded(false);alert(`Please submit profile details!`);nav2('/profile')}
-                let ind=[]
-                for(let i=data.length-1;i>=0;i--)
-                {
-                    accounts.push(data[i].name);
-                    accounts.push(data[i].bio);
-                    ind.push(data[i].index)
-                }
-                set_indices(ind);
-                setinfo(accounts);
             }
-        );
+            if(flag[0]===false){set_flag1(false);set_loaded(false);alert(`No account exists with ${username}`);localStorage.setItem('root',true);nav2('/');}
+            else if(flag[1]==='null'){set_flag1(false);set_loaded(false);alert('Please submit profile details!');nav2('/profile')}
+            let ind=[]
+            for(let i=data.length-1;i>=0;i--)
+            {
+                accounts.push(data[i].name);
+                accounts.push(data[i].bio);
+                ind.push(data[i].index)
+            }
+            set_indices(ind);
+            setinfo(accounts);
+        });
         let icons=document.querySelectorAll(".desktop_icons label");
         icons[0].style.backgroundColor='darkgreen'
         icons[0].style.color='white'
@@ -1105,12 +891,11 @@ function Home()
         refresh_people.addEventListener("click",function()
         {
             fetch("/accounts",
-                {
-                    method:'POST',
-                    headers:{'Content-Type':'application/json'},
-                    body:JSON.stringify({test:'test'})
-                }
-            )
+            {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({test:'test'})
+            })
             .then(response => response.json())
             .then(data => 
             {
@@ -1132,6 +917,7 @@ function Home()
         {
             phone_icons[i].addEventListener('click',()=>{
             update_receiver('-')
+            receiver_again.current='-'
             for(let j=0;j<phone_icons.length;j++)
             {   
                 phone_icons[j].style.color='white';
@@ -1148,17 +934,17 @@ function Home()
                 icons[i].style.backgroundColor='darkgreen'
                 icons[i].style.color='white'
             }
-            if(i==0){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('flex');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
-            if(i==1){setprofile_section('flex');setsettings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
-            if(i==2){setprofile_section('none');setsettings_section('flex');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
-            if(i==4){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='flex';document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0}
+            if(i==0){set_profile_section('none');set_settings_section('none');setdisp('none');set_disp_chat('flex');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
+            if(i==1){set_profile_section('flex');set_settings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
+            if(i==2){set_profile_section('none');set_settings_section('flex');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
+            if(i==4){set_profile_section('none');set_settings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='flex';document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0}
             });
         }
-
         for(let i=0;i<icons.length;i++)
         {
             icons[i].addEventListener('click',()=>{
                 update_receiver('-')
+                receiver_again.current='-'
                 for(let j=0;j<icons.length;j++)
                 {
                     icons[j].style.backgroundColor='lightgreen';
@@ -1171,12 +957,11 @@ function Home()
                 icons[i].style.backgroundColor='darkgreen';
                 icons[i].style.color='white';
                 phone_icons[i].style.color='lime'
-                if(i==0){setprofile_section('none');setsettings_section('none');setdisp('none');set_disp_chat('flex')}
-                if(i==1){setprofile_section('flex');setsettings_section('none');setdisp('none');set_disp_chat('none')}
-                if(i==2){setprofile_section('none');setsettings_section('flex');setdisp('none');set_disp_chat('none')}
+                if(i==0){set_profile_section('none');set_settings_section('none');setdisp('none');set_disp_chat('flex')}
+                if(i==1){set_profile_section('flex');set_settings_section('none');setdisp('none');set_disp_chat('none')}
+                if(i==2){set_profile_section('none');set_settings_section('flex');setdisp('none');set_disp_chat('none')}
             });
         }
-        
     }, []);
     
     async function Send(message)
@@ -1199,7 +984,6 @@ function Home()
             replied_to:msg_being_replied.startsWith('✔')? msg_being_replied.replace(msg_being_replied.slice(0,msg_being_replied.indexOf(' ')),'✔'):msg_being_replied.startsWith(' ')?msg_being_replied:'',
             reply: msg_being_replied===''?false:true,
         });
-
         onSnapshot(inserted_msg,(document)=>
         {
             let data=document.data()
@@ -1210,24 +994,15 @@ function Home()
                 {
                     if(ids.includes(document.id)===false)
                     {
-                    ids.push(document.id)
-
-                    setmessages(prev=>
-                        {
-                            let previous=[...prev]
-                            previous[0][1][previous[0][1].length-1]='✔'+previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,data.createdAt.toDate().toISOString())
-                            return previous
-                        })
-                        
-                    insert_msg(index,receiver,message,data.createdAt.toDate().toISOString());
-                    return;
+                        ids.push(document.id)
+                        insert_msg(index,receiver,message,data.createdAt.toDate().toISOString());
+                        return;
                     }
                 }
             }
         })    
     }
-    
-    
+
     function insert_msg(from,to,msg,time)
     {
         fetch('/save_msg',
@@ -1241,26 +1016,28 @@ function Home()
         .then(response => response.json())
         .then(data=>
         {   
-
+            setmessages(prev=>
+            {
+                let previous=[...prev]
+                previous[0][1][previous[0][1].length-1]='✔'+previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,time)
+                return previous
+            })
         })
     }
+
     useEffect(() => {
         let connect_buttons=document.getElementsByClassName("connect_buttons");
         for(let i=0;i<connect_buttons.length;i++)
         {
             connect_buttons[i].addEventListener('click',()=>{
-
                 if(window.innerWidth<=1100){document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
                 else{document.getElementsByClassName('people_section')[0].style.flex=0.5;document.getElementsByClassName('main_body_section')[0].style.flex=1}
-                
                 setdisp("flex");
-                setprofile_section('none');
-                setsettings_section('none');
+                set_profile_section('none');
+                set_settings_section('none');
                 set_disp_chat('none');
-
                 let phone_icons=document.querySelectorAll(".phone_icons label");
                 let icons=document.querySelectorAll(".desktop_icons label");
-
                 for(let j=0;j<phone_icons.length;j++)
                 {
                     phone_icons[j].style.color='white';
@@ -1297,24 +1074,24 @@ function Home()
             })
             if(found_result){set_no_match_msg('none')}
             else{set_no_match_msg('flex')}
-
         }
         else if(search_value==='')
         {
             for(let i=0;i<info.length;i+=2)
             {
-                    values[i/2]='flex'
+                values[i/2]='flex'
             }
             set_no_match_msg('none')
         }
         set_search_filter(values)
     },[search_value,info])
+
     return(
         <>
-        <div style={{display:`${loaded==true? 'none':'flex'}`,height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
+        <div style={{display:loaded==true? 'none':'flex',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
             <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label></div>
         </div>
-        <div className='home' style={{display:`${loaded==true? 'flex':'none'}`}}>
+        <div className='home' style={{display:loaded==true? 'flex':'none'}}>
             <div className='top'>
                 <label><i class='fas fa-mobile-alt'></i>WhatsUpp</label>
                 <label><i class='fas fa-user'></i>{profile}</label>
@@ -1327,10 +1104,8 @@ function Home()
                     <label onClick=
                     {()=>{localStorage.setItem('root',true);nav2('/');}} 
                     ><i class='fas fa-user-plus'></i>Add Account</label>
-
                 </div>
                 <div className='main_body_section'>
-
                     <div className='chat_detail_section' style={{display:disp}} >
                         <label  id="profile_name" >
                             <i className='fas fa-user'></i> {info[indices.indexOf(receiver)*2]} {status[indices.indexOf(receiver)]}
@@ -1339,57 +1114,51 @@ function Home()
                         {
                             if(receiver==messages[index][0])
                             {
-                                
                                 return(
                                     <div key={index} className='chat_detail' style={{display:'flex',flexDirection:'column'}} >
                                         {value[1].map((text,ind)=>
                                         (
                                             text.startsWith('✔')?
                                             (<span style={{marginRight:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'270px',padding:'5px',fontSize:'20px'}}>
-                                            <select id='options1' value={selectval} onChange={(e)=>
-                                                { 
-                                                if(e.target.value==='Delete'){set_edit('none'); set_msg_value('');set_reply('none');set_reply_to('');delete_msg(receiver,text);}
-                                                else if(e.target.value==='Edit'){set_reply('none');set_reply_to('');edit_msg(receiver,text);}
-                                                else if(e.target.value==="Reply"){set_edit('none');set_msg_value('');reply_msg(receiver,text);}
-                                                else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
-                                                set_selectval('Select')}}
-                                                    style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
-                                                <option value='Select'>🧾 Select</option>
-                                                <option value='Edit'>✏️ Edit</option>
-                                                <option value='Delete'>🗑️ Delete</option>
-                                                <option value='Reply'>💬 Reply</option>
-                                                <option value='seen'>{seen_at[index]?.[ind]===undefined?'👁️ > ❌':seen_at[index]?.[ind]}</option>
-                                            </select>
-
-                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'lightslategray'}}>
-                                                <span style={{fontWeight:'bold'}}>{replies[index]?.[ind]?.[1]===undefined?'':replies[index][ind][1]}</span>
-                                                <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{replies[index]?.[ind]?.[2]===undefined?'':replies[index][ind][2]}</span>
-                                            </span>
-
-                                            <span style={{minWidth:'100px',maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
-                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{is_edited[index]?.[ind]===undefined?'':is_edited[index]?.[ind]} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
+                                                <select id='options1' value={selectval} onChange={(e)=>
+                                                    { 
+                                                    if(e.target.value==='Delete'){set_edit('none'); set_msg_value('');set_reply('none');set_reply_to('');delete_msg(receiver,text);}
+                                                    else if(e.target.value==='Edit'){set_reply('none');set_reply_to('');edit_msg(receiver,text);}
+                                                    else if(e.target.value==="Reply"){set_edit('none');set_msg_value('');reply_msg(receiver,text);}
+                                                    else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
+                                                    set_selectval('Select')}}
+                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
+                                                    <option value='Select'>🧾 Select</option>
+                                                    <option value='Edit'>✏️ Edit</option>
+                                                    <option value='Delete'>🗑️ Delete</option>
+                                                    <option value='Reply'>💬 Reply</option>
+                                                    <option value='seen'>{!msg_attributes[index]?.[ind]?.seen_info?'👁️ > ❌':msg_attributes[index]?.[ind]?.seen_info}</option>
+                                                </select>
+                                                <span style={{display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?"none":msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'lightslategray'}}>
+                                                    <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
+                                                    <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
+                                                </span>
+                                                <span style={{minWidth:'100px',maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
+                                                <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
-                                            
                                             text.startsWith(' ')?
                                             (<span style={{marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:bgr==='#221130'?'lightslategray':'#221130',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
-                                            <select id='options2' value={selectval} onChange={(e)=>
-                                                { 
-                                                if(e.target.value==="Reply"){reply_msg(receiver,text);}
-                                                else{set_reply('none');set_reply_to('')}
-                                                set_selectval('Select')}}
-                                                    style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
-                                                <option value='Select'>🧾 Select</option>
-                                                <option value='Reply'>💬 Reply</option>
-                                            </select>
-
-                                            <span style={{display:replies[index]?.[ind]?.[0]===undefined?'none':replies[index][ind][0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:bgr==='#221130'?'#221130':'lightslategray'}}>
-                                                <span style={{fontWeight:'bold'}}>{replies[index]?.[ind]?.[1]===undefined?'':replies[index][ind][1]}</span>
-                                                <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{replies[index]?.[ind]?.[2]===undefined?'':replies[index][ind][2]}</span>
-                                            </span>
-                                            
-                                            <span style={{minWidth:'100px', maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
-                                            <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{is_edited[index]?.[ind]===undefined?'':is_edited[index]?.[ind]} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span></span>):
-
+                                                <select id='options2' value={selectval} onChange={(e)=>
+                                                    { 
+                                                    if(e.target.value==="Reply"){reply_msg(receiver,text);}
+                                                    else{set_reply('none');set_reply_to('')}
+                                                    set_selectval('Select')}}
+                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
+                                                    <option value='Select'>🧾 Select</option>
+                                                    <option value='Reply'>💬 Reply</option>
+                                                </select>
+                                                <span style={{display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?'none':msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:bgr==='#221130'?'#221130':'lightslategray'}}>
+                                                    <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
+                                                    <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
+                                                </span>
+                                                <span style={{minWidth:'100px', maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
+                                                <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
+                                            </span>):
                                             (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'lightslategray',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
                                         )
                                         )}
@@ -1400,18 +1169,17 @@ function Home()
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
                         <label id="connect_msg" style={{border:bgr==='#221130'?'solid white':'solid darkgreen',color:bgr==='#221130'?'white':'darkgreen', display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fas fa-users"></i> Start connecting with people.</label>
-
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='#221130'?'solid white ':'solid darkgreen'}} >
+                                    <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='#221130'?'solid white ':'solid darkgreen'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
                                             <span style={{paddingLeft:'5px',paddingTop:'5px',color:bgr==='#221130'?'lime':'darkgreen'}}><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
                                             <span style={{color:bgr==='#221130'?'white':'darkgreen',paddingRight:'5px',fontSize:'12px',paddingTop:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
                                                 {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()=== new Date().toLocaleDateString()?
                                                 new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
                                                 new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()}
-                                                </span>
+                                            </span>
                                         </div>
                                         <div style={{height:'35px'}}>
                                             <span style={{fontWeight:'normal',paddingLeft:'5px',color:bgr==='#221130'?'white':'darkgreen'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
@@ -1422,7 +1190,6 @@ function Home()
                             })
                         }
                     </div>
-                    
                     <div className='profile_section' style={{display:profile_section}} >
                         <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='#221130'?'lime':'darkgreen'}} class='fas fa-user'></i>
                         <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Username 🔑</label>
@@ -1430,24 +1197,26 @@ function Home()
                         <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Name 🏷️</label>
                         <input onChange={(e)=>
                             {
-                            if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
-                            setup_name(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
-                            }} value={up_name} style={{alignSelf:'end'}}></input>
+                                if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+                                setup_name(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
+                            }} value={up_name} style={{alignSelf:'end'}}>
+                        </input>
                         <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>About 📝</label>
                         <input onChange={(e)=>
                             {
                             if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
                             setup_bio(e.target.value)
-                            }} value={up_bio} style={{alignSelf:'end'}}></input>
+                            }} value={up_bio} style={{alignSelf:'end'}}>
+                        </input>
                         <button onClick={()=>
                             {
                                 if(up_user.length>0 && up_user.length<13 && up_name.length>0 && up_name.length<13 && up_bio.length>0 && up_bio.length<21)
                                     {update_info(up_user,up_name,up_bio)}
                                 else{alert("Username,Profile Name Range:1-12 and About Range:1-20")
                                 }
-                            }} id="save">Save</button>
+                            }} id="save">Save
+                        </button>
                     </div>
-                    
                     <div className='settings_section' style={{display:settings_section}} >
                         <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='#221130'?'lime':'darkgreen'}} class='fas fa-user'></i>
                         <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Change Password 🔒</label>
@@ -1464,12 +1233,10 @@ function Home()
                             {
                                 if(pass.length>0 && pass.length<13){update_settings(pass,bgr)}
                                 else{alert("Password Range:1-12")}
-                            }} id="save">Save</button>
+                            }} id="save">Save
+                        </button>
                     </div>
                 </div>
-                
-                
-
                 <div className='people_section' >
                     <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='#221130'?'white':'darkgreen'}}><i style={{marginTop:'2.5px'}} id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
                     <aa style={{display:'flex',justifyContent:'center',width:'100%'}}>
@@ -1486,7 +1253,7 @@ function Home()
                     <span style={{display:no_match_msg, color:bgr==='#221130'?'white':'darkgreen',justifyContent:'center',alignItems:'center',fontWeight:'bold'}}>No match for '{search_value}'</span>
                     {info.map((a, index) => {
                         if (index < info.length / 2) {
-                            w = w + 1; // Increment w before returning
+                            w = w + 1; 
                             return (
                                 <div className='userinfo' key={index} style={{display:search_filter[index]}}> 
                                     <div style={{display:search_filter[index],flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'160px',backgroundColor:'darkgreen',borderRadius:'20px',padding:'5px'}}>
@@ -1496,6 +1263,7 @@ function Home()
                                     <button onClick={()=>
                                         {
                                             update_receiver(indices[index])
+                                            receiver_again.current=indices[index]
                                             set_seen()
                                         }
                                     } className='connect_buttons'><i className='fas fa-envelope'></i>Message</button>
@@ -1506,13 +1274,10 @@ function Home()
                         return null; 
                     })}
                 </div>
-
             </div>
-            
             <div className='msg_div' style={{display:disp}}>
                 <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'30px',cursor:'pointer'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
                 <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'30px',cursor:'pointer'}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
-
                 <textarea id="message" style={{ resize:"none",borderRadius:"30px",paddingLeft:'12px'}} placeholder='Type...'
                 onChange={()=>
                 {
@@ -1527,7 +1292,6 @@ function Home()
                     if(edit_icon==='flex'){write_edit(document.getElementById('message').value)}
                     document.getElementById('message').value=''}}} style={{borderRadius:"30px",fontSize:'20px',color:"white",cursor:"pointer"}} >⏩⏩</button>
             </div>
-
             <div className='phone_icons' style={{display:'none'}}>
                 <label ><i class='fas fa-comment-dots'></i>Chats<sup>{unread===0?'':unread}</sup></label>
                 <label ><i class='fas fa-user'></i>Profile</label>

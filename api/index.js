@@ -18,9 +18,9 @@ app.post('/accounts', (req, res) => {
 
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(buildPath, 'index.html'), {
-      headers: {
+        headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate'
-      }
+        }
     });
 });
 
@@ -237,13 +237,13 @@ app.post('/delete_msg',(req,res)=>
     const {from,to,message}=req.body;
     let updated_msg=message.replace(message.slice(0,message.indexOf(' ')),`${from}:`)
     pool.query(`update public.chats set "${from}"=array_remove("${from}",$1) where chat_with=$2 and "${from}" is not null`,[updated_msg,to],(err,results)=>
-                {
-                    if(results.rowCount===0)
-                    {
-                        pool.query(`update public.chats set "${to}"=array_remove("${to}",$1) where chat_with=$2 and "${to}" is not null`,[updated_msg,from],(err,results)=>
-                        {})
-                    }
-                })
+    {
+        if(results.rowCount===0)
+        {
+            pool.query(`update public.chats set "${to}"=array_remove("${to}",$1) where chat_with=$2 and "${to}" is not null`,[updated_msg,from],(err,results)=>
+            {})
+        }
+    })
     res.json({success:true});
 })
 
@@ -253,13 +253,13 @@ app.post('/edit_message',(req,res)=>
     let updated_text=`${from}: ${text}     ${original_msg.slice(original_msg.lastIndexOf(' ')+1,original_msg.length)}`
     let original=`${from}: ${original_msg.slice(original_msg.indexOf(' ')+1,original_msg.length)}`
     pool.query(`update public.chats set "${from}"=array_replace("${from}",$1,$2) where chat_with=$3 and "${from}" is not null`,[original,updated_text,to],(err,results)=>
+    {
+        if(results.rowCount===0)
         {
-            if(results.rowCount===0)
-            {
-                pool.query(`update public.chats set "${to}"=array_replace("${to}",$1,$2) where chat_with=$3 and "${to}" is not null`,[original,updated_text,from],(err,results)=>
-                {})
-            }
-        })
+            pool.query(`update public.chats set "${to}"=array_replace("${to}",$1,$2) where chat_with=$3 and "${to}" is not null`,[original,updated_text,from],(err,results)=>
+            {})
+        }
+    })
 res.json({success:true})
 })
 

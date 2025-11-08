@@ -1,47 +1,44 @@
 body{
-  margin: 0;
-  scroll-behavior: smooth;
+    margin: 0;
+    scroll-behavior: smooth;
 }
 .Profile{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background:darkgreen; 
-  width: auto;
-  min-height: 100dvh;
-  overflow-y: auto;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background:darkgreen; 
+    width: auto;
+    min-height: 100dvh;
+    overflow-y: auto;
 }
 .Profile label{
-  align-self: center;
-  justify-self: center;
-  font-weight: bold;
-  color: green;
-  font-size: 20px;
-  margin: 10px;
+    align-self: center;
+    justify-self: center;
+    font-weight: bold;
+    color: green;
+    font-size: 20px;
+    margin: 10px;
 }
 .Profile input{
-  align-items: center;
-  margin: 10px;
-  justify-self: center;
-  border-radius: 5px;
-  border: none;
-  font-size: 20px;
+    align-items: center;
+    margin: 10px;
+    justify-self: center;
+    border-radius: 5px;
+    border: none;
+    font-size: 20px;
 }
-
 .Profile button{
-  margin: 10px;
-  background-color: white;
-  color: green;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 20px;
-  transition: all 0.3s;
-
+    margin: 10px;
+    background-color: white;
+    color: green;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s;
 }
 .Profile button:hover{
-  background-color: green;
-  color: white;
+    background-color: green;
+    color: white;
 }
