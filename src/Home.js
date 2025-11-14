@@ -1278,7 +1278,7 @@ function Home()
             <div className='msg_div' style={{display:disp}}>
                 <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'30px',cursor:'pointer'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
                 <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'30px',cursor:'pointer'}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
-                <textarea id="message" style={{ resize:"none",borderRadius:"30px",paddingLeft:'12px'}} placeholder='Type...'
+                <textarea id="message" style={{ resize:"none",borderRadius:"30px",paddingLeft:'12px',height:'50px',maxHeight:'100px'}} placeholder='Type...'
                 onChange={(e)=>
                 {
                     e.target.style.height='auto';
