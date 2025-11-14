@@ -1279,8 +1279,10 @@ function Home()
                 <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'30px',cursor:'pointer'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
                 <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'30px',cursor:'pointer'}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
                 <textarea id="message" style={{ resize:"none",borderRadius:"30px",paddingLeft:'12px'}} placeholder='Type...'
-                onChange={()=>
+                onChange={(e)=>
                 {
+                    e.target.style.height='auto';
+                    e.target.style.height=e.target.scrollHeight+'px';
                     if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
                     typing_status()
                 }
