@@ -278,7 +278,7 @@ select{
     .phone_icons label {
         cursor: pointer;
     }
-    #profile_name,.msg_div{
+    #profile_name,.msg_div div{
         width: 100%;
     }
     .msg_div{
