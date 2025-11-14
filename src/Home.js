@@ -1282,7 +1282,7 @@ function Home()
                 onChange={(e)=>
                 {
                     e.target.style.height='auto';
-                    e.target.style.height=e.scrollHeight+'px';
+                    e.target.style.height=e.target.scrollHeight+'px';
                     if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
                     typing_status()
                 }
