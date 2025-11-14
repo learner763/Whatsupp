@@ -470,7 +470,7 @@ function Home()
                                 }
                                 set_msg_transfer(prev=>prev+1)
                                 return previous;
-                            }
+                            } 
                             else if(to==index && previous[i][0]==from){
                                 found=1
                                 previous[i][1].push(` ${message_text}     ${time}`)
