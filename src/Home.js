@@ -1277,12 +1277,10 @@ function Home()
             </div>
             <div className='msg_div' style={{display:disp}}>
                 <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',width:'100%'}}>
-                    <label style={{marginLeft:'auto'}}>Cancel</label>
+                    <label style={{marginLeft:'auto'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');document.getElementById('message').value=''}}}>Cancel</label>
                     <label>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
-                    <button  style={{display:edit_icon}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
-                    <button  style={{display:reply_icon}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
                     <textarea id="message" style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'12px',height:'50px',maxHeight:'96px'}} placeholder='Type...'
                     onChange={(e)=>
                     {
