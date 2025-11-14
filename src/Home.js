@@ -1276,9 +1276,9 @@ function Home()
                 </div>
             </div>
             <div className='msg_div' style={{display:disp}}>
-                <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column'}}>
+                <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',width:'100%'}}>
                     <label style={{marginLeft:'auto'}}>Cancel</label>
-                    <label>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)]+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
+                    <label>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
                     <button  style={{display:edit_icon}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
