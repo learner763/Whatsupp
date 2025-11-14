@@ -1278,7 +1278,7 @@ function Home()
             <div className='msg_div' style={{display:disp}}>
                 <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column'}}>
                     <label>{msg_before_edit.length>0?'You':reply_to.length>0?reply_to.startsWith('✔')?'You':receiver:''}<i className='fas fa-times'></i></label>
-                    <label>{msg_before_edit.length>0?msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.length-4):reply_to.length>0?reply_to.slice(reply_to.indexOf(' ')+1,reply_to.length-4):''}<i className='fas fa-times'></i></label>
+                    <label>{msg_before_edit.length>0?msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}<i className='fas fa-times'></i></label>
                 </span>
                 <div>
                     <button  style={{display:edit_icon}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
