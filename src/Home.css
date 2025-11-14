@@ -41,7 +41,7 @@ body{
     display: flex;
 }
 .desktop_icons{
-    flex: .25 ;
+    flex: .5 ;
     border: darkgreen solid ;
     border-width: 0px 1px 0px 0px;
     flex-direction: column;
@@ -60,7 +60,8 @@ body{
     border-radius: 30px;
     font-size: 25px;
     font-weight: bolder;
-    
+    padding-top: 5px ;
+    padding-bottom: 5px ;
 }
 .main_body_section
 {
@@ -255,7 +256,7 @@ select{
 }
 @media (max-width: 1100px)
 {
-    .msg_div textarea,.msg_div button{
+    .msg_div div{
         border:none;
     }
     .desktop_icons{

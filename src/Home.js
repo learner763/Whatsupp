@@ -1098,12 +1098,12 @@ function Home()
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
                 <div className='desktop_icons'>
-                    <label><i class='fas fa-comment-dots'></i>Chats<sup>{unread===0?'':unread}</sup></label>
-                    <label><i class='fas fa-user'></i>Profile</label>
-                    <label><i class='fas fa-cog'></i>Settings</label>
+                    <label><i class='fas fa-comment-dots'></i>Read Chats<sup>{unread===0?'':unread}</sup></label>
+                    <label><i class='fas fa-user'></i>Update Profile</label>
+                    <label><i class='fas fa-cog'></i>Alter Settings</label>
                     <label onClick=
                     {()=>{localStorage.setItem('root',true);nav2('/');}} 
-                    ><i class='fas fa-user-plus'></i>Add Account</label>
+                    ><i class='fas fa-user-plus'></i>Switch Account</label>
                 </div>
                 <div className='main_body_section'>
                     <div className='chat_detail_section' style={{display:disp}} >
@@ -1279,7 +1279,7 @@ function Home()
                 <div>
                     <button  style={{display:edit_icon}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
                     <button  style={{display:reply_icon}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
-                    <textarea id="message" style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'12px',height:'50px',maxHeight:'100px'}} placeholder='Type...'
+                    <textarea id="message" style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'12px',height:'50px',maxHeight:'96px'}} placeholder='Type...'
                     onChange={(e)=>
                     {
                         e.target.style.height='auto';
