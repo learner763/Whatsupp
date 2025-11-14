@@ -1276,23 +1276,25 @@ function Home()
                 </div>
             </div>
             <div className='msg_div' style={{display:disp}}>
-                <button  style={{display:edit_icon,fontSize:'20px',borderRadius:'30px',cursor:'pointer'}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
-                <button  style={{display:reply_icon,fontSize:'20px',borderRadius:'30px',cursor:'pointer'}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
-                <textarea id="message" style={{ resize:"none",borderRadius:"30px",paddingLeft:'12px',height:'50px',maxHeight:'100px'}} placeholder='Type...'
-                onChange={(e)=>
-                {
-                    e.target.style.height='auto';
-                    e.target.style.height=e.target.scrollHeight+'px';
-                    if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
-                    typing_status()
-                }
-                }></textarea>
-                <button id="Send_Button" onClick={()=>{
-                    if(document.getElementById('message').value!='')
+                <div>
+                    <button  style={{display:edit_icon}} onClick={()=>{set_edit('none');document.getElementById('message').value='';set_msg_value('')}}>✏️❌</button>
+                    <button  style={{display:reply_icon}} onClick={()=>{set_reply('none');set_reply_to('')}}>🔁❌</button>
+                    <textarea id="message" style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'12px',height:'50px',maxHeight:'100px'}} placeholder='Type...'
+                    onChange={(e)=>
                     {
-                    if(edit_icon==='none'){Send(document.getElementById('message').value)};
-                    if(edit_icon==='flex'){write_edit(document.getElementById('message').value)}
-                    document.getElementById('message').value=''}}} style={{borderRadius:"30px",fontSize:'20px',color:"white",cursor:"pointer"}} >⏩⏩</button>
+                        e.target.style.height='auto';
+                        e.target.style.height=e.target.scrollHeight+'px';
+                        if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
+                        typing_status()
+                    }
+                    }></textarea>
+                    <button id="Send_Button" onClick={()=>{
+                        if(document.getElementById('message').value!='')
+                        {
+                        if(edit_icon==='none'){Send(document.getElementById('message').value)};
+                        if(edit_icon==='flex'){write_edit(document.getElementById('message').value)}
+                        document.getElementById('message').value=''}}} >⏩⏩</button>
+                </div>
             </div>
             <div className='phone_icons' style={{display:'none'}}>
                 <label ><i class='fas fa-comment-dots'></i>Chats<sup>{unread===0?'':unread}</sup></label>
