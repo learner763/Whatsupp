@@ -195,7 +195,6 @@ body{
     padding-right: 5px;
 }
 .msg_div textarea{
-    width: 336px;
     font-family: sans-serif;
     font-size: 20px;
 }
@@ -279,16 +278,13 @@ select{
     .phone_icons label {
         cursor: pointer;
     }
-    #profile_name,.msg_div div{
+    #profile_name,.msg_div{
         width: 100%;
     }
     .msg_div{
         position: fixed;
         bottom: 30px;
         background-color: lightgreen;
-    }
-    .msg_div textarea{
-        width: 222px;
     }
     .profile_section,.settings_section,.people_section,.chats,.chat_detail_section{
         padding-bottom: 30px;
