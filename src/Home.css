@@ -263,7 +263,7 @@ select{
 }
 @media (max-width: 1100px)
 {
-    .msg_div div{
+    .msg_div div,.msg_div span{
         border:none;
     }
     .desktop_icons{
