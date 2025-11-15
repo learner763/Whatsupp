@@ -191,12 +191,16 @@ body{
     position: fixed;
     align-self: center;
     bottom: 0px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 .msg_div textarea{
     font-family: sans-serif;
     font-size: 20px;
+    width: 400px;
+}
+.msg_div div,.msg_div span{
+    width: 430px;
 }
 .msg_div textarea,.msg_div button{
     border:none ;
@@ -292,6 +296,12 @@ select{
 }
 @media (max-width:500px) {
     
+    .msg_div div,.msg_div span{
+        width: 300px;
+    }
+    .msg_div textarea{
+        width: 270px;
+    }
     .settings_section a,.top label,#youmayknow,.profile_section label,.settings_section label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
         font-size: 20px;
     }
