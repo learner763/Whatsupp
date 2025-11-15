@@ -198,9 +198,11 @@ body{
     font-family: sans-serif;
     font-size: 20px;
     width: 400px;
+    border-radius: 10px;
 }
 .msg_div div,.msg_div span{
     width: 430px;
+    border-radius: 10px;
 }
 .msg_div textarea,.msg_div button{
     border:none ;
@@ -209,6 +211,10 @@ body{
     cursor: pointer;
     font-size: 20px;
     padding: 5px;
+}
+.msg_div span{
+    border: black solid;
+    border-width: 1px;
 }
 .msg_div div{
     display: flex;
