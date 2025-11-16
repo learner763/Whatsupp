@@ -78,8 +78,13 @@ function Home()
             let deleted_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("text","==",message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)));
             let deleted=await getDocs(deleted_msgs)
             deleted=deleted.docs.filter(x=>!x.data().delete)
-            if(deleted.length>0){const doc=deleted[0]
-            await updateDoc(doc.ref,{delete:message.slice(message.lastIndexOf(' ')+1,message.length)})}
+            for(let i=0;i<deleted.length;i++)
+            {
+                if(deleted[i].data().createdAt===message.slice(message.lastIndexOf(' ')+1,message.length))
+                {
+                    await updateDoc(deleted[i].ref,{delete:true})}
+                }
+            }
             let deleted_replied_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'✔')));
             let deleted_replied=await getDocs(deleted_replied_msgs)
             if(deleted_replied.docs.length>0)
@@ -123,8 +128,13 @@ function Home()
         set_edit('none')
         let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4)));
         let edited_msgs=await getDocs(edit_this_msg)
-        if(edited_msgs.docs.length>0){const edit_doc=edited_msgs.docs[0]
-        await updateDoc(edit_doc.ref,{edit:true,text:message})}
+        for(let i=0;i<edited_msgs.docs.length;i++)
+        {
+            if(edited_msgs.docs[i].data().createdAt===msg_before_edit.slice(msg_before_edit.lastIndexOf(' ')+1,msg_before_edit.length))
+            {
+                await updateDoc(edited_msgs.docs[i].ref,{edit:true,text:message})}
+            }
+        }
         let edit_replied=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("replied_to","==",msg_before_edit.replace(msg_before_edit.slice(0,msg_before_edit.indexOf(' ')),'✔')));
         let edited_replied_msgs=await getDocs(edit_replied)
         if(edited_replied_msgs.docs.length>0)
