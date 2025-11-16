@@ -131,7 +131,7 @@ function Home()
         let edited_msgs=await getDocs(edit_this_msg)
         for(let i=0;i<edited_msgs.docs.length;i++)
         {
-            if(edited_msgs.docs[i].data().createdAt===msg_before_edit.slice(msg_before_edit.lastIndexOf(' ')+1,msg_before_edit.length))
+            if(edited_msgs.docs[i].data().createdAt.toDate().toISOString()===msg_before_edit.slice(msg_before_edit.lastIndexOf(' ')+1,msg_before_edit.length))
             {
                 await updateDoc(edited_msgs.docs[i].ref,{edit:true,text:message})
             }
