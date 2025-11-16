@@ -82,7 +82,7 @@ function Home()
             console.log(deleted)
             for(let i=0;i<deleted.docs.length;i++)
             {
-                if(deleted.docs[i].data().createdAt===message.slice(message.lastIndexOf(' ')+1,message.length))
+                if(deleted.docs[i].data().createdAt.toDate().toISOString()===message.slice(message.lastIndexOf(' ')+1,message.length))
                 {
                     await updateDoc(deleted.docs[i].ref,{delete:true})
                 }
