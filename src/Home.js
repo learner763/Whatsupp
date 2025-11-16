@@ -1025,12 +1025,15 @@ function Home()
         .then(response => response.json())
         .then(data=>
         {   
-            setmessages(prev=>
+            if(data.success)
             {
-                let previous=[...prev]
-                previous[0][1][previous[0][1].length-1]='✔'+previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,time)
-                return previous
-            })
+                setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    previous[0][1][previous[0][1].length-1]='✔'+previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,time)
+                    return previous
+                })
+            }
         })
     }
 

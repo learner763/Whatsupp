@@ -222,14 +222,23 @@ app.post('/save_msg',(req,res)=>
             {
             if((results.rows[0].chat==null && results.rows[1].chat==null) || results.rows[0].chat==null || from==to)
             {
-                pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}     ${time}`]])
+                pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}     ${time}`]],(err1,results1)=>
+                {
+                    if(results1.rowCount===1){res.json({success:true})}
+                    else if(err1){res.json({success:false})}
+                    else{res.json({success:false})}
+                })
             }
             else if(results.rows[1].chat==null)
             {
-                pool.query(`update public.chats set "${from}"= coalesce("${from}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[to,[`${from}: ${message}     ${time}`]])
+                pool.query(`update public.chats set "${from}"= coalesce("${from}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[to,[`${from}: ${message}     ${time}`]],(err2,results2)=>
+                {
+                    if(results2.rowCount===1){res.json({success:true})}
+                    else if(err2){res.json({success:false})}
+                    else{res.json({success:false})}
+                })
             }
             })
-    res.json({success:true});
 })
 
 app.post('/delete_msg',(req,res)=>
