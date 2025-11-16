@@ -801,14 +801,13 @@ function Home()
                         let present_date=new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).toLocaleDateString()
                         if(present_date!==String(new Date().toLocaleDateString()))
                         {
-                            if(present_date.slice(0,present_date.indexOf('/'))===String(new Date().getMonth()) && present_date.slice(present_date.lastIndexOf('/')+1,present_date.length)===String(new Date().getFullYear()))
+                            if(present_date.slice(0,present_date.indexOf('/'))===String(new Date().getMonth()+1) && present_date.slice(present_date.lastIndexOf('/')+1,present_date.length)===String(new Date().getFullYear()))
                             {
                                 let difference=new Date().getDate()-Number(present_date.slice(present_date.indexOf('/')+1,present_date.lastIndexOf('/')))
                                 if(difference===1){present_date='Yesterday'}
                                 else if(difference<7)
                                 {
-                                    let difference_update=new Date().getDay()-difference
-                                    present_date=days[difference_update>1?difference_update:difference_update*-1+new Date().getDay()]
+                                    present_date=days[new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getDay()]
                                 }
                                 else{
                                 present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
