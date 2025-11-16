@@ -77,6 +77,7 @@ function Home()
         {
             let deleted_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("text","==",message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)));
             let deleted=await getDocs(deleted_msgs)
+            console.log(deleted)
             deleted=deleted.docs.filter(x=>!x.data().delete)
             console.log(deleted)
             for(let i=0;i<deleted.docs.length;i++)
