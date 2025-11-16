@@ -1298,9 +1298,9 @@ function Home()
                         if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
                         if(document.getElementById('message').value==='')
                         {
-                            document.getElementById('Send_Button').style.backgroundColor='lime'
+                            document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
                         }
-                        else{document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'}
+                        else{document.getElementById('Send_Button').style.backgroundColor='lime'}
                         typing_status()
                     }
                     }></textarea>
