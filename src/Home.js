@@ -1296,11 +1296,11 @@ function Home()
                         e.target.style.height='auto';
                         e.target.style.height=e.target.scrollHeight+'px';
                         if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
-                        if(document.getElementById('message').value='')
+                        /*if(document.getElementById('message').value='')
                         {
                             document.getElementById('Send_Button').style.backgroundColor='lime'
                         }
-                        else{document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'}
+                        else{document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'}*/
                         typing_status()
                     }
                     }></textarea>
