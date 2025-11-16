@@ -80,9 +80,9 @@ function Home()
             deleted=deleted.docs.filter(x=>!x.data().delete)
             for(let i=0;i<deleted.length;i++)
             {
-                if(deleted[i].data().createdAt===message.slice(message.lastIndexOf(' ')+1,message.length))
+                if(deleted.docs[i].data().createdAt===message.slice(message.lastIndexOf(' ')+1,message.length))
                 {
-                    await updateDoc(deleted[i].ref,{delete:true})}
+                    await updateDoc(deleted.docs[i].ref,{delete:true})
                 }
             }
             let deleted_replied_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'✔')));
@@ -132,7 +132,7 @@ function Home()
         {
             if(edited_msgs.docs[i].data().createdAt===msg_before_edit.slice(msg_before_edit.lastIndexOf(' ')+1,msg_before_edit.length))
             {
-                await updateDoc(edited_msgs.docs[i].ref,{edit:true,text:message})}
+                await updateDoc(edited_msgs.docs[i].ref,{edit:true,text:message})
             }
         }
         let edit_replied=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("replied_to","==",msg_before_edit.replace(msg_before_edit.slice(0,msg_before_edit.indexOf(' ')),'✔')));
