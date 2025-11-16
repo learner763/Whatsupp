@@ -1286,8 +1286,8 @@ function Home()
             </div>
             <div className='msg_div' style={{display:disp}}>
                 <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',backgroundColor:'lightslategray',color:'white'}}>
-                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');document.getElementById('message').value=''}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
-                    <label style={{paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
+                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');document.getElementById('message').value=''}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
+                    <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
                     <textarea id="message" style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'50px',maxHeight:'96px'}} placeholder='Type...'
@@ -1296,6 +1296,11 @@ function Home()
                         e.target.style.height='auto';
                         e.target.style.height=e.target.scrollHeight+'px';
                         if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
+                        if(document.getElementById('message').value='')
+                        {
+                            document.getElementById('Send_Button').style.backgroundColor='lime'
+                        }
+                        else{document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'}
                         typing_status()
                     }
                     }></textarea>
