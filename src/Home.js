@@ -119,6 +119,7 @@ function Home()
             set_edit('flex');
             document.getElementById('message').value=message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)
             set_msg_value(message)
+            document.getElementById('Send_Button').style.backgroundColor='lime'
         }
     }
     
@@ -1314,7 +1315,8 @@ function Home()
                         {
                         if(edit_icon==='none'){Send(document.getElementById('message').value)};
                         if(edit_icon==='flex'){write_edit(document.getElementById('message').value)}
-                        document.getElementById('message').value=''}}} ><i className='fas fa-arrow-up'></i></button>
+                        document.getElementById('message').value=''
+                        document.getElementById('Send_Button').style.backgroundColor="#EEEEEE"}}} ><i className='fas fa-arrow-up'></i></button>
                 </div>
             </div>
             <div className='phone_icons' style={{display:'none'}}>
