@@ -125,16 +125,18 @@ function Home()
     async function write_edit(message)
     {
         set_edit('none')
-        let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4)));
+        let intermediate=msg_before_edit
+        set_msg_value('')
+        let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",intermediate.slice(intermediate.indexOf(' ')+1,intermediate.lastIndexOf(' ')-4)));
         let edited_msgs=await getDocs(edit_this_msg)
         for(let i=0;i<edited_msgs.docs.length;i++)
         {
-            if(edited_msgs.docs[i].data().createdAt.toDate().toISOString()===msg_before_edit.slice(msg_before_edit.lastIndexOf(' ')+1,msg_before_edit.length))
+            if(edited_msgs.docs[i].data().createdAt.toDate().toISOString()===intermediate.slice(intermediate.lastIndexOf(' ')+1,intermediate.length))
             {
                 await updateDoc(edited_msgs.docs[i].ref,{edit:true,text:message})
             }
         }
-        let edit_replied=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("replied_to","==",msg_before_edit.replace(msg_before_edit.slice(0,msg_before_edit.indexOf(' ')),'✔')));
+        let edit_replied=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("replied_to","==",intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'✔')));
         let edited_replied_msgs=await getDocs(edit_replied)
         if(edited_replied_msgs.docs.length>0)
         {
@@ -147,9 +149,8 @@ function Home()
         {
             method:'POST',
             headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({from:index,to:receiver,text:message,original_msg:msg_before_edit})
+            body:JSON.stringify({from:index,to:receiver,text:message,original_msg:intermediate})
         })
-        set_msg_value('')
     }
 
     function update_data()
