@@ -61,13 +61,13 @@ function Home()
     const [msg_attributes,set_msg_attributes]=useState([])
     let w=-1;
 
-    async function set_seen()
+    async function set_seen(user)
     {
-        let entries=query(collection(db,'messages'),where("to","==",index),where("from","==",receiver),where("seen","==",false));
-        const snapshot=await getDocs(entries);
-        for(let i=0;i<snapshot.docs.length;i++)
+        let entries=query(collection(db,'messages'),where("to","==",index),where("from","==",user),where("seen","==",false));
+        let unseen=await getDocs(entries);
+        for(let i=0;i<unseen.docs.length;i++)
         {
-            await updateDoc(snapshot.docs[i].ref,{seen:true,seenAt:serverTimestamp()})
+            await updateDoc(unseen.docs[i].ref,{seen:true,seenAt:serverTimestamp()})
         }
     } 
 
@@ -1211,7 +1211,7 @@ function Home()
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div onClick={()=>{set_seen();set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='#221130'?'solid white ':'solid darkgreen'}} >
+                                    <div onClick={()=>{set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='#221130'?'solid white ':'solid darkgreen'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
                                             <span style={{paddingLeft:'5px',paddingTop:'5px',color:bgr==='#221130'?'lime':'darkgreen'}}><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
                                             <span style={{color:bgr==='#221130'?'white':'darkgreen',paddingRight:'5px',fontSize:'12px',paddingTop:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
@@ -1303,7 +1303,7 @@ function Home()
                                         {
                                             update_receiver(indices[index])
                                             receiver_again.current=indices[index]
-                                            set_seen()
+                                            set_seen(indices[index])
                                         }
                                     } className='connect_buttons'><i className='fas fa-envelope'></i>Message</button>
                                     </div>
