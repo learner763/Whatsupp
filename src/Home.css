@@ -8,8 +8,8 @@ body{
     margin: 0;
 }
 @keyframes highlight{
-    0% { background-color: yellow; }
-    100% { background-color: lime; }
+    0% { align-self: center; }
+    100% { align-self: center; }
 }
 .top label
 {
