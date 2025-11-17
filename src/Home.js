@@ -65,10 +65,10 @@ function Home()
     {
         let entries=query(collection(db,'messages'),where("to","==",index),where("from","==",receiver),where("seen","==",false));
         const snapshot=await getDocs(entries);
-        snapshot.forEach(async (doc)=>
+        for(let i=0;i<snapshot.docs.length;i++)
         {
-            await updateDoc(doc.ref,{seen:true,seenAt:serverTimestamp()})
-        })
+            await updateDoc(snapshot.docs[i].ref,{seen:true,seenAt:serverTimestamp()})
+        }
     } 
 
     async function delete_msg(user,message)
