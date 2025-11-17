@@ -73,7 +73,7 @@ function Home()
             previous[previous.findIndex(x=>x[0]===user)][2]=0
             return previous
         })
-        set_unread(pre_unread=>pre_unread-1)
+        set_unread(pre_unread=>{if(pre_unread!==0){pre_unread-1}})
     } 
 
     async function delete_msg(user,message)
