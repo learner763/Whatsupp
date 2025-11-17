@@ -16,9 +16,7 @@ import {
     doc} from "firebase/firestore";
 import{
     onDisconnect,set,ref,onValue,
-    update,serverTimestamp as rtdb_time,
-    remove
-} from "firebase/database";
+    update,serverTimestamp as rtdb_time} from "firebase/database";
 function Home()
 {
     const [info, setinfo] = useState([]);
@@ -69,6 +67,13 @@ function Home()
         {
             await updateDoc(unseen.docs[i].ref,{seen:true,seenAt:serverTimestamp()})
         }
+        setmessages(prev=>
+        {
+            let previous=[...prev]
+            previous[previous.findIndex(x=>x[0]===user)][2]=0
+            return previous
+        })
+        set_unread(pre_unread=>pre_unread-1)
     } 
 
     async function delete_msg(user,message)
