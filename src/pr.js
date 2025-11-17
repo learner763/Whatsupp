@@ -1,3 +1,2 @@
-let r={e:[3,4]}
-r.e=r.e.filter(x=>x>3)
-console.log(r)
+let r=[4,5]
+console.log(r[r.findIndex(x=>x===4)])

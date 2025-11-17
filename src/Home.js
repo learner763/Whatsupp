@@ -154,6 +154,23 @@ function Home()
         })
     }
 
+    async function find_qouted_msg(message)
+    {
+        let qouted_msg=query(collection(db,'messages'),where("text","==",text.slice(text.indexOf(' ')+1,text.lastIndexOf(' ')-4)))
+        let qouted_doc=await getDocs(qouted_msg)
+        setmessages(prev=>
+        {
+            let previous=[...prev]
+            for (let i=0;i<previous[previous.findIndex(x=>x[0]===qouted_doc[0].to)][1].length;i++)
+            {
+                if(previous[previous.findIndex(x=>x[0]===qouted_doc[0].to)][1][i].endsWith(qouted_doc[0].replied_to))
+                {
+                    return i
+                }
+            }
+        })
+    }
+
     function update_data()
     {
         let ind=[]
@@ -1146,7 +1163,8 @@ function Home()
                                                     <option value='Reply'>💬 Reply</option>
                                                     <option value='seen'>{!msg_attributes[index]?.[ind]?.seen_info?'👁️ > ❌':msg_attributes[index]?.[ind]?.seen_info}</option>
                                                 </select>
-                                                <span style={{display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?"none":msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'lightslategray'}}>
+                                                <span onClick={()=> document.getElementsByClassName('chat_detail')[0].children[find_qouted_msg(text)].scrollIntoView({behaviour:'smooth'})}
+                                                    style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?"none":msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'lightslategray'}}>
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
@@ -1164,7 +1182,7 @@ function Home()
                                                     <option value='Select'>🧾 Select</option>
                                                     <option value='Reply'>💬 Reply</option>
                                                 </select>
-                                                <span style={{display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?'none':msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:bgr==='#221130'?'#221130':'lightslategray'}}>
+                                                <span style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?'none':msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:bgr==='#221130'?'#221130':'lightslategray'}}>
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
