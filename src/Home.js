@@ -448,7 +448,6 @@ function Home()
                                         return previous_attributes
                                     })
                                 }
-                                set_msg_transfer(prev=>prev+1)
                                 return previous;
                             }
                         }
@@ -479,7 +478,6 @@ function Home()
                                         return previous_attributes
                                     })
                                 }
-                                set_msg_transfer(prev=>prev+1)
                                 return previous;
                             } 
                             else if(to==index && previous[i][0]==from){
@@ -496,7 +494,6 @@ function Home()
                                     previous_attributes.unshift(spliced_element)
                                     return previous_attributes
                                 })
-                                set_msg_transfer(prev=>prev+1)
                                 return previous;
                             }
                         }
@@ -515,10 +512,10 @@ function Home()
                             previous_attributes.unshift([])
                             return previous_attributes
                         })
-                        set_msg_transfer(prev=>prev+1)
                         return previous;
                     }
                 });  
+                set_msg_transfer(prev=>prev+1)
             } 
             setmessages(prev=>
             {
@@ -778,6 +775,8 @@ function Home()
         let container=document.getElementsByClassName('chat_detail_section');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
         document.getElementById('message').value=''
+        document.getElementById('message').style.height='51px'
+        document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
         set_edit('none')
         set_msg_value('')
         set_reply('none')
