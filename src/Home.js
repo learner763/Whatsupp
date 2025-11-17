@@ -161,9 +161,9 @@ function Home()
         setmessages(prev=>
         {
             let previous=[...prev]
-            for (let i=0;i<previous[previous.findIndex(x=>x[0]===qouted_doc[0].to)][1].length;i++)
+            for (let i=0;i<previous[previous.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1].length;i++)
             {
-                if(previous[previous.findIndex(x=>x[0]===qouted_doc[0].to)][1][i].endsWith(qouted_doc[0].replied_to))
+                if(previous[previous.findIndex(x=>x[0]===outed_doc.docs[0].data().to)][1][i].endsWith(outed_doc.docs[0].data().replied_to))
                 {
                     return i
                 }
