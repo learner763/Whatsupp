@@ -1299,7 +1299,7 @@ function Home()
                     {
                         e.target.style.height='auto';
                         e.target.style.height=e.target.scrollHeight+'px';
-                        if(document.getElementById('message').value.startsWith(' ')){document.getElementById('message').value=document.getElementById('message').value.substring(1)}
+                        document.getElementById('message').value=document.getElementById('message').value.replace(/^\s+/, "");
                         if(document.getElementById('message').value==='')
                         {
                             document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
