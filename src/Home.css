@@ -1,12 +1,15 @@
 .home{
-display: flex;
-flex-direction: column;
-background-color: darkgreen;
-
+    display: flex;
+    flex-direction: column;
+    background-color: darkgreen;
 }
 body{
     font-family: sans-serif;
     margin: 0;
+}
+@keyframes highlight{
+    0% { background-color: lightgreen; }
+    100% { background-color: yellow; }
 }
 .top label
 {
