@@ -156,7 +156,7 @@ function Home()
 
     async function find_qouted_msg(message)
     {
-        let qouted_msg=query(collection(db,'messages'),where("text","==",text.slice(text.indexOf(' ')+1,text.lastIndexOf(' ')-4)))
+        let qouted_msg=query(collection(db,'messages'),where("text","==",message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)))
         let qouted_doc=await getDocs(qouted_msg)
         setmessages(prev=>
         {
