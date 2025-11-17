@@ -228,7 +228,6 @@ function Home()
                     feature_array[i]=[]
                 }
                 set_msg_attributes(feature_array.map(arr=>[...arr]))
-                console.log(frontend_messages)
                 setmessages(frontend_messages);
                 set_refresh(true)
             }
@@ -569,7 +568,7 @@ function Home()
                         } 
                         if(stop){break}
                     }
-                    previous[i][2]=count
+                    previous[j][2]=count
                     if(count>0){unread_chats+=1}
                 }
                 set_unread(unread_chats)
