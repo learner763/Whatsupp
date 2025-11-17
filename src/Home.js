@@ -166,9 +166,10 @@ function Home()
                 if(previous[previous.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1][i].endsWith(qouted_doc.docs[0].data().replied_to))
                 {
                     document.getElementsByClassName('chat_detail')[0].children[i].scrollIntoView({behavior:'smooth',block:'center'});
-                    return previous
+                    break
                 }
             }
+            return previous
         })
     }
 
