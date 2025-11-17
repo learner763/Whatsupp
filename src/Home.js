@@ -1329,7 +1329,7 @@ function Home()
                     <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
-                    <textarea id="message" style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'51px',maxHeight:'99px'}} placeholder='Type...'
+                    <textarea id="message" style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'50px',maxHeight:'96px'}} placeholder='Type...'
                     onChange={(e)=>
                     {
                         e.target.style.height='auto';
