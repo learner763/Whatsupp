@@ -167,7 +167,7 @@ function Home()
                 {
                     document.getElementsByClassName('chat_detail')[0].children[i].scrollIntoView({behavior:'smooth',block:'center'});
                     document.getElementsByClassName('chat_detail')[0].children[i].style.animation='none';
-                    document.getElementsByClassName('chat_detail')[0].children[i].OffsetHeight;
+                    void document.getElementsByClassName('chat_detail')[0].children[i].OffsetHeight;
                     document.getElementsByClassName('chat_detail')[0].children[i].style.animation='highlight 3s ease';
                     break
                 }
