@@ -165,7 +165,7 @@ function Home()
             {
                 if(previous[previous.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1][i].endsWith(qouted_doc.docs[0].data().replied_to))
                 {
-                    document.getElementsByClassName('chat_detail')[0].children[i].scrollIntoView({behavior:'smooth'});
+                    document.getElementsByClassName('chat_detail')[0].children[i].scrollIntoView({behavior:'smooth',block:'center'});
                     return previous
                 }
             }
@@ -1183,7 +1183,8 @@ function Home()
                                                     <option value='Select'>🧾 Select</option>
                                                     <option value='Reply'>💬 Reply</option>
                                                 </select>
-                                                <span style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?'none':msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:bgr==='#221130'?'#221130':'lightslategray'}}>
+                                                <span onClick={()=> find_qouted_msg(text)}
+                                                    style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?'none':msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:bgr==='#221130'?'#221130':'lightslategray'}}>
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
