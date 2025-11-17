@@ -158,17 +158,13 @@ function Home()
     {
         let qouted_msg=query(collection(db,'messages'),where("text","==",message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)))
         let qouted_doc=await getDocs(qouted_msg)
-        setmessages(prev=>
+        for(let i=0;i<messages[messages.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1].length;i++)
         {
-            let previous=[...prev]
-            for (let i=0;i<previous[previous.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1].length;i++)
+            if(messages[messages.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1][i].endsWith(qouted_doc.docs[0].data().replied_to))
             {
-                if(previous[previous.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1][i].endsWith(qouted_doc.docs[0].data().replied_to))
-                {
-                    return i
-                }
+                return i
             }
-        })
+        }
     }
 
     function update_data()
