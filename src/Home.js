@@ -221,7 +221,7 @@ function Home()
                 let feature_array=[]
                 for(let i=0;i<data.length;i+=2)
                 {
-                    frontend_messages.push([data[i],data[i+1]])
+                    frontend_messages.push([data[i],data[i+1],0])
                 }
                 for(let i=0;i<frontend_messages.length;i++)
                 {
@@ -542,7 +542,6 @@ function Home()
             setmessages(prev=>
             {
                 let previous=[...prev]
-                let unread_chats=0
                 for(let i=0;i<unseen_messages.length;i++)
                 {
                     let count=0
@@ -556,7 +555,7 @@ function Home()
                                 if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===unseen_messages[i].text && unseen_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                 {
                                     if(receiver_again.current!==unseen_messages[i].from)
-                                    {count+=1}
+                                    {count=1}
                                     else{
                                         let msgref=doc(db,'messages',unseen_messages[i].id)
                                         updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
@@ -566,10 +565,14 @@ function Home()
                                 }
                             }
                         } 
+                        if(count){previous[j][2]+=1}
                         if(stop){break}
                     }
-                    previous[j][2]=count
-                    if(count>0){unread_chats+=1}
+                }
+                let unread_chats=0
+                for(let i=0;i<previous.length;i++)
+                {
+                    if(previous[i][2]>0){unread_chats+=1}
                 }
                 set_unread(unread_chats)
                 return previous
