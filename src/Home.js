@@ -158,13 +158,18 @@ function Home()
     {
         let qouted_msg=query(collection(db,'messages'),where("text","==",message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)))
         let qouted_doc=await getDocs(qouted_msg)
-        for(let i=0;i<messages[messages.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1].length;i++)
+        setmessages(prev=>
         {
-            if(messages[messages.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1][i].endsWith(qouted_doc.docs[0].data().replied_to))
+            let previous=[...prev]
+            for (let i=0;i<previous[previous.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1].length;i++)
             {
-                return i
+                if(previous[previous.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1][i].endsWith(qouted_doc.docs[0].data().replied_to))
+                {
+                    document.getElementsByClassName('chat_detail')[0].children[i].scrollIntoView({behavior:'smooth'});
+                    return previous
+                }
             }
-        }
+        })
     }
 
     function update_data()
@@ -1159,7 +1164,7 @@ function Home()
                                                     <option value='Reply'>💬 Reply</option>
                                                     <option value='seen'>{!msg_attributes[index]?.[ind]?.seen_info?'👁️ > ❌':msg_attributes[index]?.[ind]?.seen_info}</option>
                                                 </select>
-                                                <span onClick={()=> document.getElementsByClassName('chat_detail')[0].children[find_qouted_msg(text)].scrollIntoView({behaviour:'smooth'})}
+                                                <span onClick={()=> find_qouted_msg(text)}
                                                     style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?"none":msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'lightslategray'}}>
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
