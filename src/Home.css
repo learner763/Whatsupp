@@ -104,11 +104,9 @@ body{
     word-wrap: break-word;
     word-break: break-word;
 }
-
-
 #youmayknow{
     font-size: 25px;
-    padding-top: 28px;
+    padding-top: 29px;
 }
 .profile_section,.settings_section{
     display: flex;
@@ -161,7 +159,7 @@ body{
     overflow-y: scroll;
     align-items: center;
     flex: .85;
-    padding-top: 28px;
+    padding-top: 29px;
 }
 
 .chat_detail_section label,.chats label{
@@ -226,7 +224,7 @@ body{
 }
 .chats{
     display: flex;
-    padding-top: 28px;
+    padding-top: 29px;
     flex-direction: column;
     overflow-y: scroll;
 }
@@ -252,7 +250,7 @@ body{
     color: white;
 }
 .chat_detail{
-    padding-top: 28px;
+    padding-top: 29px;
 }
 
 .phone_icons label{
