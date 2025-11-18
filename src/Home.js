@@ -182,10 +182,10 @@ function Home()
                         {
                             if(previous[j][1][k].endsWith(qouted_doc.docs[i].data().replied_to))
                             {
-                                document.getElementsByClassName('chat_detail')[0].children[i].scrollIntoView({behavior:'smooth',block:'center'});
-                                document.getElementsByClassName('chat_detail')[0].children[i].style.animation='none';
-                                void document.getElementsByClassName('chat_detail')[0].children[i].offsetHeight;
-                                document.getElementsByClassName('chat_detail')[0].children[i].style.animation='highlight 3s ease';
+                                document.getElementsByClassName('chat_detail')[0].children[k].scrollIntoView({behavior:'smooth',block:'center'});
+                                document.getElementsByClassName('chat_detail')[0].children[k].style.animation='none';
+                                void document.getElementsByClassName('chat_detail')[0].children[k].offsetHeight;
+                                document.getElementsByClassName('chat_detail')[0].children[k].style.animation='highlight 3s ease';
                                 stop=true
                                 break
                             }
