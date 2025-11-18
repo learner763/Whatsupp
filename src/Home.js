@@ -662,7 +662,7 @@ function Home()
                                         {
                                             let previous_attributes=[...pre_attributes]
                                             if(!previous_attributes[j][k]){previous_attributes[j][k]={}}
-                                            previous_attributes[j][k].reply_info=['flex',replied_messages[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(replied_messages[i].to)*2],replied_messages[i].replied_to.slice(replied_messages[i].replied_to.indexOf(' ')+1,replied_messages[i].replied_to.lastIndexOf(' ')-4)]
+                                            previous_attributes[j][k].reply_info=['flex',replied_messages[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(replied_messages[i].from)*2],replied_messages[i].replied_to.slice(replied_messages[i].replied_to.indexOf(' ')+1,replied_messages[i].replied_to.lastIndexOf(' ')-4)]
                                             return previous_attributes
                                         })
                                     }
