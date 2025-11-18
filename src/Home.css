@@ -27,7 +27,7 @@ body{
     width: 100%;
     position: fixed;
     top: 0;
-    background-color:  darkgreen;
+    background-color:darkgreen;
     flex-wrap: wrap;
 }
 #connect_people{
