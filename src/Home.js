@@ -896,12 +896,6 @@ function Home()
         })
     },[msg_transfer,refreshed])
 
-    useEffect(()=>
-    {
-        let container=document.getElementsByClassName('chat_detail_section');
-        if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
-    },[msg_transfer])
-
     useEffect(() => {
         window.addEventListener('resize',()=>
         {
