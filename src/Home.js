@@ -887,9 +887,8 @@ function Home()
                 if(msg_transfer>1)
                 {
                     if(receiver_again.current===previous[0][0])
-                    {document.getElementsByClassName('chat_detail')[0].scrollTo
-                        ({top:document.getElementsByClassName('chat_detail')[0].scrollHeight,
-                        behavior:'smooth'})
+                    {document.getElementsByClassName('chat_detail')[0].children[document.getElementsByClassName('chat_detail')[0].children.length-1].scrollIntoView
+                        ({behavior:'smooth'})
                     }
                     break
                 }
