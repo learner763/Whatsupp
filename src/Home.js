@@ -180,7 +180,7 @@ function Home()
                     {
                         for(let k=0;k<previous[j][1].length;k++)
                         {
-                            if(previous[j][1][k].endsWith(qouted_doc.docs[i].data().replied_to.slice(qouted_doc.docs[i].data().replied_to.indexOf(' ')+1,qouted_doc.docs[i].data().replied_to.lastIndexOf(' ')-4)))
+                            if(previous[j][1][k].endsWith(qouted_doc.docs[i].data().replied_to.slice(qouted_doc.docs[i].data().replied_to.indexOf(' ')+1,qouted_doc.docs[i].data().replied_to.length)))
                             {
                                 document.getElementsByClassName('chat_detail')[0].children[k].scrollIntoView({behavior:'smooth',block:'center'});
                                 document.getElementsByClassName('chat_detail')[0].children[k].style.animation='none';
