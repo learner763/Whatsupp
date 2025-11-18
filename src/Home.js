@@ -61,6 +61,7 @@ function Home()
 
     async function set_seen(user)
     {
+        if(previous.findIndex(x=>x[0]===user)===-1){return}
         let entries=query(collection(db,'messages'),where("to","==",index),where("from","==",user),where("seen","==",false));
         let unseen=await getDocs(entries);
         for(let i=0;i<unseen.docs.length;i++)
