@@ -1230,22 +1230,22 @@ function Home()
                         })}
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
-                        <label id="connect_msg" style={{border:bgr==='#221130'?'solid white':'solid darkgreen',color:bgr==='#221130'?'white':'darkgreen', display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fas fa-users"></i> Start connecting with people.</label>
+                        <label id="connect_msg" style={{border:bgr==='black'?'solid white':'solid darkgreen',color:bgr==='black'?'white':'darkgreen', display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fas fa-users"></i> Start connecting with people.</label>
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div onClick={()=>{set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='#221130'?'solid white ':'solid darkgreen'}} >
+                                    <div onClick={()=>{set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='black'?'solid white ':'solid darkgreen'}} >
                                         <div style={{height:'35px',fontWeight:'bold'}}>
-                                            <span style={{paddingLeft:'5px',paddingTop:'5px',color:bgr==='#221130'?'lime':'darkgreen'}}><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
-                                            <span style={{color:bgr==='#221130'?'white':'darkgreen',paddingRight:'5px',fontSize:'12px',paddingTop:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
+                                            <span style={{paddingLeft:'5px',paddingTop:'5px',color:bgr==='black'?'lime':'darkgreen'}}><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
+                                            <span style={{color:bgr==='black'?'white':'darkgreen',paddingRight:'5px',fontSize:'12px',paddingTop:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
                                                 {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()=== new Date().toLocaleDateString()?
                                                 new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
                                                 new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()}
                                             </span>
                                         </div>
                                         <div style={{height:'35px'}}>
-                                            <span style={{fontWeight:'normal',paddingLeft:'5px',color:bgr==='#221130'?'white':'darkgreen'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
-                                            <span style={{color:bgr==='#221130'?'lime':'darkgreen',paddingRight:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
+                                            <span style={{fontWeight:'normal',paddingLeft:'5px',color:bgr==='black'?'white':'darkgreen'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
+                                            <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
                                         </div>
                                     </div>
                                 );
@@ -1253,17 +1253,17 @@ function Home()
                         }
                     </div>
                     <div className='profile_section' style={{display:profile_section}} >
-                        <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='#221130'?'lime':'darkgreen'}} class='fas fa-user'></i>
-                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Username 🔑</label>
+                        <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
+                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Username 🔑</label>
                         <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} style={{alignSelf:'end'}}></input>
-                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Name 🏷️</label>
+                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Name 🏷️</label>
                         <input onChange={(e)=>
                             {
                                 if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
                                 setup_name(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
                             }} value={up_name} style={{alignSelf:'end'}}>
                         </input>
-                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>About 📝</label>
+                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>About 📝</label>
                         <input onChange={(e)=>
                             {
                             if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
@@ -1280,17 +1280,17 @@ function Home()
                         </button>
                     </div>
                     <div className='settings_section' style={{display:settings_section}} >
-                        <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='#221130'?'lime':'darkgreen'}} class='fas fa-user'></i>
-                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Change Password 🔒</label>
+                        <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
+                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Change Password 🔒</label>
                         <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
-                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Background Theme 🎨</label>
-                        <select value={bgr} style={{ alignSelf:'end',color:'#221130'}} onChange={(e)=>setbg(e.target.value)} >
+                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Background Theme 🎨</label>
+                        <select value={bgr} style={{ alignSelf:'end',color:'black'}} onChange={(e)=>setbg(e.target.value)} >
                             <option  value="white">Light</option>
                             <option  value="yellow">Yellow</option>
-                            <option  value="#221130">Dark</option>
+                            <option  value="black">Dark</option>
                         </select>
-                        <label style={{color:bgr==='#221130'?'lime':'darkgreen'}}>Read More 👉</label>
-                        <a href='https://github.com/learner763/Whatsupp/#readme' style={{color:bgr==='#221130'?'white':'darkgreen'}}>🔗Documentation</a>
+                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Read More 👉</label>
+                        <a href='https://github.com/learner763/Whatsupp/#readme' style={{color:bgr==='black'?'white':'darkgreen'}}>🔗Documentation</a>
                         <button onClick={()=>
                             {
                                 if(pass.length>0 && pass.length<13){update_settings(pass,bgr)}
@@ -1300,7 +1300,7 @@ function Home()
                     </div>
                 </div>
                 <div className='people_section' >
-                    <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='#221130'?'white':'darkgreen'}}><i style={{marginTop:'2.5px'}} id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
+                    <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'darkgreen'}}><i style={{marginTop:'2.5px'}} id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
                     <aa style={{display:'flex',justifyContent:'center',width:'100%'}}>
                         <input placeholder='Search ...' value={search_value} 
                         onChange={(e)=>
@@ -1312,7 +1312,7 @@ function Home()
                         style={{ display:'flex',width:'200px',justifySelf:'center',alignSelf:'center',borderRadius:'5px',border:'1px solid darkgreen',fontSize:'20px'}}></input>
                         <button onClick={()=>set_search_value('')} style={{cursor:'pointer', fontSize:'20px',borderRadius:'5px',border:'1px solid darkgreen',backgroundColor:'darkgreen',color:'white'}}>Clear</button>
                     </aa>
-                    <span style={{display:no_match_msg, color:bgr==='#221130'?'white':'darkgreen',justifyContent:'center',alignItems:'center',fontWeight:'bold'}}>No match for '{search_value}'</span>
+                    <span style={{display:no_match_msg, color:bgr==='black'?'white':'darkgreen',justifyContent:'center',alignItems:'center',fontWeight:'bold'}}>No match for '{search_value}'</span>
                     {info.map((a, index) => {
                         if (index < info.length / 2) {
                             w = w + 1; 
@@ -1340,7 +1340,7 @@ function Home()
             <div className='msg_div' style={{display:disp}}>
                 <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',backgroundColor:'darkgreen',color:'white'}}>
                     <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');document.getElementById('message').value='';document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
-                    <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
+                    <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)*2])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
                     <textarea id="message" style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'50px',maxHeight:'96px'}} placeholder='Type...'
