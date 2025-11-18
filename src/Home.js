@@ -61,7 +61,6 @@ function Home()
 
     async function set_seen(user)
     {
-        if(previous.findIndex(x=>x[0]===user)===-1){return}
         let entries=query(collection(db,'messages'),where("to","==",index),where("from","==",user),where("seen","==",false));
         let unseen=await getDocs(entries);
         for(let i=0;i<unseen.docs.length;i++)
@@ -71,14 +70,16 @@ function Home()
         setmessages(prev=>
         {
             let previous=[...prev]
+            if(previous.findIndex(x=>x[0]===user)===-1){return previous;}
             previous[previous.findIndex(x=>x[0]===user)][2]=0
+            set_unread(pre_unread=>
+            {
+                if(pre_unread!==0){return pre_unread-1}
+                else{return 0}
+            })
             return previous
         })
-        set_unread(pre_unread=>
-        {
-            if(pre_unread!==0){return pre_unread-1}
-            else{return 0}
-        })
+        
     } 
 
     async function delete_msg(user,message)
