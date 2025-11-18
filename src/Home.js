@@ -882,6 +882,14 @@ function Home()
                         }
                     }
                 }
+                if(msg_transfer>1)
+                {
+                    if(receiver_again.current===previous[0][0])
+                    {document.getElementsByClassName('chat_detail')[0].scrollIntoView
+                        ({top:scrollHeight,behavior:'smooth'})
+                    }
+                    break
+                }
             }
             return previous
         })
