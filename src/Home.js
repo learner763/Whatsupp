@@ -176,7 +176,7 @@ function Home()
                 if(qouted_doc.docs[i].data().createdAt.toDate().toISOString()!==message.slice(message.lastIndexOf(' ')+1,message.length)){continue}
                 for(let j=0;j<previous.length;j++)
                 {
-                    if(previous[j][0]===qouted_doc.docs[i].data().to)
+                    if(previous[j][0]===qouted_doc.docs[i].data().to || previous[j][0]===qouted_doc.docs[i].data().from)
                     {
                         for(let k=0;k<previous[j][1].length;k++)
                         {
@@ -662,7 +662,7 @@ function Home()
                                         {
                                             let previous_attributes=[...pre_attributes]
                                             if(!previous_attributes[j][k]){previous_attributes[j][k]={}}
-                                            previous_attributes[j][k].reply_info=['flex',replied_messages[i].replied_to.startsWith('✔')?'You':info[indices.indexOf(replied_messages[i].from)*2],replied_messages[i].replied_to.slice(replied_messages[i].replied_to.indexOf(' ')+1,replied_messages[i].replied_to.lastIndexOf(' ')-4)]
+                                            previous_attributes[j][k].reply_info=['flex',replied_messages[i].replied_to.startsWith('✔')?info[indices.indexOf(replied_messages[i].from)*2]:'You',replied_messages[i].replied_to.slice(replied_messages[i].replied_to.indexOf(' ')+1,replied_messages[i].replied_to.lastIndexOf(' ')-4)]
                                             return previous_attributes
                                         })
                                     }
