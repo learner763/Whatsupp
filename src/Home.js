@@ -170,16 +170,30 @@ function Home()
         setmessages(prev=>
         {
             let previous=[...prev]
-            for (let i=0;i<previous[previous.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1].length;i++)
-            {
-                if(previous[previous.findIndex(x=>x[0]===qouted_doc.docs[0].data().to)][1][i].endsWith(qouted_doc.docs[0].data().replied_to))
+            let stop=false
+            for(let i=0;i<qouted_doc.docs.length;i++)
+            {    
+                if(qouted_doc.docs[i].data().createdAt!==message.slice(message.lastIndexOf(' ')+1,message.length)){continue}
+                for(let j=0;j<previous.length;j++)
                 {
-                    document.getElementsByClassName('chat_detail')[0].children[i].scrollIntoView({behavior:'smooth',block:'center'});
-                    document.getElementsByClassName('chat_detail')[0].children[i].style.animation='none';
-                    void document.getElementsByClassName('chat_detail')[0].children[i].offsetHeight;
-                    document.getElementsByClassName('chat_detail')[0].children[i].style.animation='highlight 3s ease';
-                    break
+                    if(previous[j][0]===qouted_doc.docs[i].data().to)
+                    {
+                        for(let k=0;k<previous[j][1].length;k++)
+                        {
+                            if(previous[j][1][k].endsWith(qouted_doc.docs[i].data().replied_to))
+                            {
+                                document.getElementsByClassName('chat_detail')[0].children[i].scrollIntoView({behavior:'smooth',block:'center'});
+                                document.getElementsByClassName('chat_detail')[0].children[i].style.animation='none';
+                                void document.getElementsByClassName('chat_detail')[0].children[i].offsetHeight;
+                                document.getElementsByClassName('chat_detail')[0].children[i].style.animation='highlight 3s ease';
+                                stop=true
+                                break
+                            }
+                        }
+                    }
+                    if(stop){break}
                 }
+                if(stop){break}
             }
             return previous
         })
