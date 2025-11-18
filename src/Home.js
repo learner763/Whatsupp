@@ -886,7 +886,7 @@ function Home()
                 {
                     if(receiver_again.current===previous[0][0])
                     {document.getElementsByClassName('chat_detail')[0].scrollIntoView
-                        ({top:document.getElementsByClassName('chat_detail')[0].scrollHeight,
+                        ({bottom:document.getElementsByClassName('chat_detail')[0].scrollHeight,
                         behavior:'smooth'})
                     }
                     break
