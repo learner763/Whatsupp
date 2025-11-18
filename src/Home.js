@@ -173,7 +173,7 @@ function Home()
             let stop=false
             for(let i=0;i<qouted_doc.docs.length;i++)
             {    
-                if(qouted_doc.docs[i].data().createdAt!==message.slice(message.lastIndexOf(' ')+1,message.length)){continue}
+                if(qouted_doc.docs[i].data().createdAt.toDate().toISOString()!==message.slice(message.lastIndexOf(' ')+1,message.length)){continue}
                 for(let j=0;j<previous.length;j++)
                 {
                     if(previous[j][0]===qouted_doc.docs[i].data().to)
