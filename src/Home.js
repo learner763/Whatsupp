@@ -400,7 +400,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let unseen_messages=snapshot.docChanges().filter(change=>!change.doc.data().seen && change.doc.data().to===index && !change.doc.data().delete).map(function(change)
+            let unseen_messages=snapshot.docChanges().filter(change=>!change.doc.data().seen && change.doc.data().to===index ).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
@@ -416,45 +416,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            console.log(sent_messages)
-            console.log(read_messages)
-            console.log(unseen_messages)
-            console.log(deleted_messages)
-            console.log(edited_messages)
-            console.log(replied_messages)
 
-            setmessages(prev=>
-            {
-                let previous=[...prev]
-                for(let i=0;i<edited_messages.length;i++)
-                {
-                    let stop=false
-                    for(let j=0;j<previous.length;j++)
-                    {
-                        if(previous[j][0]===edited_messages[i].to || previous[j][0]===edited_messages[i].from )
-                        {
-                            for(let k=0;k<previous[j][1].length;k++)
-                            {
-                                if(edited_messages[i].createdAt!==null  && edited_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
-                                {
-                                    previous[j][1][k]=previous[j][1][k].replace(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4),edited_messages[i].text)
-                                    set_msg_attributes(pre_attributes=>
-                                    {
-                                        let previous_attributes=[...pre_attributes]
-                                        if(!previous_attributes[j][k]){previous_attributes[j][k]={}}
-                                        previous_attributes[j][k].edit_info='Edited'
-                                        return previous_attributes
-                                    })
-                                    stop=true
-                                    break
-                                }
-                            }
-                        }
-                        if(stop){break}
-                    }
-                }
-                return previous
-            })
             if(sent_messages.length>0)
             {
                 let to=sent_messages[0].to;
@@ -563,13 +525,40 @@ function Home()
                     }
                 });  
                 set_msg_transfer(prev=>prev+1)
-            } 
+            }
+            
             setmessages(prev=>
             {
                 let previous=[...prev]
+                for(let i=0;i<edited_messages.length;i++)
+                {
+                    let stop=false
+                    for(let j=0;j<previous.length;j++)
+                    {
+                        if(previous[j][0]===edited_messages[i].to || previous[j][0]===edited_messages[i].from )
+                        {
+                            for(let k=0;k<previous[j][1].length;k++)
+                            {
+                                if(edited_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                {
+                                    previous[j][1][k]=previous[j][1][k].replace(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4),edited_messages[i].text)
+                                    set_msg_attributes(pre_attributes=>
+                                    {
+                                        let previous_attributes=[...pre_attributes]
+                                        if(!previous_attributes[j][k]){previous_attributes[j][k]={}}
+                                        previous_attributes[j][k].edit_info='Edited'
+                                        return previous_attributes
+                                    })
+                                    stop=true
+                                    break
+                                }
+                            }
+                        }
+                        if(stop){break}
+                    }
+                }
                 for(let i=0;i<unseen_messages.length;i++)
                 {
-                    let count=0
                     let stop=false
                     for(let j=0;j<previous.length;j++)                    
                     {
@@ -577,10 +566,10 @@ function Home()
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
-                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===unseen_messages[i].text && unseen_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                if(unseen_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                 {
                                     if(receiver_again.current!==unseen_messages[i].from)
-                                    {count=1}
+                                    {previous[j][2]+=1}
                                     else{
                                         let msgref=doc(db,'messages',unseen_messages[i].id)
                                         updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
@@ -590,7 +579,6 @@ function Home()
                                 }
                             }
                         } 
-                        if(count){previous[j][2]+=1}
                         if(stop){break}
                     }
                 }
@@ -600,11 +588,6 @@ function Home()
                     if(previous[i][2]>0){unread_chats+=1}
                 }
                 set_unread(unread_chats)
-                return previous
-            })
-            setmessages(prev=>
-            {
-                let previous=[...prev]
                 for(let i=0;i<read_messages.length;i++)
                 {
                     let stop=false
@@ -614,7 +597,7 @@ function Home()
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
-                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(" ")-4)===read_messages[i].text && read_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(" ")+1,previous[j][1][k].length))
+                                if(read_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(" ")+1,previous[j][1][k].length))
                                 {
                                     previous[j][1][k]=`✔✔${previous[j][1][k]}`
                                     set_msg_attributes(pre_attributes=>
@@ -632,11 +615,6 @@ function Home()
                         if(stop){break}
                     }
                 }
-                return previous
-            })
-            setmessages(prev=>
-            {
-                let previous=[...prev]
                 for(let i=0;i<replied_messages.length;i++)
                 {
                     let stop=false
@@ -646,7 +624,7 @@ function Home()
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
-                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===replied_messages[i].text && replied_messages[i].createdAt!==null  && replied_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                if(replied_messages[i].createdAt!==null  && replied_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                 {
                                     if(previous[j][1][k].startsWith('✔'))
                                     {
@@ -677,7 +655,7 @@ function Home()
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
-                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===replied_messages[i].text && replied_messages[i].createdAt!==null  && replied_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                if(replied_messages[i].createdAt!==null  && replied_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                 {
                                     set_msg_attributes(pre_attributes=>
                                     {
@@ -694,11 +672,6 @@ function Home()
                         if(stop){break}
                     }
                 }
-                return previous
-            })
-            setmessages(prev=>
-            {
-                let previous=[...prev]
                 let remove_elements=0
                 for(let i=0;i<deleted_messages.length;i++)
                 {
@@ -709,7 +682,7 @@ function Home()
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
-                                if(previous[j][1][k].slice(previous[j][1][k].indexOf(' ')+1,previous[j][1][k].lastIndexOf(' ')-4)===deleted_messages[i].text && deleted_messages[i].createdAt!==null  && deleted_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                if(deleted_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                 {
                                     if(previous[j][1][k-1]!=undefined)
                                     {

@@ -255,7 +255,6 @@ body{
 .chat_detail{
     padding-top: 29px;
 }
-
 .phone_icons label{
     border-radius: 6px;
 }
@@ -294,8 +293,11 @@ select{
         bottom: 30px;
         background-color: lightgreen;
     }
-    .profile_section,.settings_section,.people_section,.chats,.chat_detail_section{
+    .profile_section,.settings_section,.people_section,.chats{
         padding-bottom: 30px;
+    }
+    .chat_detail_section{
+        margin-bottom: 30px;
     }
 }
 @media (max-width:500px) {
@@ -306,14 +308,16 @@ select{
     .msg_div textarea{
         width: 270px;
     }
+    .chat_detail_section{
+        margin-bottom: 40px;
+    }
     .settings_section a,.top label,#youmayknow,.profile_section label,.settings_section label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
         font-size: 20px;
     }
     .profile_section input,.settings_section input,.settings_section select{
         font-size: 20px;
-        align-self: center;
     }
-    .profile_section,.settings_section,.people_section,.chats,.chat_detail_section{
+    .profile_section,.settings_section,.people_section,.chats{
         padding-bottom: 40px;
     }
     .top{
