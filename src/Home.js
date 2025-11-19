@@ -1333,7 +1333,7 @@ function Home()
                     {
                         e.target.style.height='auto';
                         e.target.style.height=e.target.scrollHeight+'px';
-                        console.log(e.target.scrollHeight)
+                        console.log(e.target.style.height)
                         if(e.target.scrollHeight<60){document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='70px'}
                         else if(e.target.scrollHeight>60 && e.target.scrollHeight<85){document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='95px'}
                         else {document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='120px'}
