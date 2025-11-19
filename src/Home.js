@@ -1333,8 +1333,8 @@ function Home()
                     {
                         e.target.style.height='auto';
                         e.target.style.height=e.target.scrollHeight+'px';
-                        if(e.target.style.height<55){document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='70px'}
-                        else if(e.target.style.height>55 && e.target.style.height<80){document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='95px'}
+                        if(e.target.scrollHeight<55){document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='70px'}
+                        else if(e.target.scrollHeight>55 && e.target.scrollHeight<80){document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='95px'}
                         else {document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='120px'}
                         document.getElementById('message').value=document.getElementById('message').value.replace(/^\s+/, "");
                         if(document.getElementById('message').value==='')
