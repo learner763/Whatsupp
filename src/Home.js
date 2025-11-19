@@ -809,15 +809,6 @@ function Home()
 
     useEffect(()=>
     {
-        if(msg_before_edit.length>0 || reply_to.length>0)
-        {
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=
-            parseInt(getComputedStyle(document.getElementsByClassName('chat_detail_section')[0]).marginBottom)+50+'px'
-        }
-    },[msg_before_edit,reply_to])
-
-    useEffect(()=>
-    {
         if(!msg_transfer || !refreshed){return}
         setmessages(prev=>
         {
@@ -1334,9 +1325,18 @@ function Home()
                         e.target.style.height='auto';
                         e.target.style.height=e.target.scrollHeight+'px';
                         console.log(e.target.style.height)
-                        if(e.target.scrollHeight<60){document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='70px'}
-                        else if(e.target.scrollHeight>60 && e.target.scrollHeight<85){document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='95px'}
-                        else {document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='120px'}
+                        if(e.target.scrollHeight<60)
+                        {
+                            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=70+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
+                        }
+                        else if(e.target.scrollHeight>60 && e.target.scrollHeight<85)
+                        {
+                            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=95+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
+                        }
+                        else 
+                        {
+                            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=120+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
+                        }
                         document.getElementById('message').value=document.getElementById('message').value.replace(/^\s+/, "");
                         if(document.getElementById('message').value==='')
                         {
