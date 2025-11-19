@@ -255,6 +255,7 @@ body{
 .chat_detail{
     padding-top: 29px;
 }
+
 .phone_icons label{
     border-radius: 6px;
 }
@@ -307,9 +308,6 @@ select{
     }
     .msg_div textarea{
         width: 270px;
-    }
-    .chat_detail_section{
-        margin-bottom: 40px;
     }
     .settings_section a,.top label,#youmayknow,.profile_section label,.settings_section label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
         font-size: 20px;
