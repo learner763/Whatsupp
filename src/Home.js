@@ -127,8 +127,8 @@ function Home()
     {
         if(message.startsWith('✔✔'))
         {
-            set_edit('flex');
             document.getElementById('message').value=message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)
+            set_edit('flex');
             set_msg_value(message)
             document.getElementById('Send_Button').style.backgroundColor='lime'
         }
@@ -1315,7 +1315,7 @@ function Home()
             </div>
             <div className='msg_div' style={{display:disp}}>
                 <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',backgroundColor:'darkgreen',color:'white'}}>
-                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');document.getElementById('message').value='';document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='51px'}document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=parseInt(document.getElementsByClassName('chat_detail_section')[0].marginBottom)-50+'px';}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
+                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');document.getElementById('message').value='';document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='51px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
                     <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)*2])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
@@ -1324,19 +1324,6 @@ function Home()
                     {
                         e.target.style.height='auto';
                         e.target.style.height=e.target.scrollHeight+'px';
-                        console.log(e.target.style.height)
-                        if(e.target.scrollHeight<60)
-                        {
-                            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=70+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
-                        }
-                        else if(e.target.scrollHeight>60 && e.target.scrollHeight<85)
-                        {
-                            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=95+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
-                        }
-                        else 
-                        {
-                            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=120+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
-                        }
                         document.getElementById('message').value=document.getElementById('message').value.replace(/^\s+/, "");
                         if(document.getElementById('message').value==='')
                         {
