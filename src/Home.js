@@ -1353,6 +1353,7 @@ function Home()
                         if(edit_icon==='none'){Send(document.getElementById('message').value)};
                         if(edit_icon==='flex'){write_edit(document.getElementById('message').value)}
                         document.getElementById('message').value=''
+                        document.getElementById('message').style.height='51px'
                         document.getElementById('Send_Button').style.backgroundColor="#EEEEEE"}}} ><i className='fas fa-arrow-up'></i></button>
                 </div>
             </div>
