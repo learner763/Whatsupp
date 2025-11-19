@@ -297,9 +297,6 @@ select{
     .profile_section,.settings_section,.people_section,.chats{
         padding-bottom: 30px;
     }
-    .chat_detail_section{
-        margin-bottom: 30px;
-    }
 }
 @media (max-width:500px) {
     
