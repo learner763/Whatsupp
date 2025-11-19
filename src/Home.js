@@ -238,7 +238,7 @@ function Home()
         .then(response => response.json())
         .then(data => 
         {
-            if(data.error){alert(data.error);nav2('/',{state:{er:true}})}
+            if(data.error){alert(data.error);localStorage.setItem('root',true);nav2('/')}
             else{
                 signInAnonymously(auth_app)
                 .then(res=>set_verified(true))

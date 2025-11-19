@@ -8,5 +8,4 @@ const firebaseConfig = {
     measurementId: process.env.REACT_APP_measurementId,
     databaseURL: process.env.REACT_APP_databaseURL
   };
-
 export default firebaseConfig;

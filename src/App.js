@@ -5,8 +5,6 @@ import { BrowserRouter , useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 function App() {
-    const location = useLocation();
-    const {er}=location.state==undefined?false:location.state;
     const [email, setemail] = useState('');
     const [email1, setemail1] = useState('');
     const [password, setpassword] = useState('');
@@ -18,46 +16,9 @@ function App() {
     const [msg,cmsg]=useState("New to this app?");
     const [f,df]=useState("none");
     const nav=useNavigate();
-    const [proceed,set_proceed]=useState('none')
-    const [root,set_root]=useState(localStorage.getItem("root"))
     const [email_key,set_email_key]=useState(localStorage.getItem("email"))
-    const [profile_key,set_profile_key]=useState(localStorage.getItem("profile"))
     const [ready,set_is_ready]=useState(false)
     
-    useEffect(()=>
-    {
-        if(!er)
-        {
-            if(!root || root==="false")
-            {
-                if(email_key!==null && profile_key!==null )
-                {
-                    set_proceed('none')
-                    nav('/home');
-                }
-                else if(!profile_key && email_key!==null)
-                {
-                    set_proceed('none')
-                    nav('/profile');
-                }
-                else if(!email_key && profile_key!==null)
-                {
-                    set_proceed('flex')
-                    nav('/');
-                }
-                else if(!email_key && !profile_key)
-                {
-                    set_proceed('flex');
-                }
-            }
-            else if(root==='true')
-            {
-                set_proceed('flex')
-            }
-        }
-        else{set_proceed('flex')}
-    },[])
-  
     useEffect(()=>
     {
         fetch("/user_data",
@@ -186,7 +147,7 @@ function App() {
     }
 
   return (
-      <div className="App" style={{display:ready===true?proceed:'none'}}>
+      <div className="App" style={{display:ready===true?'flex':'none'}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
         <a href='https://github.com/learner763/Whatsupp/#readme' style={{margin:'10px',fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
         <label style={{padding:'5px', color:'white',backgroundColor:'darkgreen',borderRadius:'5px'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
