@@ -161,7 +161,6 @@ body{
     flex-direction: column;
     overflow-y: scroll;
     align-items: center;
-    flex: .85;
     padding-top: 29px;
 }
 
@@ -188,7 +187,6 @@ body{
     align-items: center;
     flex-direction: column;
     width: auto;
-    flex: .1;
     position: fixed;
     align-self: center;
     bottom: 0px;
@@ -255,7 +253,9 @@ body{
 .chat_detail{
     padding-top: 29px;
 }
-
+.chat_detail_section{
+    margin-bottom: 70px;
+}
 .phone_icons label{
     border-radius: 6px;
 }
