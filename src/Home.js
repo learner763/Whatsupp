@@ -1348,12 +1348,14 @@ function Home()
                     {
                         if(e.key==='Enter')
                         {
-                            e.preventDefault()
-                            console.log(message_text)
-                            set_text('')
-                            document.getElementById('message').style.height='51px'
-                            document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
-                            edit_icon==='flex'?write_edit(message_text):Send(message_text)
+                            if(message_text.length>0)
+                            {
+                                e.preventDefault()
+                                set_text('')
+                                document.getElementById('message').style.height='51px'
+                                document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
+                                edit_icon==='flex'?write_edit(message_text):Send(message_text)
+                            }
                         }
                     }}
                     onChange={(e)=>
