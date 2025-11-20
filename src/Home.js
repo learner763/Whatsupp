@@ -55,7 +55,9 @@ function Home()
     const [innerheight,set_innerheight]=useState(window.innerHeight)
     const [verified,set_verified]=useState(false)
     const on_reload=useRef(false)
+    const focus_input=useRef(false)
     const receiver_again=useRef('-');
+    const [message_text,set_text]=useState('')
     const [msg_attributes,set_msg_attributes]=useState([])
     let w=-1;
 
@@ -127,7 +129,7 @@ function Home()
     {
         if(message.startsWith('✔✔'))
         {
-            document.getElementById('message').value=message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4)
+            set_text(message.slice(message.indexOf(' ')+1,message.lastIndexOf(' ')-4))
             set_edit('flex');
             set_msg_value(message)
             document.getElementById('Send_Button').style.backgroundColor='lime'
@@ -216,9 +218,12 @@ function Home()
         {
             for(let i=data.length-1;i>=0;i--)
             {
-                ind.push(data[i].index)
-                accounts.push(data[i].name)
-                accounts.push(data[i].bio)
+                if(data[i].name!==null || data[i].bio!==null)
+                {
+                    ind.push(data[i].index)
+                    accounts.push(data[i].name)
+                    accounts.push(data[i].bio)
+                }
             }
             set_indices(ind)
             setinfo(accounts)
@@ -238,7 +243,7 @@ function Home()
         .then(response => response.json())
         .then(data => 
         {
-            if(data.error){alert(data.error);localStorage.setItem('root',true);nav2('/')}
+            if(data.error){}
             else{
                 signInAnonymously(auth_app)
                 .then(res=>set_verified(true))
@@ -797,15 +802,31 @@ function Home()
     useEffect(() => {
         let container=document.getElementsByClassName('chat_detail_section');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
-        document.getElementById('message').value=''
+        set_text('')
         document.getElementById('message').style.height='51px'
         document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
         document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='70px'
+        focus_input.current.focus()
         set_edit('none')
         set_msg_value('')
         set_reply('none')
         set_reply_to('')
     },[receiver])
+
+    useEffect(()=>
+    {
+        if(parseInt(getComputedStyle(document.getElementById('message')).height)<60)
+        {
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=70+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
+        }
+        else if(parseInt(getComputedStyle(document.getElementById('message')).height)>60 && parseInt(getComputedStyle(document.getElementById('message')).height)<85)
+        {
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=95+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
+        }
+        else{
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=120+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
+        }
+    },[reply_to,msg_before_edit,message_text])
 
     useEffect(()=>
     {
@@ -910,9 +931,12 @@ function Home()
             let ind=[]
             for(let i=data.length-1;i>=0;i--)
             {
-                accounts.push(data[i].name);
-                accounts.push(data[i].bio);
-                ind.push(data[i].index)
+                if(data[i].name!==null || data[i].bio!==null)
+                {
+                    accounts.push(data[i].name);
+                    accounts.push(data[i].bio);
+                    ind.push(data[i].index)
+                }
             }
             set_indices(ind);
             setinfo(accounts);
@@ -1220,7 +1244,7 @@ function Home()
                                             </span>
                                         </div>
                                         <div style={{height:'35px'}}>
-                                            <span style={{fontWeight:'normal',paddingLeft:'5px',color:bgr==='black'?'white':'darkgreen'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
+                                            <span style={{fontWeight:'normal',paddingLeft:'5px',color:status[indices.indexOf(value[0])]==="(Typing...)"?'rebeccapurple':bgr==='black'?'white':'darkgreen'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
                                             <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
                                         </div>
                                     </div>
@@ -1315,17 +1339,30 @@ function Home()
             </div>
             <div className='msg_div' style={{display:disp}}>
                 <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',backgroundColor:'darkgreen',color:'white'}}>
-                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');document.getElementById('message').value='';document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='51px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
+                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');set_text('');document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='51px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
                     <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)*2])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
-                    <textarea id="message" style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'51px',maxHeight:'97px'}} placeholder='Type...'
+                    <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'50px',maxHeight:'97px'}} placeholder='Type...'
+                    onKeyDown={(e)=>
+                    {
+                        if(e.key==='Enter')
+                        {
+                            e.preventDefault()
+                            console.log(message_text)
+                            set_text('')
+                            document.getElementById('message').style.height='51px'
+                            document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
+                            edit_icon==='flex'?write_edit(message_text):Send(message_text)
+                        }
+                    }}
                     onChange={(e)=>
                     {
                         e.target.style.height='auto';
                         e.target.style.height=e.target.scrollHeight+'px';
-                        document.getElementById('message').value=document.getElementById('message').value.replace(/^\s+/, "");
-                        if(document.getElementById('message').value==='')
+                        e.target.value=e.target.value.replace(/^\s+/, "");
+                        set_text(e.target.value)
+                        if(e.target.value==='')
                         {
                             document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
                         }
@@ -1335,11 +1372,11 @@ function Home()
                     }></textarea>
                     <button id="Send_Button" style={{color:'white',margin:'5px',borderRadius:'7px'}}
                         onClick={()=>{
-                        if(document.getElementById('message').value!='')
+                        if(message_text!='')
                         {
-                        if(edit_icon==='none'){Send(document.getElementById('message').value)};
-                        if(edit_icon==='flex'){write_edit(document.getElementById('message').value)}
-                        document.getElementById('message').value=''
+                        if(edit_icon==='none'){Send(message_text)};
+                        if(edit_icon==='flex'){write_edit(message_text)}
+                        set_text('')
                         document.getElementById('message').style.height='51px'
                         document.getElementById('Send_Button').style.backgroundColor="#EEEEEE"}}} ><i className='fas fa-arrow-up'></i></button>
                 </div>

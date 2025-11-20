@@ -39,16 +39,16 @@ pool.connect((err) => {
 app.post("/login", (req, res) => {
     const { email, password,bt } = req.body;
     if(bt=="Log In")    
-        pool.query("select * from public.users where email=$1 and password=$2", [email,password], (err, results) => {
-            return res.json(results.rows);
+        pool.query("select * from public.users where email=$1 and password=$2", [email,password], (err1, results1) => {
+            return res.json(results1.rows);
         });
     else if(bt=="Sign Up")
-        pool.query("select * from public.users where email=$1 union all select * from public.users where index=$1", [email], (err, results) => {
-            if (err) {}
-            if(results.rows.length>0){return res.json({success:false});}
+        pool.query("select * from public.users where email=$1 union all select * from public.users where index=$1", [email], (err2, results2) => {
+            if (err2) {}
+            if(results2.rows.length>0){return res.json({success:false});}
             else{     
-                pool.query("insert into public.users(email,password,index) values($1,$2,$3)", [email,password,email], (err, results) => {
-                    return res.json({success:true});    
+                pool.query("insert into public.users(email,password,index) values($1,$2,$3)", [email,password,email], (err3, results3) => {
+                    if(results3.rowCount===1){return res.json({success:true});}  
                 });
             }
         });
@@ -57,18 +57,21 @@ app.post("/login", (req, res) => {
 app.post("/personal", (req, res) => {
     const { username, name,bio } = req.body;
     pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,username], (err, results) => {   
-        return res.json({success:true}); 
+        if(results.rowCount===1){return res.json({success:true});} 
     });
 });
 
 app.post("/user_in_table", (req, res) => {
     const { username } = req.body;
-    pool.query("insert into public.chats(chat_with) values($1) on conflict(chat_with) do nothing;", [username], (err, results) => {
+    pool.query("insert into public.chats(chat_with) values($1) on conflict(chat_with) do nothing;", [username], (err1, results1) => 
+    {
+        if(results1.rowCount===1)
+        {
+            pool.query(`alter table public.chats add column if not exists "${username}" text[];`, (err2, results2) => {
+                if(results2.command==='ALTER'){return res.json({success:true});}
+            });
+        }
     });
-    pool.query(`alter table public.chats add column if not exists "${username}" text[];`, (err, results) => {
-        if (err) {console.log(err)}
-    });
-    res.json({success:true});
 })
 
 app.post('/user_data',(req,res)=>
@@ -87,7 +90,7 @@ app.post('/get_messages',(req,res)=>
     const {username}=req.body;
     pool.query(`select "${username}",chat_with from public.chats `, (err1, results) => {
         pool.query(`select * from public.chats where chat_with=$1`,[username], (err2, results2) => {
-            if( err1 || err2) {return res.json({error:`Couldn't push your data in database due to slow internet or you leaving application immediately after signing in!`})}
+            if( err1 || err2) {}
             let a_list=results.rows
             for(let i=0;i<a_list.length;i++)
             {
@@ -158,40 +161,46 @@ app.post("/save_info", (req, res) => {
         if(results.rows.length>0)
         {
             if(username==previous && profile==name)
-            {pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,previous], (err, results) => {});
-            return res.json({success:true});}
+            {pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,previous], (err1, results1) => {
+                if(results1.rowCount===1){return res.json({success:true});}
+            });}
             else if(username==previous && profile!=name)
             {
                 for(let i=0;i<results.rows.length;i++)
                 {
                     if(results.rows[i].name==name && results.rows[i].email!=username)
                     {
-                        pool.query("update public.users set bio=$1 where email=$2", [bio,previous], (err, results) => {});
-                        return res.json({success:false,msg:'Profile name is taken already.Choose Another!',person:false,user:true});
+                        pool.query("update public.users set bio=$1 where email=$2", [bio,previous], (err2, results2) => {
+                            if(results2.rowCount===1){return res.json({success:false,msg:'Profile name is taken already.Choose Another!',person:false,user:true});}
+                        });
                     }
                 }
-                pool.query("update public.users set bio=$1,name=$2 where email=$3", [bio,name,previous], (err, results) => {});
-                return res.json({success:true});
+                pool.query("update public.users set bio=$1,name=$2 where email=$3", [bio,name,previous], (err3, results3) => {
+                    if(results3.rowCount===1){return res.json({success:true});}
+                });
             }
             else if(profile==name && username!=previous)
+            {
+                for(let i=0;i<results.rows.length;i++)
                 {
-                    for(let i=0;i<results.rows.length;i++)
+                    if(results.rows[i].email==username && results.rows[i].profile!=name)
                     {
-                        if(results.rows[i].email==username && results.rows[i].profile!=name)
-                        {
-                            pool.query("update public.users set bio=$1 where name=$2", [bio,name], (err, results) => {});
-                            return res.json({success:false,msg:'Username name is taken already.Choose Another!',user:false,person:true});
-                        }
+                        pool.query("update public.users set bio=$1 where name=$2", [bio,name], (err4, results4) => {
+                            if(results4.rowCount===1){return res.json({success:false,msg:'Username name is taken already.Choose Another!',user:false,person:true});}
+                        });
                     }
-                pool.query("update public.users set bio=$1,email=$2 where name=$3", [bio,username,name], (err, results) => {});
-                return res.json({success:true});
+                }
+                pool.query("update public.users set bio=$1,email=$2 where name=$3", [bio,username,name], (err5, results5) => {
+                    if(results5.rowCount===1){return res.json({success:true});}
+                });
+                
             }
             else
             {return res.json({success:false,msg:'Username & Profile name is taken already.Choose Another!'});}
         }
         else{
-            pool.query("update public.users set name=$1,bio=$2,email=$3 where email=$4", [name,bio,username,previous], (err, results) => {   
-                return res.json({success:true})
+            pool.query("update public.users set name=$1,bio=$2,email=$3 where email=$4", [name,bio,username,previous], (err6, results6) => {   
+                if(results6.rowCount===1){return res.json({success:true})}
             });            
         }
     });
@@ -200,16 +209,14 @@ app.post("/save_info", (req, res) => {
 app.post("/save_settings", (req, res) => {
     const { username,password, bg } = req.body;
     pool.query("update public.users set password=$1,bg=$2 where email=$3", [password,bg,username], (err, results) => {   
-        if (err) {console.log(4)}
-        else res.json({success:true}); 
+        if(results.rowCount===1){return res.json({success:true});}
     });
 });
 
 app.post("/forpass", (req, res) => {
     const { email } = req.body;
     pool.query("select * from public.users where email=$1", [email], (err, results) => {
-        if (err) {}
-        else res.json(results.rows);
+        return res.json(results.rows);
     });
 });
 
@@ -219,7 +226,7 @@ app.post('/save_msg',(req,res)=>
     pool.query(`select "${from}" as chat from public.chats where chat_with=$1 
                 union all 
                 select "${to}" from public.chats where chat_with=$2`,[to,from],(err,results)=>
-            {
+        {
             if((results.rows[0].chat==null && results.rows[1].chat==null) || results.rows[0].chat==null || from==to)
             {
                 pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}     ${time}`]],(err1,results1)=>
@@ -238,22 +245,24 @@ app.post('/save_msg',(req,res)=>
                     else{res.json({success:false})}
                 })
             }
-            })
+        })
 })
 
 app.post('/delete_msg',(req,res)=>
 {
     const {from,to,message}=req.body;
     let updated_msg=message.replace(message.slice(0,message.indexOf(' ')),`${from}:`)
-    pool.query(`update public.chats set "${from}"=array_remove("${from}",$1) where chat_with=$2 and "${from}" is not null`,[updated_msg,to],(err,results)=>
+    pool.query(`update public.chats set "${from}"=array_remove("${from}",$1) where chat_with=$2 and "${from}" is not null`,[updated_msg,to],(err1,results1)=>
     {
-        if(results.rowCount===0)
+        if(results1.rowCount===0)
         {
-            pool.query(`update public.chats set "${to}"=array_remove("${to}",$1) where chat_with=$2 and "${to}" is not null`,[updated_msg,from],(err,results)=>
-            {})
+            pool.query(`update public.chats set "${to}"=array_remove("${to}",$1) where chat_with=$2 and "${to}" is not null`,[updated_msg,from],(err2,results2)=>
+            {
+                if(results2.rowCount===1){res.json({success:true})}
+            })
         }
+        else if(results1.rowCount===1){res.json({success:true})}
     })
-    res.json({success:true});
 })
 
 app.post('/edit_message',(req,res)=>
@@ -261,13 +270,16 @@ app.post('/edit_message',(req,res)=>
     const {from,to,text,original_msg}=req.body
     let updated_text=`${from}: ${text}     ${original_msg.slice(original_msg.lastIndexOf(' ')+1,original_msg.length)}`
     let original=`${from}: ${original_msg.slice(original_msg.indexOf(' ')+1,original_msg.length)}`
-    pool.query(`update public.chats set "${from}"=array_replace("${from}",$1,$2) where chat_with=$3 and "${from}" is not null`,[original,updated_text,to],(err,results)=>
+    pool.query(`update public.chats set "${from}"=array_replace("${from}",$1,$2) where chat_with=$3 and "${from}" is not null`,[original,updated_text,to],(err1,results1)=>
     {
-        if(results.rowCount===0)
+        if(results1.rowCount===0)
         {
-            pool.query(`update public.chats set "${to}"=array_replace("${to}",$1,$2) where chat_with=$3 and "${to}" is not null`,[original,updated_text,from],(err,results)=>
-            {})
+            pool.query(`update public.chats set "${to}"=array_replace("${to}",$1,$2) where chat_with=$3 and "${to}" is not null`,[original,updated_text,from],(err2,results2)=>
+            {
+                if(results2.rowCount===1){res.json({success:true})}
+            })
         }
+        else if(results1.rowCount===1){res.json({success:true})}
     })
 res.json({success:true})
 })

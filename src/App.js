@@ -67,21 +67,9 @@ function App() {
                 else if(response.data[0].email===email && response.data[0].password===password){
                     setdisp("none");
                     settext("");
-                    localStorage.setItem("email",email);
+                    localStorage.setItem("email",email);                    
                     localStorage.setItem('root',false)
-                    fetch("/user_in_table",{    
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({ username: response.data[0].index})
-                      })
-                    .then(response => response.json())
-                    .then(data => 
-                    {
-                        localStorage.setItem('root',false)
-                        nav('/home');
-                    })
+                    nav('/home');
                 }
             }
             else if(bt==="Sign Up")
