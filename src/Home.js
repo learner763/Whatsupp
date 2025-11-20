@@ -1374,6 +1374,7 @@ function Home()
                     }></textarea>
                     <button id="Send_Button" style={{color:'white',margin:'5px',borderRadius:'7px'}}
                         onClick={()=>{
+                        focus_input.current.focus()
                         if(message_text!='')
                         {
                         if(edit_icon==='none'){Send(message_text)};
