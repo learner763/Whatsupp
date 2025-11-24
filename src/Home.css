@@ -176,7 +176,11 @@ body{
     width: auto;
     text-align: center;
     position: fixed;
-    padding: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 0px 0px 10px 10px;
 }
 #refresh_people{
     cursor: pointer;

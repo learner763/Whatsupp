@@ -10,4 +10,7 @@
   appId: "1:845602969471:web:f6fa7e87657a68ff336c4a",
   measurementId: "G-FFDYCCC490"
 };*/
+
+let r=[4,5]
+r.count
 console.log(!null)

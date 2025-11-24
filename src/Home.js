@@ -74,11 +74,12 @@ function Home()
             let previous=[...prev]
             if(previous.findIndex(x=>x[0]===user)===-1){return previous;}
             previous[previous.findIndex(x=>x[0]===user)][2]=0
-            set_unread(pre_unread=>
+            let unread=0
+            for(let i=0;i<previous.length;i++)
             {
-                if(pre_unread!==0){return pre_unread-1}
-                else{return 0}
-            })
+                if(previous[i][2]>0){unread+=1}
+            }
+            set_unread(unread)
             return previous
         })
         
@@ -960,9 +961,12 @@ function Home()
                 let ind=[]
                 for(let i=data.length-1;i>=0;i--)
                 {
-                    accounts.push(data[i].name);
-                    accounts.push(data[i].bio);
-                    ind.push(data[i].index)
+                    if(data[i].name && data[i].bio)
+                    {
+                        accounts.push(data[i].name);
+                        accounts.push(data[i].bio);
+                        ind.push(data[i].index)
+                    }
                 }
                 set_indices(ind);
                 setinfo(accounts);
@@ -1199,7 +1203,7 @@ function Home()
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
-                                                <span style={{minWidth:'100px',maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
+                                                <span style={{minWidth:'100px',maxWidth:'270px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
                                                 <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             text.startsWith(' ')?
@@ -1218,7 +1222,7 @@ function Home()
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
-                                                <span style={{minWidth:'100px', maxWidth:'270px',overflowWrap:'break-word',wordBreak:'break-all',wordWrap:'break-word'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
+                                                <span style={{minWidth:'100px', maxWidth:'270px'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
                                                 <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'rebeccapurple',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
