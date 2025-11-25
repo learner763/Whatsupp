@@ -82,7 +82,6 @@ function Home()
             set_unread(unread)
             return previous
         })
-        
     } 
 
     async function delete_msg(user,message)
@@ -710,10 +709,7 @@ function Home()
                                     })
                                     if(previous[j][1].length===0)
                                     {   
-                                        console.log(previous)
                                         previous.splice(j,1)
-                                        console.log(previous)
-
                                         set_msg_attributes(pre_attributes=>
                                         {
                                             let previous_attributes=[...pre_attributes]
@@ -732,7 +728,6 @@ function Home()
                 if(!on_reload.current || remove_elements>0)
                 {
                     let friends=previous.map(x=>x[0])
-                    console.log(previous)
                     previous.sort((a,b)=>
                     {
                         return new Date(b[1][b[1].length-1].slice(b[1][b[1].length-1].lastIndexOf(' ')+1,b[1][b[1].length-1].length))-
@@ -784,11 +779,6 @@ function Home()
             document.getElementsByClassName('main_body_section')[0].style.display='flex';
         }
     },[innerwidth])
-        
-    useEffect(()=>
-    {
-        console.log(msg_attributes)
-    },[msg_attributes])
 
     useEffect(()=>
     {
@@ -927,7 +917,7 @@ function Home()
                     setbg(data[i].bg);
                 }
             }
-            if(flag[0]===false){set_flag1(false);set_loaded(false);alert(`No account exists with ${username}`);localStorage.setItem('root',true);nav2('/');}
+            if(flag[0]===false){set_flag1(false);set_loaded(false);alert(!username?'Please register/log in first!':`No account exists with ${username}`);localStorage.setItem('root',true);nav2('/');}
             else if(flag[1]==='null'){set_flag1(false);set_loaded(false);alert('Please submit profile details!');nav2('/profile')}
             let ind=[]
             for(let i=data.length-1;i>=0;i--)

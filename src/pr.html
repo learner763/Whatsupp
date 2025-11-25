@@ -1,20 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scroll Into View Example</title>
-    <style>
-      
-      
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom File Button</title>
+
+<style>
+  /* Hide native input */
+  #a {
+    display: none;
+  }
+
+  /* Custom button */
+  .file-btn {
+    background: blueviolet;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: sans-serif;
+  }
+
+  /* File name text */
+  #filename {
+    margin-left: 10px;
+    font-family: sans-serif;
+  }
+</style>
 </head>
 <body>
 
-    <input placeholder='type' id="a"  />
+<label for="a" class="file-btn">Upload Image</label> 
+<input id="a" type="file">
 
-  <script>
-    document.getElementById('a').focus();
-  </script>
+<span id="filename">No file chosen</span>
+
+<script>
+  document.getElementById('a').addEventListener('change', function() {
+    const fileLabel = document.getElementById('filename');
+    fileLabel.textContent = this.files.length > 0 ? this.files[0].name : "No file chosen";
+  });
+</script>
+
 </body>
 </html>
