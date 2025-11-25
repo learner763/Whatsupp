@@ -23,6 +23,7 @@ https://whatsupp-chat.vercel.app/
 - **Chat Section**
     - Chats are **not encrypted** for now.
     - Chats are **sorted** from latest to oldest ones.
+    - Message is delivered to other person if it is marked with ✔✔.
     - **Blue Tick and SeenAt** features are implemented to tell you that receiver has read the message along with the time when it was read.
     - You **get notified** on application when you receive unread messages.
     - You can **Edit,Delete and Reply** to certain messages.

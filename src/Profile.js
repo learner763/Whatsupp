@@ -19,7 +19,7 @@ function Profile() {
     function personal_info(name,bio)
     {
         let flag=false
-        if(name.length<13 && bio.length<21)
+        if(name.length<16 && bio.length<26)
         {
             fetch("/accounts",
             {
@@ -57,7 +57,7 @@ function Profile() {
             }})
         }
         else{
-            alert("Name and About should be 12 and 20 characters max respectively!");
+            alert("Name and About should be 15 and 25 characters max respectively!");
         }
     }
 
@@ -96,7 +96,7 @@ function Profile() {
           onChange={(e) => 
           {
             if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
-            setname(e.target.value.replace(/[^a-zA-Z0-9_]/g,''))} 
+            setname(e.target.value.replace(/[^a-zA-Z_]/g,''))} 
           }
         />
         <label >About Me 📝</label>

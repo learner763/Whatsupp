@@ -1254,7 +1254,7 @@ function Home()
                         <input onChange={(e)=>
                             {
                                 if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
-                                setup_name(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
+                                setup_name(e.target.value.replace(/[^a-zA-Z_]/g, ''))
                             }} value={up_name} style={{alignSelf:'end'}}>
                         </input>
                         <label style={{color:bgr==='black'?'lime':'darkgreen'}}>About 📝</label>
@@ -1266,9 +1266,9 @@ function Home()
                         </input>
                         <button onClick={()=>
                             {
-                                if(up_user.length>0 && up_user.length<13 && up_name.length>0 && up_name.length<13 && up_bio.length>0 && up_bio.length<21)
+                                if(up_user.length>0 && up_user.length<16 && up_name.length>0 && up_name.length<16 && up_bio.length>0 && up_bio.length<26)
                                     {update_info(up_user,up_name,up_bio)}
-                                else{alert("Username,Profile Name Range:1-12 and About Range:1-20")
+                                else{alert("Username,Profile Name Range:1-15 and About Range:1-25")
                                 }
                             }} id="save">Save
                         </button>
@@ -1287,8 +1287,8 @@ function Home()
                         <a href='https://github.com/learner763/Whatsupp/#readme' style={{color:bgr==='black'?'white':'darkgreen'}}>🔗Documentation</a>
                         <button onClick={()=>
                             {
-                                if(pass.length>0 && pass.length<13){update_settings(pass,bgr)}
-                                else{alert("Password Range:1-12")}
+                                if(pass.length>0 && pass.length<16){update_settings(pass,bgr)}
+                                else{alert("Password Range:1-15")}
                             }} id="save">Save
                         </button>
                     </div>
@@ -1300,7 +1300,7 @@ function Home()
                         onChange={(e)=>
                             {
                                 if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
-                                if(e.target.value.length>12){e.target.value=e.target.value.slice(0,12)}
+                                if(e.target.value.length>15){e.target.value=e.target.value.slice(0,15)}
                                 set_search_value(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
                             }}
                         style={{ display:'flex',width:'200px',justifySelf:'center',alignSelf:'center',borderRadius:'5px',border:'1px solid darkgreen',fontSize:'20px'}}></input>

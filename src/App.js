@@ -48,7 +48,7 @@ function App() {
     
     async function post(email, password,bt) 
     {
-        if(email.length<13 && password.length<13)
+        if(email.length<16 && password.length<16)
         {
             try{
             const response = await axios.post('/login', {
@@ -103,7 +103,7 @@ function App() {
           }
         }
         else{
-          alert("Username and Password should be 12 characters max!");
+          alert("Username and Password should be 15 characters max!");
         }
     }
       
@@ -157,7 +157,7 @@ function App() {
         <input placeholder='Enter Account Username:' style={{display:f}} type='text' value={email1} 
         onChange={(e) => 
         {
-          if(e.target.value.length>12){e.target.value=e.target.value.slice(0,12)}
+          if(e.target.value.length>15){e.target.value=e.target.value.slice(0,15)}
           setemail1(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
         }}></input>
         <button style={{display:f}} onClick={()=>forget(email1)}>Find My Password</button>
