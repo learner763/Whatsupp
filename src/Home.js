@@ -255,7 +255,7 @@ function Home()
                     frontend_messages.push([data[i],data[i+1],0])
                 }
                 for(let i=0;i<frontend_messages.length;i++)
-                {
+                { 
                     feature_array[i]=[]
                 }
                 set_msg_attributes(feature_array.map(arr=>[...arr]))
@@ -422,7 +422,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-
+            console.log(sent_messages)
             if(sent_messages.length>0)
             {
                 let to=sent_messages[0].to;
@@ -592,6 +592,7 @@ function Home()
                 let unread_chats=0
                 for(let i=0;i<previous.length;i++)
                 {
+                    previous[i][2]=previous[i][2]===undefined??0
                     if(previous[i][2]>0){unread_chats+=1}
                 }
                 set_unread(unread_chats)
