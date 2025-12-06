@@ -60,7 +60,7 @@ function Home()
     const [message_text,set_text]=useState('')
     const [msg_attributes,set_msg_attributes]=useState([])
     const set_time_stamp=useRef(null)
-    const sent_once=useRef(null)
+    const sent_once=useRef([])
     let w=-1;
 
     async function set_seen(user)
