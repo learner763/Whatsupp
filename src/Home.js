@@ -59,6 +59,7 @@ function Home()
     const receiver_again=useRef('-');
     const [message_text,set_text]=useState('')
     const [msg_attributes,set_msg_attributes]=useState([])
+    const time_stamp=useRef('')
     let w=-1;
 
     async function set_seen(user)
@@ -427,7 +428,8 @@ function Home()
                 let to=sent_messages[0].to;
                 let from=sent_messages[0].from;
                 let message_text=sent_messages[0].text;
-                let time=sent_messages[0].createdAt===null?new Date().toISOString():sent_messages[0].createdAt.toDate().toISOString();                    
+                time_stamp.current=new Date().toISOString()
+                let time=sent_messages[0].createdAt===null?time_stamp.current:sent_messages[0].createdAt.toDate().toISOString();                    
                 setmessages(prev=>
                 {
                     let previous=[...prev]
@@ -1065,7 +1067,7 @@ function Home()
                                     setmessages(prev=>
                                     {
                                         let previous=[...prev]
-                                        previous[0][1][previous[0][1].length-1]='✔'+previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,time)
+                                        previous[previous.findIndex(x=>x[0]===receiver)][1][previous[previous.findIndex(x=>x[0]===receiver)][1].findIndex(x=>x===`✔ ${message}     ${time_stamp.current}` )]='✔'+previous[previous.findIndex(x=>x[0]===receiver)][1][previous[previous.findIndex(x=>x[0]===receiver)][1].findIndex(x=>x===`✔ ${message}     ${time_stamp.current}` )]
                                         return previous
                                     })
                                 })
