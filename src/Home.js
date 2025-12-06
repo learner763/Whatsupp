@@ -1068,9 +1068,9 @@ function Home()
                             body: JSON.stringify({ from: index, to: receiver, message: message,time:data.createdAt.toDate().toISOString() }),
                         })
                         .then(response => response.json())
-                        .then( async data=>
+                        .then( async data_neon=>
                         {   
-                            if(data.success)
+                            if(data_neon.success)
                             {
                                 await updateDoc(inserted_msg,{neondb:true})
                                 .then(()=>
