@@ -423,6 +423,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
+            console.log(sent_messages)
             console.log(read_messages)
             console.log(deleted_messages)
             console.log(replied_messages)
@@ -431,6 +432,7 @@ function Home()
 
             if(sent_messages.length>0 && !sent_once.includes(sent_messages[0].id))
             {
+                console.log(sent_once)
                 sent_once.push(sent_messages[0].id)
                 console.log(sent_once)
                 let to=sent_messages[0].to;
@@ -614,12 +616,9 @@ function Home()
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
-                                console.log(previous[j][1][k])
-                                console.log(read_messages[i].createdAt.toDate().toISOString())
                                 if(read_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(" ")+1,previous[j][1][k].length))
                                 {
                                     previous[j][1][k]=`✔✔${previous[j][1][k]}`
-                                    console.log(previous[j][1][k])
                                     set_msg_attributes(pre_attributes=>
                                     {
                                         let previous_attributes=[...pre_attributes]
@@ -1080,7 +1079,6 @@ function Home()
                                     setmessages(prev=>
                                     {
                                         let previous=[...prev]
-                                        console.log(data.text)
                                         previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${set_time_stamp.current}` )]=`✔✔ ${data.text}     ${data.createdAt.toDate().toISOString()}`
                                         return previous
                                     })
