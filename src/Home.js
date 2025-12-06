@@ -1166,10 +1166,10 @@ function Home()
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
                 <div className='desktop_icons'>
-                    <label><i class='fas fa-comment-dots'></i>Read Chats<sup>{unread===0?'':unread}</sup></label>
+                    <label style={{marginTop:'30px'}}><i class='fas fa-comment-dots'></i>Read Chats<sup>{unread===0?'':unread}</sup></label>
                     <label><i class='fas fa-user'></i>Update Profile</label>
                     <label><i class='fas fa-cog'></i>Alter Settings</label>
-                    <label onClick=
+                    <label style={{marginBottom:'30px'}} onClick=
                     {()=>{localStorage.setItem('root',true);nav2('/');}} 
                     ><i class='fas fa-user-plus'></i>Switch Account</label>
                 </div>
