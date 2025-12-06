@@ -580,6 +580,7 @@ function Home()
                                     if(receiver_again.current!==unseen_messages[i].from)
                                     {previous[j][2]+=1}
                                     else{
+
                                         let msgref=doc(db,'messages',unseen_messages[i].id)
                                         updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
                                     }
@@ -610,6 +611,7 @@ function Home()
                                 if(read_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(" ")+1,previous[j][1][k].length))
                                 {
                                     previous[j][1][k]=`✔✔${previous[j][1][k]}`
+                                    console.log(previous[j][1][k])
                                     set_msg_attributes(pre_attributes=>
                                     {
                                         let previous_attributes=[...pre_attributes]
