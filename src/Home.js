@@ -399,7 +399,7 @@ function Home()
         let action_query=query(collection(db,'messages'),or(where('from','==',index),where('to','==',index)));
         let action=onSnapshot(action_query,(snapshot)=>
         {
-            sent_once.current=snapshot.docs.map(doc => doc.id)
+            if(!on_reload.current)sent_once.current=snapshot.docs.map(doc => doc.id)
             let sent_messages=snapshot.docChanges().filter(change=>(change.doc.data().from===index? change.type==='added':change.type==='modified' && change.doc.data().neondb) && on_reload.current).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
