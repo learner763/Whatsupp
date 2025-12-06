@@ -397,7 +397,7 @@ function Home()
         let action_query=query(collection(db,'messages'),or(where('from','==',index),where('to','==',index)));
         let action=onSnapshot(action_query,(snapshot)=>
         {
-            let sent_messages=snapshot.docChanges().filter(change=>change.type==='added' && !change.doc.data().delete && on_reload.current).map(function(change)
+            let sent_messages=snapshot.docChanges().filter(change=>(change.doc.data().from===index? change.type==='added':change.type==='modified' && change.doc.data().neondb) && on_reload.current).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
@@ -1046,37 +1046,35 @@ function Home()
                     if(ids.includes(document.id)===false)
                     {
                         ids.push(document.id)
-                        insert_msg(index,receiver,message,data.createdAt.toDate().toISOString());
-                        return;
+                        fetch('/save_msg',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ from: index, to: receiver, message: message,time:data.createdAt.toDate().toISOString() }),
+                        })
+                        .then(response => response.json())
+                        .then( async data=>
+                        {   
+                            if(data.success)
+                            {
+                                await updateDoc(inserted_msg,{neondb:true})
+                                .then(()=>
+                                {
+                                    setmessages(prev=>
+                                    {
+                                        let previous=[...prev]
+                                        previous[0][1][previous[0][1].length-1]='✔'+previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,time)
+                                        return previous
+                                    })
+                                })
+                            }
+                        })
                     }
                 }
             }
         })    
-    }
-
-    function insert_msg(from,to,msg,time)
-    {
-        fetch('/save_msg',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ from: from, to: to, message: msg,time:time }),
-        })
-        .then(response => response.json())
-        .then(data=>
-        {   
-            if(data.success)
-            {
-                setmessages(prev=>
-                {
-                    let previous=[...prev]
-                    previous[0][1][previous[0][1].length-1]='✔'+previous[0][1][previous[0][1].length-1].replace(`${previous[0][1][previous[0][1].length-1].slice(previous[0][1][previous[0][1].length-1].lastIndexOf(' ')+1,previous[0][1][previous[0][1].length-1].length)}`,time)
-                    return previous
-                })
-            }
-        })
     }
 
     useEffect(() => {
