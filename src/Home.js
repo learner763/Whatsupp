@@ -60,6 +60,7 @@ function Home()
     const [message_text,set_text]=useState('')
     const [msg_attributes,set_msg_attributes]=useState([])
     const set_time_stamp=useRef(null)
+    const sent_once=useRef(null)
     let w=-1;
 
     async function set_seen(user)
@@ -395,31 +396,31 @@ function Home()
     useEffect(()=>
     {
         if( !index || indices.includes(index)===false || !refreshed || !verified ){return;}
-        let sent_once=[]
         let action_query=query(collection(db,'messages'),or(where('from','==',index),where('to','==',index)));
         let action=onSnapshot(action_query,(snapshot)=>
         {
+            sent_once.current.push(...snapshot.docChanges().map(doc => doc.id))
             let sent_messages=snapshot.docChanges().filter(change=>(change.doc.data().from===index? change.type==='added':change.type==='modified' && change.doc.data().neondb) && on_reload.current).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let edited_messages=snapshot.docChanges().filter(change=>change.doc.data().edit && !change.doc.data().delete).map(function(change)
+            let edited_messages=snapshot.docChanges().filter(change=>change.doc.data().edit && !change.doc.data().delete ).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let unseen_messages=snapshot.docChanges().filter(change=>!change.doc.data().seen && change.doc.data().to===index ).map(function(change)
+            let unseen_messages=snapshot.docChanges().filter(change=>!change.doc.data().seen && change.doc.data().to===index && change.doc.data().neondb).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let read_messages=snapshot.docChanges().filter(change=>change.doc.data().seen && change.doc.data().from===index && !change.doc.data().delete).map(function(change)
+            let read_messages=snapshot.docChanges().filter(change=>change.doc.data().neondb && change.doc.data().seen && change.doc.data().from===index && !change.doc.data().delete).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let replied_messages=snapshot.docChanges().filter(change=>change.doc.data().reply && !change.doc.data().delete).map(function(change)
+            let replied_messages=snapshot.docChanges().filter(change=>  change.doc.data().reply && !change.doc.data().delete).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let deleted_messages=snapshot.docChanges().filter(change=>change.doc.data().delete).map(function(change)
+            let deleted_messages=snapshot.docChanges().filter(change=> change.doc.data().delete).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
@@ -430,10 +431,10 @@ function Home()
             console.log(edited_messages)
             console.log(unseen_messages)
 
-            if(sent_messages.length>0 && !sent_once.includes(sent_messages[0].id))
+            if(sent_messages.length>0 && !sent_once.current.includes(sent_messages[0].id))
             {
                 console.log(sent_once)
-                sent_once.push(sent_messages[0].id)
+                sent_once.current.push(sent_messages[0].id)
                 console.log(sent_once)
                 let to=sent_messages[0].to;
                 let from=sent_messages[0].from;
