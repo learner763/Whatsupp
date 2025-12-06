@@ -1081,7 +1081,7 @@ function Home()
                                     {
                                         let previous=[...prev]
                                         console.log(data.text)
-                                        previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${set_time_stamp.current}` )]='✔✔'+data.text+"     "+data.createdAt.toDate().toISOString()
+                                        previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${set_time_stamp.current}` )]=`✔✔ ${data.text}     ${data.createdAt.toDate().toISOString()}`
                                         return previous
                                     })
                                 })
