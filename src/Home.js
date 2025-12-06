@@ -617,6 +617,8 @@ function Home()
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
+                                console.log(read_messages[i])
+                                console.log(previous[j][1][k])
                                 if(read_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(" ")+1,previous[j][1][k].length))
                                 {
                                     previous[j][1][k]=`✔✔${previous[j][1][k]}`
