@@ -1078,9 +1078,8 @@ function Home()
                                     setmessages(prev=>
                                     {
                                         let previous=[...prev]
-                                        console.log(receiver)
+                                        console.log(previous[previous.findIndex(x=>x[0]===receiver)][1])
                                         previous[previous.findIndex(x=>x[0]===receiver)][1][previous[previous.findIndex(x=>x[0]===receiver)][1].findIndex(x=>x===`✔ ${message}     ${data.createdAt.toDate().toISOString()}` )]='✔'+previous[previous.findIndex(x=>x[0]===receiver)][1][previous[previous.findIndex(x=>x[0]===receiver)][1].findIndex(x=>x===`✔ ${message}     ${data.createdAt.toDate().toISOString()}` )]
-                                        console.log(previous[previous.findIndex(x=>x[0]===receiver)][1][previous[previous.findIndex(x=>x[0]===receiver)][1].findIndex(x=>x===`✔ ${message}     ${data.createdAt.toDate().toISOString()}` )])
                                         return previous
                                     })
                                 })
