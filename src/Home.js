@@ -1076,17 +1076,14 @@ function Home()
                         {   
                             if(data_neon.success)
                             {
-                                await updateDoc(inserted_msg,{neondb:true})
-                                .then(()=>
+                                setmessages(prev=>
                                 {
-                                    setmessages(prev=>
-                                    {
-                                        let previous=[...prev]
-                                        console.log(previous)
-                                        previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${set_time_stamp.current}` )]=`✔✔ ${data.text}     ${data.createdAt.toDate().toISOString()}`
-                                        return previous
-                                    })
+                                    let previous=[...prev]
+                                    console.log(previous)
+                                    previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${set_time_stamp.current}` )]=`✔✔ ${data.text}     ${data.createdAt.toDate().toISOString()}`
+                                    return previous
                                 })
+                                await updateDoc(inserted_msg,{neondb:true})
                             }
                         })
                     }
