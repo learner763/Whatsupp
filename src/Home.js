@@ -423,6 +423,12 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
+            console.log(read_messages)
+            console.log(deleted_messages)
+            console.log(replied_messages)
+            console.log(edited_messages)
+            console.log(unseen_messages)
+
             if(sent_messages.length>0 && !sent_once.includes(sent_messages[0].id))
             {
                 sent_once.push(sent_messages[0].id)
