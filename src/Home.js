@@ -395,6 +395,7 @@ function Home()
     useEffect(()=>
     {
         if( !index || indices.includes(index)===false || !refreshed || !verified ){return;}
+        let sent_once=[]
         let action_query=query(collection(db,'messages'),or(where('from','==',index),where('to','==',index)));
         let action=onSnapshot(action_query,(snapshot)=>
         {
@@ -423,8 +424,9 @@ function Home()
                 return {id:change.doc.id,...change.doc.data()}
             })
             console.log(sent_messages)
-            if(sent_messages.length>0)
+            if(sent_messages.length>0 && !sent_once.includes(sent_messages.id))
             {
+                sent_once.push(sent_messages[0].id)
                 let to=sent_messages[0].to;
                 let from=sent_messages[0].from;
                 let message_text=sent_messages[0].text;
