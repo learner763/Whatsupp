@@ -423,10 +423,10 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            console.log(sent_messages)
             if(sent_messages.length>0 && !sent_once.includes(sent_messages.id))
             {
                 sent_once.push(sent_messages[0].id)
+                console.log(sent_once)
                 let to=sent_messages[0].to;
                 let from=sent_messages[0].from;
                 let message_text=sent_messages[0].text;
