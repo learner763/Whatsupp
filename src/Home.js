@@ -59,6 +59,7 @@ function Home()
     const receiver_again=useRef('-');
     const [message_text,set_text]=useState('')
     const [msg_attributes,set_msg_attributes]=useState([])
+    const set_time_stamp=useRef(null)
     let w=-1;
 
     async function set_seen(user)
@@ -435,7 +436,8 @@ function Home()
                 let to=sent_messages[0].to;
                 let from=sent_messages[0].from;
                 let message_text=sent_messages[0].text;
-                let time=sent_messages[0].createdAt===null?new Date().toISOString():sent_messages[0].createdAt.toDate().toISOString();                    
+                set_time_stamp.current=new Date().toISOString()
+                let time=sent_messages[0].createdAt===null?set_time_stamp.current:sent_messages[0].createdAt.toDate().toISOString();                    
                 setmessages(prev=>
                 {
                     let previous=[...prev]
@@ -1079,7 +1081,7 @@ function Home()
                                     {
                                         let previous=[...prev]
                                         console.log(previous[previous.findIndex(x=>x[0]===receiver)][1])
-                                        previous[previous.findIndex(x=>x[0]===receiver)][1][previous[previous.findIndex(x=>x[0]===receiver)][1].findIndex(x=>x===`✔ ${message}     ${data.createdAt.toDate().toISOString()}` )]='✔'+previous[previous.findIndex(x=>x[0]===receiver)][1][previous[previous.findIndex(x=>x[0]===receiver)][1].findIndex(x=>x===`✔ ${message}     ${data.createdAt.toDate().toISOString()}` )]
+                                        previous[previous.findIndex(x=>x[0]===receiver)][1][previous[previous.findIndex(x=>x[0]===receiver)][1].findIndex(x=>x===`✔ ${message}     ${set_time_stamp.current}` )]='✔'+previous[previous.findIndex(x=>x[0]===receiver)][1][previous[previous.findIndex(x=>x[0]===receiver)][1].findIndex(x=>x===`✔ ${message}     ${data.createdAt.toDate().toISOString()}` )]
                                         return previous
                                     })
                                 })
