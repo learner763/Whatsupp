@@ -423,7 +423,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            if(sent_messages.length>0 && !sent_once.includes(sent_messages.id))
+            if(sent_messages.length>0 && !sent_once.includes(sent_messages[0].id))
             {
                 sent_once.push(sent_messages[0].id)
                 console.log(sent_once)
@@ -594,7 +594,7 @@ function Home()
                 let unread_chats=0
                 for(let i=0;i<previous.length;i++)
                 {
-                    previous[i][2]=previous[i][2]===undefined??0
+                    previous[i][2]=previous[i][2]===undefined?0:previous[i][2]
                     if(previous[i][2]>0){unread_chats+=1}
                 }
                 set_unread(unread_chats)
