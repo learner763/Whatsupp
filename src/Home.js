@@ -421,7 +421,7 @@ function Home()
         {
             console.log(3)
             if(!on_reload.current)sent_once.current=snapshot.docs.map(doc => doc.id)
-                console.log(sent_ones.current)
+                console.log(sent_once.current)
             let sent_messages=snapshot.docChanges().filter(change=>(change.doc.data().from===index? change.type==='added':change.type==='modified' && change.doc.data().neondb) && on_reload.current).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
