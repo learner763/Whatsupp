@@ -4,8 +4,9 @@
     background-color: darkgreen;
 }
 body{
-    font-family: 'Inter';
     margin: 0;
+    font-family: 'Inter';
+    scroll-behavior: smooth;
 }
 @keyframes highlight{
     0% { align-self: center;margin-right: 0px;margin-left: 0px; }
