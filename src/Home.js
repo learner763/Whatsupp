@@ -1253,7 +1253,7 @@ function Home()
                             {
                                 return(
                                     <div onClick={()=>{set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='black'?'solid white ':'solid darkgreen'}} >
-                                        <div style={{height:'35px',fontWeight:'bold'}}>
+                                        <div style={{height:'35px',fontWeight:'bold',alignItems:'center'}}>
                                             <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
                                             <span style={{color:bgr==='black'?'white':'darkgreen',paddingRight:'5px',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
                                                 {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()=== new Date().toLocaleDateString()?
@@ -1261,7 +1261,7 @@ function Home()
                                                 new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()}
                                             </span>
                                         </div>
-                                        <div style={{height:'35px'}}>
+                                        <div style={{height:'35px',alignItems:'center'}}>
                                             <span style={{fontWeight:'normal',paddingLeft:'5px',color:status[indices.indexOf(value[0])]==="(Typing...)"?'rebeccapurple':bgr==='black'?'white':'darkgreen'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
                                             <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
                                         </div>
