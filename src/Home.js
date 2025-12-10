@@ -910,6 +910,7 @@ function Home()
     },[msg_transfer,refreshed])
 
     useEffect(() => {
+        document.getElementById('select_bg').style.width=getComputedStyle(document.querySelectorAll('.settings_section input')[0]).width
         window.addEventListener('resize',()=>
         {
             set_innerwidth(window.innerWidth);
