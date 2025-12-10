@@ -631,7 +631,6 @@ function Home()
                 }
                 for(let i=0;i<replied_messages.length;i++)
                 {
-                    console.log(replied_messages[i].createdAt.toDate().toISOString())
                     let stop=false
                     for(let j=0;j<previous.length;j++)
                     {
