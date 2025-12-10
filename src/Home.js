@@ -784,7 +784,6 @@ function Home()
                 return previous
             })
             if(!on_reload.current){set_msg_transfer(pre_value=>pre_value+1);on_reload.current=true}
-            document.getElementById('select_bg').style.width=getComputedStyle(document.querySelectorAll('.settings_section input')[0]).width
             if(flag1===true){set_loaded(true);}
         })
         return()=>
@@ -811,9 +810,6 @@ function Home()
 
     useEffect(()=>
     {
-        console.log(innerwidth)
-        if(innerwidth>500){console.log(innerwidth);document.getElementById('select_bg').style.width=314+'px'}
-        else{document.getElementById('select_bg').style.width=243+'px'}
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
@@ -919,7 +915,6 @@ function Home()
             console.log(43)
             set_innerwidth(window.innerWidth);
             set_innerheight(window.innerHeight);
-            document.getElementById('select_bg').style.width=getComputedStyle(document.querySelectorAll('.settings_section input')[0]).width
         })
         fetch("/accounts",
         {
@@ -1211,7 +1206,7 @@ function Home()
                                                     else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
                                                     set_selectval('Select')}}
                                                         style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
-                                                    <option value='Select'>🧾 Select</option>
+                                                    <option value='Select'>Select</option>
                                                     <option value='Edit'>✏️ Edit</option>
                                                     <option value='Delete'>🗑️ Delete</option>
                                                     <option value='Reply'>💬 Reply</option>
@@ -1233,7 +1228,7 @@ function Home()
                                                     else{set_reply('none');set_reply_to('')}
                                                     set_selectval('Select')}}
                                                         style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
-                                                    <option value='Select'>🧾 Select</option>
+                                                    <option value='Select'>Select</option>
                                                     <option value='Reply'>💬 Reply</option>
                                                 </select>
                                                 <span onClick={()=> find_qouted_msg(text)}
@@ -1307,7 +1302,7 @@ function Home()
                         <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Change Password 🔒</label>
                         <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
                         <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Background Theme 🎨</label>
-                        <select id='select_bg' value={bgr} style={{ alignSelf:'end',color:'black'}} onChange={(e)=>setbg(e.target.value)} >
+                        <select  value={bgr} style={{ alignSelf:'end',color:'black',width:innerwidth>500?'314px':'243px'}} onChange={(e)=>setbg(e.target.value)} >
                             <option  value="white">Light</option>
                             <option  value="yellow">Yellow</option>
                             <option  value="black">Dark</option>
