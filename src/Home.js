@@ -1302,7 +1302,7 @@ function Home()
                         <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Change Password 🔒</label>
                         <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
                         <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Background Theme 🎨</label>
-                        <select  value={bgr} style={{ alignSelf:'end',color:'black',width:innerwidth>500?'314px':'243px'}} onChange={(e)=>setbg(e.target.value)} >
+                        <select  value={bgr} style={{ alignSelf:'end',color:'black',width:innerwidth>500?'318px':'247px'}} onChange={(e)=>setbg(e.target.value)} >
                             <option  value="white">Light</option>
                             <option  value="yellow">Yellow</option>
                             <option  value="black">Dark</option>
