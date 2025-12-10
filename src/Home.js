@@ -99,7 +99,7 @@ function Home()
                     await updateDoc(deleted.docs[i].ref,{delete:true})
                 }
             }
-            let deleted_replied_msgs=query(collection(db,'messages'),where("replied_to",'==',message.startsWith('✔') ?message.replace(message.slice(0,message.indexOf(' ')),'✔'):message));
+            let deleted_replied_msgs=query(collection(db,'messages'),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'✔') || message.replace(message.slice(0,message.indexOf(' ')),'')));
             let deleted_replied=await getDocs(deleted_replied_msgs)
             console.log(deleted_replied.docs)
             if(deleted_replied.docs.length>0)
@@ -144,7 +144,7 @@ function Home()
         set_edit('none')
         let intermediate=msg_before_edit
         set_msg_value('')
-        let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",intermediate.slice(intermediate.indexOf(' ')+1,intermediate.lastIndexOf(' ')-4)));
+        let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'✔') || intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'')));
         let edited_msgs=await getDocs(edit_this_msg)
         for(let i=0;i<edited_msgs.docs.length;i++)
         {
