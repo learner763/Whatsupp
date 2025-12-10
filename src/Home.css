@@ -4,7 +4,7 @@
     background-color: darkgreen;
 }
 body{
-    font-family: sans-serif;
+    font-family: 'Inter';
     margin: 0;
 }
 @keyframes highlight{
