@@ -101,6 +101,7 @@ function Home()
             }
             let deleted_replied_msgs=query(collection(db,'messages'),where("replied_to",'==',message.startsWith('✔') ?message.replace(message.slice(0,message.indexOf(' ')),'✔'):message));
             let deleted_replied=await getDocs(deleted_replied_msgs)
+            console.log(deleted_replied.docs)
             if(deleted_replied.docs.length>0)
             {
                 for(let i=0;i<deleted_replied.docs.length;i++)
