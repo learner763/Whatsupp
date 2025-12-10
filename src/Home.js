@@ -152,7 +152,7 @@ function Home()
                 await updateDoc(edited_msgs.docs[i].ref,{edit:true,text:message})
             }
         }
-        let edit_replied=query(collection(db,'messages'),where("replied_to","==",intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'✔')));
+        let edit_replied=query(collection(db,'messages'),where("replied_to","==",intermediate.startsWith('✔')? intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'✔'):intermediate));
         let edited_replied_msgs=await getDocs(edit_replied)
         if(edited_replied_msgs.docs.length>0)
         {
