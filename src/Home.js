@@ -811,7 +811,8 @@ function Home()
 
     useEffect(()=>
     {
-        console.log(innerwidth)
+        if(innerwidth>500){document.getElementById('select_bg').style.width='314px'}
+        else{document.getElementById('select_bg').style.width='243px'}
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
