@@ -415,6 +415,8 @@ function Home()
     {
         if( !index || indices.includes(index)===false || !refreshed || !verified ){return;}
         let action_query=query(collection(db,'messages'),or(where('from','==',index),where('to','==',index)));
+        console.log(4)
+
         let action=onSnapshot(action_query,(snapshot)=>
         {
             console.log(3)
