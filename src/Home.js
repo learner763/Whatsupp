@@ -99,13 +99,13 @@ function Home()
                     await updateDoc(deleted.docs[i].ref,{delete:true})
                 }
             }
-            let deleted_replied_msgs=query(collection(db,'messages'),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'✔')));
+            let deleted_replied_msgs=query(collection(db,'messages'),where("replied_to",'==',message.startsWith('✔') ?message.replace(message.slice(0,message.indexOf(' ')),'✔'):message));
             let deleted_replied=await getDocs(deleted_replied_msgs)
             if(deleted_replied.docs.length>0)
             {
                 for(let i=0;i<deleted_replied.docs.length;i++)
                 {
-                    await updateDoc(deleted_replied.docs[i].ref,{replied_to:'deleted'+deleted_replied.docs[i].data().replied_to})
+                    await updateDoc(deleted_replied.docs[i].ref,{replied_to:`deleted ${deleted_replied.docs[i].data().replied_to}`})
                 }
             }
             fetch('/delete_msg',
