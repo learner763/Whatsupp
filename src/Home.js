@@ -631,6 +631,7 @@ function Home()
                 }
                 for(let i=0;i<replied_messages.length;i++)
                 {
+                    console.log(replied_messages[i].createdAt.toDate().toISOString(),previous[j][1])
                     let stop=false
                     for(let j=0;j<previous.length;j++)
                     {
@@ -667,7 +668,6 @@ function Home()
                         }
                         else if(replied_messages[i].replied_to.startsWith('d'))
                         {
-                            console.log(replied_messages[i].createdAt.toDate().toISOString(),previous[j][1])
                             for(let k=0;k<previous[j][1].length;k++)
                             {
                                 if(replied_messages[i].createdAt!==null  && replied_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
