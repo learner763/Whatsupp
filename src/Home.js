@@ -784,6 +784,7 @@ function Home()
                 return previous
             })
             if(!on_reload.current){set_msg_transfer(pre_value=>pre_value+1);on_reload.current=true}
+            document.getElementById('select_bg').style.width=getComputedStyle(document.querySelectorAll('.settings_section input')[0]).width
             if(flag1===true){set_loaded(true);}
         })
         return()=>
@@ -910,7 +911,6 @@ function Home()
     },[msg_transfer,refreshed])
 
     useEffect(() => {
-        document.getElementById('select_bg').style.width=getComputedStyle(document.querySelectorAll('.settings_section input')[0]).width
         window.addEventListener('resize',()=>
         {
             set_innerwidth(window.innerWidth);
