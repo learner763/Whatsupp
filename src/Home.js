@@ -811,6 +811,7 @@ function Home()
 
     useEffect(()=>
     {
+        console.log(innerwidth)
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
@@ -913,6 +914,7 @@ function Home()
     useEffect(() => {
         window.addEventListener('resize',()=>
         {
+            console.log(43)
             set_innerwidth(window.innerWidth);
             set_innerheight(window.innerHeight);
             document.getElementById('select_bg').style.width=getComputedStyle(document.querySelectorAll('.settings_section input')[0]).width
