@@ -99,14 +99,22 @@ function Home()
                     await updateDoc(deleted.docs[i].ref,{delete:true})
                 }
             }
-            let deleted_replied_msgs=query(collection(db,'messages'),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'✔') || message.replace(message.slice(0,message.indexOf(' ')),'')));
-            let deleted_replied=await getDocs(deleted_replied_msgs)
-            console.log(deleted_replied.docs)
-            if(deleted_replied.docs.length>0)
+            let deleted_replied_msgs1=query(collection(db,'messages'),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'✔') ));
+            let deleted_replied1=await getDocs(deleted_replied_msgs1)
+            if(deleted_replied1.docs.length>0)
             {
-                for(let i=0;i<deleted_replied.docs.length;i++)
+                for(let i=0;i<deleted_replied1.docs.length;i++)
                 {
-                    await updateDoc(deleted_replied.docs[i].ref,{replied_to:`deleted ${deleted_replied.docs[i].data().replied_to}`})
+                    await updateDoc(deleted_replied1.docs[i].ref,{replied_to:`deleted ${deleted_replied1.docs[i].data().replied_to}`})
+                }
+            }
+            let deleted_replied_msgs2=query(collection(db,'messages'),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'') ));
+            let deleted_replied2=await getDocs(deleted_replied_msgs2)
+            if(deleted_replied2.docs.length>0)
+            {
+                for(let i=0;i<deleted_replied2.docs.length;i++)
+                {
+                    await updateDoc(deleted_replied2.docs[i].ref,{replied_to:`deleted ${deleted_replied2.docs[i].data().replied_to}`})
                 }
             }
             fetch('/delete_msg',
@@ -153,13 +161,22 @@ function Home()
                 await updateDoc(edited_msgs.docs[i].ref,{edit:true,text:message})
             }
         }
-        let edit_replied=query(collection(db,'messages'),where("replied_to","==",intermediate.startsWith('✔')? intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'✔'):intermediate));
-        let edited_replied_msgs=await getDocs(edit_replied)
-        if(edited_replied_msgs.docs.length>0)
+        let edit_replied1=query(collection(db,'messages'),where("replied_to","==",intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'✔')));
+        let edited_replied_msgs1=await getDocs(edit_replied1)
+        if(edited_replied_msgs1.docs.length>0)
         {
-            for(let i=0;i<edited_replied_msgs.docs.length;i++)
+            for(let i=0;i<edited_replied_msgs1.docs.length;i++)
             {
-                await updateDoc(edited_replied_msgs.docs[i].ref,{replied_to:edited_replied_msgs.docs[i].data().replied_to.replace(edited_replied_msgs.docs[i].data().replied_to.slice(edited_replied_msgs.docs[i].data().replied_to.indexOf(' ')+1,edited_replied_msgs.docs[i].data().replied_to.lastIndexOf(' ')-4),message)})
+                await updateDoc(edited_replied_msgs1.docs[i].ref,{replied_to:edited_replied_msgs1.docs[i].data().replied_to.replace(edited_replied_msgs1.docs[i].data().replied_to.slice(edited_replied_msgs1.docs[i].data().replied_to.indexOf(' ')+1,edited_replied_msgs1.docs[i].data().replied_to.lastIndexOf(' ')-4),message)})
+            }
+        }
+        let edit_replied2=query(collection(db,'messages'),where("replied_to","==",intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'')));
+        let edited_replied_msgs2=await getDocs(edit_replied2)
+        if(edited_replied_msgs2.docs.length>0)
+        {
+            for(let i=0;i<edited_replied_msgs2.docs.length;i++)
+            {
+                await updateDoc(edited_replied_msgs2.docs[i].ref,{replied_to:edited_replied_msgs2.docs[i].data().replied_to.replace(edited_replied_msgs2.docs[i].data().replied_to.slice(edited_replied_msgs2.docs[i].data().replied_to.indexOf(' ')+1,edited_replied_msgs2.docs[i].data().replied_to.lastIndexOf(' ')-4),message)})
             }
         }
         fetch('/edit_message',
