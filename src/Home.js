@@ -99,7 +99,7 @@ function Home()
                     await updateDoc(deleted.docs[i].ref,{delete:true})
                 }
             }
-            let deleted_replied_msgs=query(collection(db,'messages'),where("from","==",index),where("to","==",user),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'✔')));
+            let deleted_replied_msgs=query(collection(db,'messages'),where("replied_to",'==',message.replace(message.slice(0,message.indexOf(' ')),'✔')));
             let deleted_replied=await getDocs(deleted_replied_msgs)
             if(deleted_replied.docs.length>0)
             {
@@ -152,7 +152,7 @@ function Home()
                 await updateDoc(edited_msgs.docs[i].ref,{edit:true,text:message})
             }
         }
-        let edit_replied=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("replied_to","==",intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'✔')));
+        let edit_replied=query(collection(db,'messages'),where("replied_to","==",intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'✔')));
         let edited_replied_msgs=await getDocs(edit_replied)
         if(edited_replied_msgs.docs.length>0)
         {
@@ -501,7 +501,7 @@ function Home()
                                         let previous_attributes=[...pre_attributes]
                                         if(!previous_attributes[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)])
                                         {previous_attributes[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)]={}}
-                                        previous_attributes[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)].reply_info=['flex','You',sent_messages[0].replied_to.slice(sent_messages[0].replied_to.indexOf(' ')+1,sent_messages[0].replied_to.lastIndexOf(' ')-4)]
+                                        previous_attributes[0][previous[0][1].indexOf(`✔ ${message_text}     ${time}`)].reply_info=['flex',sent_messages[0].replied_to.startsWith('✔')?'You':info[indices.indexOf(sent_messages[0].to)*2],sent_messages[0].replied_to.slice(sent_messages[0].replied_to.indexOf(' ')+1,sent_messages[0].replied_to.lastIndexOf(' ')-4)]
                                         return previous_attributes
                                     })
                                 }
@@ -587,9 +587,11 @@ function Home()
                                 if(unseen_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                 {
                                     if(receiver_again.current!==unseen_messages[i].from)
-                                    {previous[j][2]+=1}
+                                    {
+                                        previous[j][2]=previous[j][2]===undefined?0:previous[j][2]
+                                        previous[j][2]+=1
+                                    }
                                     else{
-
                                         let msgref=doc(db,'messages',unseen_messages[i].id)
                                         updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
                                     }
