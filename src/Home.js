@@ -152,7 +152,7 @@ function Home()
         set_edit('none')
         let intermediate=msg_before_edit
         set_msg_value('')
-        let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'✔') || intermediate.replace(intermediate.slice(0,intermediate.indexOf(' ')),'')));
+        let edit_this_msg=query(collection(db,'messages'),where("from","==",index),where("to","==",receiver),where("text","==",intermediate.slice(intermediate.indexOf(' ')+1,intermediate.lastIndexOf(' ')-4)));
         let edited_msgs=await getDocs(edit_this_msg)
         for(let i=0;i<edited_msgs.docs.length;i++)
         {
