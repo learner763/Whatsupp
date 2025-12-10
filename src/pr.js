@@ -1,3 +1,5 @@
-let r=[4,0,7]
-r[2]=r[2]===undefined??0
-console.log(r)
+let r=[4,5,6]
+let f=r.filter(x=>x)
+
+r[2]=55
+console.log(r,f)
