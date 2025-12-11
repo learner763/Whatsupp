@@ -119,6 +119,7 @@ body{
     align-items: center;
     overflow-y: scroll;
     margin-top: 30px;
+    scrollbar-width: none;
 }
 .profile_section i,.settings_section i{
     font-size: 60px;
@@ -147,10 +148,10 @@ body{
     align-items: center;
     justify-content: space-evenly;
     width: auto;
-    margin: 40px;
+    margin: 0px 20px;
     border-radius: 20px;
     background-color: darkgreen;
-    padding: 0px 30px 0px 30px;
+    padding: 0px 5px;
     
 }
 .profile_section button,.settings_section button{
