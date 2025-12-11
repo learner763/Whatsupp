@@ -1279,7 +1279,7 @@ function Home()
                     </div>
                     <div className='profile_section' style={{display:profile_section}} >
                         <div>
-                            <i style={{alignSelf:'center',color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
+                            <i style={{color:'lime'}} class='fas fa-user'></i>
                             <label style={{color:'white'}}>Username 🔑</label>
                             <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} ></input>
                             <label style={{color:'white'}}>Name 🏷️</label>
@@ -1308,7 +1308,7 @@ function Home()
                     </div>
                     <div className='settings_section' style={{display:settings_section}} >
                         <div>
-                            <i style={{color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
+                            <i style={{color:'lime'}} class='fas fa-user'></i>
                             <label style={{color:'white'}}>Change Password 🔒</label>
                             <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} ></input>
                             <label style={{color:'white'}}>Background Theme 🎨</label>
