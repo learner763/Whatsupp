@@ -61,6 +61,8 @@ function Home()
     const [msg_attributes,set_msg_attributes]=useState([])
     const set_time_stamp=useRef(null)
     const sent_once=useRef([])
+    const unseen_once=useRef([])
+
     let w=-1;
 
     async function set_seen(user)
@@ -431,6 +433,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
+            if(!on_reload.current)unseen_once.current=snapshot.docs.map(doc => doc.id && !doc.data().seen && doc.data().to===index && doc.data().neondb)
             let read_messages=snapshot.docChanges().filter(change=>change.doc.data().neondb && change.doc.data().seen && change.doc.data().from===index && !change.doc.data().delete).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
@@ -588,30 +591,34 @@ function Home()
                 }
                 for(let i=0;i<unseen_messages.length;i++)
                 {
-                    let stop=false
-                    for(let j=0;j<previous.length;j++)                    
+                    if(!unseen_once.current.includes(unseen_messages[i].id))
                     {
-                        if(previous[j][0]===unseen_messages[i].from)
+                        unseen_once.current.push(unseen_messages[i].id)
+                        let stop=false
+                        for(let j=0;j<previous.length;j++)                    
                         {
-                            for(let k=0;k<previous[j][1].length;k++)
+                            if(previous[j][0]===unseen_messages[i].from)
                             {
-                                if(unseen_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
+                                for(let k=0;k<previous[j][1].length;k++)
                                 {
-                                    if(receiver_again.current!==unseen_messages[i].from)
+                                    if(unseen_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                     {
-                                        previous[j][2]=previous[j][2]===undefined?0:previous[j][2]
-                                        previous[j][2]+=1
+                                        if(receiver_again.current!==unseen_messages[i].from)
+                                        {
+                                            previous[j][2]=previous[j][2]===undefined?0:previous[j][2]
+                                            previous[j][2]+=1
+                                        }
+                                        else{
+                                            let msgref=doc(db,'messages',unseen_messages[i].id)
+                                            updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
+                                        }
+                                        stop=true
+                                        break
                                     }
-                                    else{
-                                        let msgref=doc(db,'messages',unseen_messages[i].id)
-                                        updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
-                                    }
-                                    stop=true
-                                    break
                                 }
-                            }
-                        } 
-                        if(stop){break}
+                            } 
+                            if(stop){break}
+                        }
                     }
                 }
                 let unread_chats=0
