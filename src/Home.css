@@ -127,7 +127,6 @@ body{
 .profile_section label,.settings_section label{
     font-size: 25px;
     font-weight: bolder;
-    padding-left: 5px;
 }
 .profile_section input,.settings_section input,.settings_section select{
     font-size: 25px;
@@ -135,12 +134,10 @@ body{
     border: darkgreen solid;
     border-width: 1px 0px 1px 0px;
     border-radius: 20px;
-    margin-right: 5px;
 }
 .settings_section a{
     font-size: 25px;
     text-decoration: underline;
-    margin-right: 5px;
 }
 .settings_section div,.profile_section div{
     display: flex;
