@@ -1308,7 +1308,7 @@ function Home()
                     <div className='settings_section' style={{display:settings_section}} >
                         <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
                         <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Change Password 🔒</label>
-                        <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
+                        <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end',width:innerwidth>500?'318px':'247px'}}></input>
                         <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Background Theme 🎨</label>
                         <select  value={bgr} style={{ alignSelf:'end',color:'black',width:innerwidth>500?'318px':'247px'}} onChange={(e)=>setbg(e.target.value)} >
                             <option  value="white">Light</option>
