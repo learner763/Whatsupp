@@ -306,9 +306,6 @@ select{
         bottom: 30px;
         background-color: lightgreen;
     }
-    .profile_section,.settings_section,.people_section,.chats{
-        padding-bottom: 30px;
-    }
 }
 @media (max-width:500px) {
     
@@ -323,9 +320,6 @@ select{
     }
     .profile_section input,.settings_section input,.settings_section select{
         font-size: 20px;
-    }
-    .profile_section,.settings_section,.people_section,.chats{
-        padding-bottom: 40px;
     }
     .top{
         height: 29px;
