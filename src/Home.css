@@ -309,7 +309,9 @@ select{
     }
 }
 @media (max-width:500px) {
-    
+    .profile_section div,.settings_section div{
+        margin: 50px 0px;
+    }
     .msg_div div,.msg_div span{
         width: 300px;
     }
