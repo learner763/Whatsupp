@@ -1279,50 +1279,54 @@ function Home()
                         }
                     </div>
                     <div className='profile_section' style={{display:profile_section}} >
-                        <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
-                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Username 🔑</label>
-                        <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} style={{alignSelf:'end'}}></input>
-                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Name 🏷️</label>
-                        <input onChange={(e)=>
-                            {
+                        <div>
+                            <i style={{alignSelf:'center',color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
+                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Username 🔑</label>
+                            <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} style={{alignSelf:'end'}}></input>
+                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Name 🏷️</label>
+                            <input onChange={(e)=>
+                                {
+                                    if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+                                    setup_name(e.target.value.replace(/[^a-zA-Z_]/g, ''))
+                                }} value={up_name} style={{alignSelf:'end'}}>
+                            </input>
+                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>About 📝</label>
+                            <input onChange={(e)=>
+                                {
                                 if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
-                                setup_name(e.target.value.replace(/[^a-zA-Z_]/g, ''))
-                            }} value={up_name} style={{alignSelf:'end'}}>
-                        </input>
-                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>About 📝</label>
-                        <input onChange={(e)=>
-                            {
-                            if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
-                            setup_bio(e.target.value)
-                            }} value={up_bio} style={{alignSelf:'end'}}>
-                        </input>
-                        <button onClick={()=>
-                            {
-                                if(up_user.length>0 && up_user.length<16 && up_name.length>0 && up_name.length<16 && up_bio.length>0 && up_bio.length<26)
-                                    {update_info(up_user,up_name,up_bio)}
-                                else{alert("Username,Profile Name Range:1-15 and About Range:1-25")
-                                }
-                            }} id="save">Save
-                        </button>
+                                setup_bio(e.target.value)
+                                }} value={up_bio} style={{alignSelf:'end'}}>
+                            </input>
+                            <button onClick={()=>
+                                {
+                                    if(up_user.length>0 && up_user.length<16 && up_name.length>0 && up_name.length<16 && up_bio.length>0 && up_bio.length<26)
+                                        {update_info(up_user,up_name,up_bio)}
+                                    else{alert("Username,Profile Name Range:1-15 and About Range:1-25")
+                                    }
+                                }} id="save">Save
+                            </button>
+                        </div>
                     </div>
                     <div className='settings_section' style={{display:settings_section}} >
-                        <i style={{alignSelf:'center',paddingTop:'30px',color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
-                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Change Password 🔒</label>
-                        <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end',width:innerwidth>500?'318px':'247px'}}></input>
-                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Background Theme 🎨</label>
-                        <select  value={bgr} style={{ alignSelf:'end',color:'black',width:innerwidth>500?'318px':'247px'}} onChange={(e)=>setbg(e.target.value)} >
-                            <option  value="white">Light</option>
-                            <option  value="yellow">Yellow</option>
-                            <option  value="black">Dark</option>
-                        </select>
-                        <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Read More 👉</label>
-                        <a href='https://github.com/learner763/Whatsupp/#readme' style={{color:bgr==='black'?'white':'darkgreen'}}>🔗Documentation</a>
-                        <button onClick={()=>
-                            {
-                                if(pass.length>0 && pass.length<16){update_settings(pass,bgr)}
-                                else{alert("Password Range:1-15")}
-                            }} id="save">Save
-                        </button>
+                        <div>
+                            <i style={{alignSelf:'center',color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
+                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Change Password 🔒</label>
+                            <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
+                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Background Theme 🎨</label>
+                            <select  value={bgr} style={{ alignSelf:'end',color:'black'}} onChange={(e)=>setbg(e.target.value)} >
+                                <option  value="white">Light</option>
+                                <option  value="yellow">Yellow</option>
+                                <option  value="black">Dark</option>
+                            </select>
+                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Read More 👉</label>
+                            <a href='https://github.com/learner763/Whatsupp/#readme' style={{color:bgr==='black'?'white':'darkgreen'}}>🔗Documentation</a>
+                            <button onClick={()=>
+                                {
+                                    if(pass.length>0 && pass.length<16){update_settings(pass,bgr)}
+                                    else{alert("Password Range:1-15")}
+                                }} id="save">Save
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div className='people_section' >

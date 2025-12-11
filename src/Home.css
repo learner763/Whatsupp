@@ -116,8 +116,9 @@ body{
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    align-items: start;
+    align-items: center;
     overflow-y: scroll;
+    margin-top: 30px;
 }
 .profile_section i, .profile_section button, .profile_section label, .profile_section input,
 .settings_section i, .settings_section button, .settings_section label, .settings_section input,.settings_section select{
@@ -145,6 +146,18 @@ body{
     text-decoration: underline;
     margin-right: 5px;
     align-self: flex-end;
+}
+.settings_section div,.people_section div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: auto;
+    margin: 40px;
+    border-radius: 20px;
+    background-color: darkgreen;
+    padding: 0px 30px 0px 30px;
+    
 }
 .profile_section button,.settings_section button{
     background-color: lightgreen;
