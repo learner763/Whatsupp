@@ -949,6 +949,7 @@ function Home()
                     setup_name(data[i].name);
                     setup_bio(data[i].bio);
                     setpass(data[i].password);
+                    setpass(`${getComputedStyle(document.querySelectorAll('.settings_section input')[0]).width} ${getComputedStyle(document.querySelectorAll('.settings_section select')[0]).width}` )
                     if(data[i].bg===null){data[i].bg='white'}
                     setbg(data[i].bg);
                 }
