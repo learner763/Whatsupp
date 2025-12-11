@@ -147,7 +147,7 @@ body{
     margin-right: 5px;
     align-self: flex-end;
 }
-.settings_section div,.people_section div{
+.settings_section div,.profile_section div{
     display: flex;
     flex-direction: column;
     align-items: center;

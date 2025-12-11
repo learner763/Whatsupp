@@ -949,7 +949,6 @@ function Home()
                     setup_name(data[i].name);
                     setup_bio(data[i].bio);
                     setpass(data[i].password);
-                    setpass(`${getComputedStyle(document.querySelectorAll('.settings_section input')[0]).width} ${getComputedStyle(document.querySelectorAll('.settings_section select')[0]).width}` )
                     if(data[i].bg===null){data[i].bg='white'}
                     setbg(data[i].bg);
                 }
@@ -1281,21 +1280,21 @@ function Home()
                     <div className='profile_section' style={{display:profile_section}} >
                         <div>
                             <i style={{alignSelf:'center',color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
-                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Username 🔑</label>
-                            <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} style={{alignSelf:'end'}}></input>
-                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Name 🏷️</label>
+                            <label style={{color:'white'}}>Username 🔑</label>
+                            <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} ></input>
+                            <label style={{color:'white'}}>Name 🏷️</label>
                             <input onChange={(e)=>
                                 {
                                     if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
                                     setup_name(e.target.value.replace(/[^a-zA-Z_]/g, ''))
-                                }} value={up_name} style={{alignSelf:'end'}}>
+                                }} value={up_name} >
                             </input>
-                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>About 📝</label>
+                            <label style={{color:'white'}}>About 📝</label>
                             <input onChange={(e)=>
                                 {
                                 if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
                                 setup_bio(e.target.value)
-                                }} value={up_bio} style={{alignSelf:'end'}}>
+                                }} value={up_bio} >
                             </input>
                             <button onClick={()=>
                                 {
@@ -1309,17 +1308,17 @@ function Home()
                     </div>
                     <div className='settings_section' style={{display:settings_section}} >
                         <div>
-                            <i style={{alignSelf:'center',color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
-                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Change Password 🔒</label>
-                            <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} style={{alignSelf:'end'}}></input>
-                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Background Theme 🎨</label>
-                            <select  value={bgr} style={{ alignSelf:'end',color:'black'}} onChange={(e)=>setbg(e.target.value)} >
+                            <i style={{color:bgr==='black'?'lime':'darkgreen'}} class='fas fa-user'></i>
+                            <label style={{color:'white'}}>Change Password 🔒</label>
+                            <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} ></input>
+                            <label style={{color:'white'}}>Background Theme 🎨</label>
+                            <select value={bgr} onChange={(e)=>setbg(e.target.value)} >
                                 <option  value="white">Light</option>
                                 <option  value="yellow">Yellow</option>
                                 <option  value="black">Dark</option>
                             </select>
-                            <label style={{color:bgr==='black'?'lime':'darkgreen'}}>Read More 👉</label>
-                            <a href='https://github.com/learner763/Whatsupp/#readme' style={{color:bgr==='black'?'white':'darkgreen'}}>🔗Documentation</a>
+                            <label style={{color:'white'}}>Read More 👉</label>
+                            <a href='https://github.com/learner763/Whatsupp/#readme' style={{color:'white'}}>🔗Documentation</a>
                             <button onClick={()=>
                                 {
                                     if(pass.length>0 && pass.length<16){update_settings(pass,bgr)}
