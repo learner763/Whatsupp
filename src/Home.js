@@ -456,7 +456,7 @@ function Home()
                 set_time_stamp.current=new Date().toISOString()
                 let time=sent_messages[0].createdAt===null?set_time_stamp.current:sent_messages[0].createdAt.toDate().toISOString();                    
                 setmessages(prev=>
-                {
+                {//https://whatsupp-feedback.vercel.app/
                     let previous=[...prev]
                     let found=0
                     for(let i=0;i<previous.length;i++)
@@ -1318,7 +1318,7 @@ function Home()
                                 <option  value="black">Dark</option>
                             </select>
                             <label style={{color:'white'}}>Read More 👉</label>
-                            <a href='https://github.com/learner763/Whatsupp/#readme' style={{color:'white'}}>🔗Documentation</a>
+                            <a href='https://whatsupp-feedback.vercel.app/' style={{color:'white'}}>🔗Documentation</a>
                             <button onClick={()=>
                                 {
                                     if(pass.length>0 && pass.length<16){update_settings(pass,bgr)}
