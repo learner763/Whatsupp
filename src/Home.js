@@ -20,17 +20,21 @@ import{
 function Home()
 {
     const [info, setinfo] = useState([]);
-    const [username, change_username] = useState(localStorage.getItem("email"));
-    const [profile, change_profile] = useState(localStorage.getItem("profile"));
-    const [index,change_index]=useState(localStorage.getItem('index'))
+    const [profile, change_profile] = useState('');
+    const [index,change_index]=useState('');
+    const [token,set_token]=useState(localStorage.getItem('token'));
+    const [nameatfirst,set_nameatfirst]=useState('');
+    const [all_nameatfirst,set_all_nameatfirst]=useState([]);
     const nav2=useNavigate();
     const [up_user,setup_user]=useState('');
     const [up_name,setup_name]=useState('');
     const [up_bio,setup_bio]=useState('');
     const [profile_section,set_profile_section]=useState('none');
     const [settings_section,set_settings_section]=useState('none');
-    const [pass,setpass]=useState('')
+    const [change_pass,set_change_pass]=useState(false);
+    const [pass,setpass]=useState('');
     const [bgr,setbg]=useState('white')
+    const [live_status,set_live_status]=useState(true)
     const [disp,setdisp]=useState("none")
     const [receiver,update_receiver]=useState('-');
     const [messages,setmessages]=useState([]);
@@ -62,6 +66,11 @@ function Home()
     const set_time_stamp=useRef(null)
     const sent_once=useRef([])
     const unseen_once=useRef([])
+    const [dialog_value,set_dialog_value]=useState('')
+    const dialogref=useRef(null);
+    const [profile_pic,set_profile_pic]=useState('dp.png')
+    const [profile_images,set_images]=useState([])
+    const [updating_pic,set_updating_pic]=useState(false)
 
     let w=-1;
 
@@ -229,6 +238,8 @@ function Home()
     {
         let ind=[]
         let accounts=[]
+        let names=[]
+        let images=[]
         fetch("/accounts",
         {
             method:'POST',
@@ -242,11 +253,15 @@ function Home()
             {
                 if(data[i].name!==null || data[i].bio!==null)
                 {
-                    ind.push(data[i].index)
+                    images.push(data[i].profilepicture===''?'dp.png':data[i].profilepicture)
+                    ind.push(data[i].email)
                     accounts.push(data[i].name)
                     accounts.push(data[i].bio)
+                    names.push(data[i].nameatfirst)
                 }
             }
+            set_images(images)
+            set_all_nameatfirst(names)
             set_indices(ind)
             setinfo(accounts)
         })
@@ -260,7 +275,7 @@ function Home()
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username:you }),
+            body: JSON.stringify({ email:you }),
         })
         .then(response => response.json())
         .then(data => 
@@ -293,55 +308,70 @@ function Home()
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ previous: username, username: up_user,profile:profile, name: up_name,bio:up_bio }),
+            body: JSON.stringify({ token:token, name: up_name,bio:up_bio }),
         })
         .then(response => response.json())
         .then(data =>
         {
             if(data.success===true)
             {
-                localStorage.setItem("email",up_user);
-                localStorage.setItem('profile',up_name)
-                change_username(localStorage.getItem("email")); 
-                change_profile(localStorage.getItem('profile'))
+                change_profile(up_name)
+                set_indices(prev=>
+                {
+                    let previous=[...prev]
+                    let my_data=0
+                    console.log(up_user)
+                    my_data=previous.indexOf(up_user)
+                    setinfo(pre=>
+                    {
+                        let previous_again=[...pre]
+                        previous_again[my_data*2]=up_name
+                        previous_again[1+my_data*2]=up_bio
+                        return previous_again
+                    })
+                    return previous
+                })
             }
-            else if(data.success===false)
+            else 
             {
-                if(data.person===false && data.user===true)
-                {
-                    localStorage.setItem("email",up_user);
-                    change_username(localStorage.getItem("email")); 
-                    alert(data.msg);
-                }
-                else if(data.person===true && data.user===false)
-                {
-                    localStorage.setItem('profile',up_name)
-                    change_profile(localStorage.getItem('profile'))
-                    alert(data.msg);
-                }
-                else
-                {
-                    alert(data.msg); 
-                }
+                set_dialog_value(
+                    <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+                      <label style={{fontWeight:'bold',color:'darkgreen'}}>Duplicate Name</label>
+                      <label>This name is already taken!Choose Another.</label>
+                      <button onClick={()=>dialogref.current.close()}>Close</button>
+                    </div>
+                )
+                dialogref.current.showModal();
             }
         });
     }
     
-    function update_settings(pass,bg)
+    function update_settings(pass,bg,nameatfirst,change_pass,live_status)
     {
+        let online_status=ref(real_time_db,`online_status/${nameatfirst}`)
+        update(online_status,{display:live_status})
         fetch('/save_settings', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username: username, password: pass, bg: bg }),
+            body: JSON.stringify({ token: token,change:change_pass==='true'?true:false, password: pass, bg: bg }),
         })
         .then(response => response.json())
+        .then(data=>
+        {
+            if(data.success)
+            {
+                localStorage.setItem('token',data.new_token)
+                set_token(data.new_token)
+            }
+        }
+        )
     }
 
     function typing_status()
     {
-        let online_status=ref(real_time_db,`online_status/${index}`);
+        let online_status=ref(real_time_db,`online_status/${nameatfirst}`);
         update(online_status,{
             typing:true,
             recipient:receiver
@@ -361,10 +391,10 @@ function Home()
 
     useEffect(()=>
     {
-        if(!index || indices.includes(index)===false || !verified){return;}
-        let online_status=ref(real_time_db,`online_status/${index}`);
+        if(!nameatfirst || !index || all_nameatfirst.includes(nameatfirst)===false || !verified){return;}
+        let online_status=ref(real_time_db,`online_status/${nameatfirst}`);
         let disconnect=onDisconnect(online_status)
-        set(online_status,{
+        update(online_status,{
             online:true,
             lastseen:rtdb_time()
         })
@@ -379,13 +409,18 @@ function Home()
         {
             let active_users=snapshot.val()
             let statuses=[]
-            for(let i=0;i<indices.length;i++)
+            for(let i=0;i<all_nameatfirst.length;i++)
             {
-                if(Object.keys(active_users).includes(indices[i] ))
+                if(all_nameatfirst[i]===nameatfirst)
                 {
-                    if(active_users[indices[i]].online)
+                    set_live_status(active_users[all_nameatfirst[i]].display===null?'true':active_users[all_nameatfirst[i]].display)
+                }
+                if(Object.keys(active_users).includes(all_nameatfirst[i] ))
+                {
+                    if(!active_users[all_nameatfirst[i]].display || active_users[all_nameatfirst[i]].display==='false'){statuses.push('')}
+                    else if(active_users[all_nameatfirst[i]].online)
                     {
-                        if(active_users[indices[i]].typing && active_users[indices[i]].recipient===index)
+                        if(active_users[all_nameatfirst[i]].typing && active_users[all_nameatfirst[i]].recipient===index)
                         {
                             statuses.push('(Typing...)')
                         }
@@ -393,25 +428,25 @@ function Home()
                             statuses.push('(Online)')
                         }
                     }
-                    else if(active_users[indices[i]].lastseen && active_users[indices[i]].online==false){
-                        statuses.push('('+(new Date(active_users[indices[i]].lastseen).toLocaleDateString()
-                        ===new Date().toLocaleDateString()?new Date(active_users[indices[i]].lastseen).toLocaleTimeString():
-                        new Date(active_users[indices[i]].lastseen).toLocaleDateString())+')')
+                    else if(active_users[all_nameatfirst[i]].lastseen && active_users[all_nameatfirst[i]].online==false){
+                        statuses.push('('+(new Date(active_users[all_nameatfirst[i]].lastseen).toLocaleDateString()
+                        ===new Date().toLocaleDateString()?new Date(active_users[all_nameatfirst[i]].lastseen).toLocaleTimeString():
+                        new Date(active_users[all_nameatfirst[i]].lastseen).toLocaleDateString())+')')
                     }
                 }
                 else{statuses.push('')}
             }
             set_status(statuses)
         })
-        return()=>
+        return()=> 
         {
-            set(online_status,{
+            update(online_status,{
                 online:false,
                 lastseen:rtdb_time()
             })
             current_status()
         }
-    },[indices,index,verified])
+    },[nameatfirst,all_nameatfirst,verified,index])
 
     useEffect(()=>
     {
@@ -442,7 +477,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let deleted_messages=snapshot.docChanges().filter(change=> change.doc.data().delete).map(function(change)
+            let deleted_messages=snapshot.docChanges().filter(change=> change.doc.data().delete || !change.doc.data().neondb).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
@@ -456,7 +491,7 @@ function Home()
                 set_time_stamp.current=new Date().toISOString()
                 let time=sent_messages[0].createdAt===null?set_time_stamp.current:sent_messages[0].createdAt.toDate().toISOString();                    
                 setmessages(prev=>
-                {//https://whatsupp-feedback.vercel.app/
+                {
                     let previous=[...prev]
                     let found=0
                     for(let i=0;i<previous.length;i++)
@@ -637,6 +672,7 @@ function Home()
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
+                                console.log(read_messages[i],read_messages[i].createdAt.toDate().toISOString(),previous[j][1][k])
                                 if(read_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(" ")+1,previous[j][1][k].length))
                                 {
                                     previous[j][1][k]=`✔✔${previous[j][1][k]}`
@@ -917,9 +953,9 @@ function Home()
     },[msg_transfer,refreshed])
 
     useEffect(() => {
+        if(!localStorage.getItem('logged_in')){nav2('/')}
         window.addEventListener('resize',()=>
         {
-            console.log(43)
             set_innerwidth(window.innerWidth);
             set_innerheight(window.innerHeight);
         })
@@ -933,38 +969,45 @@ function Home()
         .then(data => 
         {
             let flag=[false,null]
-            let accounts=[] 
+            
             for(let i=0;i<data.length;i++)
             {
-                if(data[i].email===username)
+                if(data[i].token===token)
                 {
-                    localStorage.setItem('profile',data[i].name)
-                    localStorage.setItem('index',data[i].index)
-                    change_profile(localStorage.getItem('profile'))
-                    change_index(localStorage.getItem('index'))
-                    retrieve_messages(data[i].index)
-                    flag=[true,data[i].name===null?localStorage.getItem('profile'):data[i].name]
+                    console.log('hi')
+                    change_profile(data[i].name)
+                    change_index(data[i].email)
+                    set_nameatfirst(data[i].nameatfirst)
+                    set_profile_pic(data[i].profilepicture===''?'dp.png':data[i].profilepicture)
+                    retrieve_messages(data[i].email)
+                    flag=[true,data[i].name]
                     set_flag1(true)
                     setup_user(data[i].email);
                     setup_name(data[i].name);
                     setup_bio(data[i].bio);
-                    setpass(data[i].password);
-                    if(data[i].bg===null){data[i].bg='white'}
+                    setpass('');
                     setbg(data[i].bg);
                 }
             }
-            if(flag[0]===false){set_flag1(false);set_loaded(false);alert(!username?'Please register/log in first!':`No account exists with ${username}`);localStorage.setItem('root',true);nav2('/');}
-            else if(flag[1]==='null'){set_flag1(false);set_loaded(false);alert('Please submit profile details!');nav2('/profile')}
+            if(flag[0]===false){set_flag1(false);set_loaded(false);nav2('/');}
+            else if(flag[1]===null || flag[1]===undefined){set_flag1(false);set_loaded(false);nav2('/profile')}
             let ind=[]
+            let accounts=[] 
+            let images=[]
+            let names=[]
             for(let i=data.length-1;i>=0;i--)
             {
                 if(data[i].name!==null || data[i].bio!==null)
                 {
                     accounts.push(data[i].name);
                     accounts.push(data[i].bio);
-                    ind.push(data[i].index)
+                    ind.push(data[i].email)
+                    names.push(data[i].nameatfirst)
+                    images.push(data[i].profilepicture===''?'dp.png':data[i].profilepicture)
                 }
             }
+            set_images(images)
+            set_all_nameatfirst(names)
             set_indices(ind);
             setinfo(accounts);
         });
@@ -985,15 +1028,21 @@ function Home()
             {
                 let accounts=[]
                 let ind=[]
+                let names=[]
+                let images=[]
                 for(let i=data.length-1;i>=0;i--)
                 {
                     if(data[i].name && data[i].bio)
                     {
                         accounts.push(data[i].name);
                         accounts.push(data[i].bio);
-                        ind.push(data[i].index)
+                        ind.push(data[i].email)
+                        names.push(data[i].nameatfirst)
+                        images.push(data[i].profilepicture===''?'dp.png':data[i].profilepicture)
                     }
                 }
+                set_images(images)
+                set_all_nameatfirst(names)
                 set_indices(ind);
                 setinfo(accounts);
             })
@@ -1187,13 +1236,17 @@ function Home()
                     <label><i class='fas fa-user'></i>Update Profile</label>
                     <label><i class='fas fa-cog'></i>Alter Settings</label>
                     <label style={{marginBottom:'30px'}} onClick=
-                    {()=>{localStorage.setItem('root',true);nav2('/');}} 
-                    ><i class='fas fa-user-plus'></i>Switch Account</label>
+                    {()=>{localStorage.removeItem('logged_in');nav2('/');}} 
+                    ><i class='fas fa-solid fa-sign-out-alt'></i>Log Out</label>
                 </div>
                 <div className='main_body_section'>
                     <div className='chat_detail_section' style={{display:disp}} >
                         <label  id="profile_name" >
-                            <i className='fas fa-user'></i> {info[indices.indexOf(receiver)*2]} {status[indices.indexOf(receiver)]}
+                            <img src={profile_images[indices.indexOf(receiver)]}></img>
+                            <label style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                <label style={{color:'white',fontWeight:'bold',fontSize:'20px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]}</label> 
+                                <label style={{color:'white',fontWeight:'normal',fontSize:'20px',alignSelf:'flex-start'}}>{status[indices.indexOf(receiver)]}</label>
+                            </label>
                         </label>
                         {messages.map((value,index)=>
                         {
@@ -1255,22 +1308,25 @@ function Home()
                         })}
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
-                        <label id="connect_msg" style={{border:bgr==='black'?'solid white':'solid darkgreen',color:bgr==='black'?'white':'darkgreen', display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fas fa-users"></i> Start connecting with people.</label>
+                        <label id="connect_msg" style={{border:bgr==='black'?'solid white':'solid darkgreen',color:bgr==='black'?'white':'darkgreen', display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fas fa-users"></i> Connect with people.</label>
                         {messages.map((value,index)=>
                             {
                                 return(
-                                    <div onClick={()=>{set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'column',border:bgr==='black'?'solid white ':'solid darkgreen'}} >
-                                        <div style={{height:'35px',fontWeight:'bold',alignItems:'center'}}>
-                                            <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}><i className='fas fa-user'></i> {info[indices.indexOf(value[0])*2]}</span>
-                                            <span style={{color:bgr==='black'?'white':'darkgreen',paddingRight:'5px',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
-                                                {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()=== new Date().toLocaleDateString()?
-                                                new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
-                                                new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()}
-                                            </span>
-                                        </div>
-                                        <div style={{height:'35px',alignItems:'center'}}>
-                                            <span style={{fontWeight:'normal',paddingLeft:'5px',color:status[indices.indexOf(value[0])]==="(Typing...)"?'rebeccapurple':bgr==='black'?'white':'darkgreen'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
-                                            <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
+                                    <div onClick={()=>{set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'row',alignItems:'center'}} >
+                                        <img style={{borderRadius:'50%',width:'65px',height:'65px',objectFit:'cover'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
+                                        <div style={{display:'flex',flexDirection:'column',height:'70px'}}>    
+                                            <div style={{height:'35px',fontWeight:'bold',alignItems:'center'}}>
+                                                <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?profile:info[indices.indexOf(value[0])*2]}</span>
+                                                <span style={{color:bgr==='black'?'white':'#222',paddingRight:'5px',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
+                                                    {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()=== new Date().toLocaleDateString()?
+                                                    new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
+                                                    new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                            <div style={{height:'35px',alignItems:'center'}}>
+                                                <span style={{fontWeight:'normal',paddingLeft:'5px',color:status[indices.indexOf(value[0])]==="(Typing...)"?bgr==='black'?'lime':'darkgreen':bgr==='black'?'white':'#222'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
+                                                <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 );
@@ -1279,50 +1335,102 @@ function Home()
                     </div>
                     <div className='profile_section' style={{display:profile_section}} >
                         <div>
-                            <i style={{color:'lime'}} class='fas fa-user'></i>
-                            <label style={{color:'white'}}>Username 🔑</label>
-                            <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} value={up_user} ></input>
+                            <img style={{borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
+                            <div style={{display:'flex',flexDirection:'row',margin:'0',padding:'0',color:'white'}}>
+                            <label className='waiting_loader' style={{
+                                    display:updating_pic?'block':'none',width:'20px',height:'20px',borderRadius:'50%',border:'5px white solid',borderTop:'5px darkgreen solid'
+                            }}></label>
+                                <input type="file" id='fileInput' hidden  
+                                onChange={(e)=>
+                                {
+                                    if(e.target.files[0].type.startsWith('image'))
+                                    {
+                                        let form=new FormData()
+                                        form.append('file',e.target.files[0])
+                                        form.append('token',token)
+                                        form.append('previous_dp',profile_pic)
+                                        set_updating_pic(true)
+                                        fetch('/upload_pic',{
+                                            method:'POST',
+                                            body:form
+                                        })
+                                        .then(res=>res.json())
+                                        .then(data=>
+                                        {
+                                            set_updating_pic(false)
+                                            if(data.url)
+                                            {
+                                                set_profile_pic(data.url)
+                                            }
+                                        })
+                                    }
+                                }
+                                }></input>
+                                <label onClick={()=>document.getElementById('fileInput').click()} style={{display:updating_pic?'none':'block',cursor:'pointer'}}>Edit</label>
+                                <label onClick={(e)=>
+                                    {
+                                        set_updating_pic(true)
+                                        fetch('/remove_pic',{
+                                            method:'POST',
+                                            headers:{'Content-Type':'application/json'},
+                                            body:JSON.stringify({token:token,public_id:profile_pic.slice(profile_pic.lastIndexOf('/')+1,profile_pic.lastIndexOf('.'))})
+                                        })
+                                        .then(res=>res.json())
+                                        .then(data=>{
+                                            set_updating_pic(false)
+                                            if(data.success){set_profile_pic('dp.png')}
+                                        })
+                                    }
+                                } style={{cursor:'pointer', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}>Remove</label>
+                                
+                            </div>
+                            <label style={{color:'white'}}>Email 🔑</label>
+                            <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_@.+]/g, ''))} disabled value={up_user} ></input>
                             <label style={{color:'white'}}>Name 🏷️</label>
                             <input onChange={(e)=>
                                 {
-                                    if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
                                     setup_name(e.target.value.replace(/[^a-zA-Z_]/g, ''))
-                                }} value={up_name} >
+                                }} value={up_name} maxLength={15}>
                             </input>
                             <label style={{color:'white'}}>About 📝</label>
                             <input onChange={(e)=>
                                 {
                                 if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
                                 setup_bio(e.target.value)
-                                }} value={up_bio} >
+                                }} value={up_bio} maxLength={25}>
                             </input>
                             <button onClick={()=>
                                 {
-                                    if(up_user.length>0 && up_user.length<16 && up_name.length>0 && up_name.length<16 && up_bio.length>0 && up_bio.length<26)
-                                        {update_info(up_user,up_name,up_bio)}
-                                    else{alert("Username,Profile Name Range:1-15 and About Range:1-25")
-                                    }
+                                    if( up_name.length>0 && up_bio.length>0 )
+                                    {update_info(up_user,up_name,up_bio)}
                                 }} id="save">Save
                             </button>
                         </div>
                     </div>
                     <div className='settings_section' style={{display:settings_section}} >
                         <div>
-                            <i style={{color:'lime'}} class='fas fa-user'></i>
-                            <label style={{color:'white'}}>Change Password 🔒</label>
-                            <input onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} ></input>
-                            <label style={{color:'white'}}>Background Theme 🎨</label>
+                            <img style={{borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
+                            <label style={{color:'white'}}>Password 🔒</label>
+                            <select value={change_pass} onChange={(e)=>set_change_pass(e.target.value)} >
+                                <option value='false'>Retain</option>
+                                <option value='true'>Change</option>
+                            </select>
+                            <input style={{display:change_pass==='true'?'block':'none'}} placeholder='Enter new password' maxLength={15} onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} type='password'></input>
+                            <label style={{color:'white'}}>Active Status 🟢</label>
+                            <select value={live_status} onChange={(e)=>set_live_status(e.target.value)} >
+                                <option value='true'>Show</option>
+                                <option value='false' >Hide</option>
+                            </select>
+                            <label style={{color:'white'}}>Theme 🎨</label>
                             <select value={bgr} onChange={(e)=>setbg(e.target.value)} >
                                 <option  value="white">Light</option>
                                 <option  value="yellow">Yellow</option>
                                 <option  value="black">Dark</option>
                             </select>
-                            <label style={{color:'white'}}>Read More 👉</label>
                             <a href='https://whatsupp-feedback.vercel.app/' style={{color:'white'}}>🔗Documentation</a>
                             <button onClick={()=>
                                 {
-                                    if(pass.length>0 && pass.length<16){update_settings(pass,bgr)}
-                                    else{alert("Password Range:1-15")}
+                                    update_settings(pass,bgr,nameatfirst,change_pass,live_status)
                                 }} id="save">Save
                             </button>
                         </div>
@@ -1347,17 +1455,17 @@ function Home()
                             w = w + 1; 
                             return (
                                 <div className='userinfo' key={index} style={{display:search_filter[index]}}> 
-                                    <div style={{display:search_filter[index],flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'160px',backgroundColor:'darkgreen',borderRadius:'20px',padding:'5px'}}>
-                                    <i className='fas fa-user'>{info[index + w ]=== profile ? ` You ${status[index]==='(Online)' || status[index]==='(Typing...)'?'(Online)':''}`: `${status[index]==='(Online)' || status[index]==='(Typing...)'?'(Online)':''}`}</i>                                    
-                                    <span className='connect_people' >{info[index + w ]}</span> 
-                                    <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
-                                    <button onClick={()=>
-                                        {
-                                            update_receiver(indices[index])
-                                            receiver_again.current=indices[index]
-                                            set_seen(indices[index])
-                                        }
-                                    } className='connect_buttons'><i className='fas fa-envelope'></i>Message</button>
+                                    <div style={{display:search_filter[index],flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'220px',backgroundColor:'darkgreen',borderRadius:'20px',padding:'5px'}}>
+                                        <img style={{borderRadius:'50%',width:'100px',height:'100px',objectFit:'cover'}} src={up_user===indices[index]?profile_pic: profile_images[index]}></img>
+                                        <span className='connect_people' >{info[index + w ]}{status[index]==='(Online)' || status[index]==='(Typing...)'?'🟢':''}</span> 
+                                        <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
+                                        <button onClick={()=>
+                                            {
+                                                update_receiver(indices[index])
+                                                receiver_again.current=indices[index]
+                                                set_seen(indices[index])
+                                            }
+                                        } className='connect_buttons'><i className='fas fa-envelope'></i>Message</button>
                                     </div>
                                 </div>
                             );
@@ -1417,10 +1525,12 @@ function Home()
                 <label ><i class='fas fa-comment-dots'></i>Chats<sup>{unread===0?'':unread}</sup></label>
                 <label ><i class='fas fa-user'></i>Profile</label>
                 <label ><i class='fas fa-cog'></i>Settings</label>
-                <label onClick={()=>{localStorage.setItem('root',true);nav2('/')}} ><i class='fas fa-user-plus'></i>Add Account</label>
+                <label onClick={()=>{localStorage.removeItem('logged_in');nav2('/')}} ><i class='fas fa-solid fa-sign-out-alt'></i>Log Out</label>
                 <label  id="people"><i class='fas fa-users'></i>People</label>
             </div>
         </div>
+        <dialog style={{borderRadius:'10px'}} ref={dialogref}>{dialog_value}</dialog>
+
         </>
     );
 }

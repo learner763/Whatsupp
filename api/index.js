@@ -2,15 +2,40 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
-const app = express();
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import validator from 'validator';
+import nodemailer from 'nodemailer';
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const upload = multer({ storage:multer.memoryStorage() });
+dotenv.config(
+    {path: path.resolve(__dirname, '../.env')}
+);
+cloudinary.config({
+    cloud_name: "dcaqvqzaf",
+    api_key: "879365262424543",
+    api_secret: "yTZepiWSl8MEUfZYDFq8Od_bz0Q",
+});
+const transporter=nodemailer.createTransport({
+    service:'gmail',
+    auth:{
+        user:process.env.EMAIL,
+        pass:process.env.PASSWORD
+    }
+})
+
+const app = express();
+
 const buildPath = path.join(__dirname, '../build');
 app.use(express.static(buildPath));
 app.use(express.json());
 
 app.post('/accounts', (req, res) => {
-    pool.query('SELECT email,name,bio,password,bg,index FROM public.users', (err, results) => {
+    pool.query('select * from public.users', (err, results) => {
         if (err) {}
         else res.json(results.rows);
     });
@@ -25,7 +50,7 @@ app.get('*', (req, res) => {
 });
 
 const pool = new pkg.Pool({
-    connectionString: process.env.postgres_db_url
+    connectionString: process.env.POSTGRES_URL
 });
 
 pool.connect((err) => {
@@ -36,38 +61,101 @@ pool.connect((err) => {
     console.log('Connected to PostgreSQL');
 });
 
-app.post("/login", (req, res) => {
-    const { email, password,bt } = req.body;
-    if(bt=="Log In")    
-        pool.query("select * from public.users where email=$1 and password=$2", [email,password], (err1, results1) => {
-            return res.json(results1.rows);
-        });
-    else if(bt=="Sign Up")
-        pool.query("select * from public.users where email=$1 union all select * from public.users where index=$1", [email], (err2, results2) => {
-            if (err2) {}
-            if(results2.rows.length>0){return res.json({success:false});}
-            else{     
-                pool.query("insert into public.users(email,password,index) values($1,$2,$3)", [email,password,email], (err3, results3) => {
-                    if(results3.rowCount===1){return res.json({success:true});}  
-                });
+function generatetoken()
+{
+    let chars='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    let char=''
+    for(let i=0;i<20;i++)
+    {
+        char+=chars.charAt(parseInt(Math.random()*chars.length))
+    }
+    return char
+}
+
+app.post("/login",async (req, res) => {
+    const { email, password,bt,token } = req.body;
+    if(bt=="Log In")   
+    {
+        let results1=await pool.query("select * from public.users where email=$1", [email])
+        if (results1.rows.length>0)
+        {
+            let check=await bcrypt.compare(password,results1.rows[0].password)
+            console.log(check)
+            if(check){
+                if (results1.rows[0].token===token)
+                {
+                    return res.json({token:token,verified:true,success:true})
+                }
+                else{
+                    let otp=parseInt(Math.random()*1000000)
+                    var hashed_otp=await bcrypt.hash(String(otp),10)
+                    await transporter.sendMail(
+                    {
+                        from:process.env.EMAIL,
+                        to:email,
+                        subject:'WhatsUpp OTP',
+                        text:`Your WhatsUpp Account OTP is ${otp}`
+                    })
+                    let results3=await pool.query("update public.users set otp=$1,lastlogin=$2 where email=$3", [hashed_otp,new Date(),email]) 
+                    return res.json({email:email,password:password,verfied:false,success:true})
+                }
             }
-        });
+            else{
+                return res.json({success:false})
+            }
+        }
+        else{
+            return res.json({success:false})
+        }   
+    }
+    else if(bt=="Sign Up")
+    {
+        var results2=await pool.query("select * from public.users where email=$1 union all select * from public.users where index=$1", [email])
+        if(results2.rows.length>0){return res.json({success:false,duplicate:true});}
+        else{     
+            if(!validator.isEmail(email)){return res.json({success:false,invalid:true});}
+            let otp=parseInt(Math.random()*1000000)
+            var hashed_otp=await bcrypt.hash(String(otp),10)
+            var hashed_password=await bcrypt.hash(String(password),10)
+            let token=generatetoken()
+            await transporter.sendMail(
+            {
+                from:process.env.EMAIL,
+                to:email,
+                subject:'WhatsUpp OTP',
+                text:`Your WhatsUpp Account OTP is ${otp}`
+            })
+            let results3=await pool.query("insert into public.users(email,password,index,token,otp,lastlogin,bg,profilepicture) values($1,$2,$3,$4,$5,$6,$7,$8)", [email,hashed_password,email,token,hashed_otp,new Date(),'white',''])
+            if(results3.rowCount===1){return res.json({success:true,password:password,email:email});}  
+        }
+    }   
 });
 
+app.post('/verify_otp',async (req,res)=>
+{
+    const {email,otp}=req.body
+    let results=await pool.query(`select * from public.users where email=$1`,[email])
+    let check=await bcrypt.compare(String(otp),results.rows[0].otp)
+    if(check && new Date().getTime()-new Date( results.rows[0].lastlogin).getTime()<121000){return res.json({success:true,token:results.rows[0].token})}
+    else if(!check){ return res.json({success:false,invalid:true})}
+    else{ return res.json({success:false,expired:true})}
+
+})
+
 app.post("/personal", (req, res) => {
-    const { username, name,bio } = req.body;
-    pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,username], (err, results) => {   
+    const { token, name,bio } = req.body;
+    pool.query("update public.users set name=$1,bio=$2,nameatfirst=$3 where token=$4", [name,bio,name,token], (err, results) => {   
         if(results.rowCount===1){return res.json({success:true});} 
     });
 });
 
 app.post("/user_in_table", (req, res) => {
-    const { username } = req.body;
-    pool.query("insert into public.chats(chat_with) values($1) on conflict(chat_with) do nothing;", [username], (err1, results1) => 
+    const { email } = req.body;
+    pool.query("insert into public.chats(chat_with) values($1) on conflict(chat_with) do nothing;", [email], (err1, results1) => 
     {
         if(results1.rowCount===1)
         {
-            pool.query(`alter table public.chats add column if not exists "${username}" text[];`, (err2, results2) => {
+            pool.query(`alter table public.chats add column if not exists "${email}" text[];`, (err2, results2) => {
                 if(results2.command==='ALTER'){return res.json({success:true});}
             });
         }
@@ -76,27 +164,47 @@ app.post("/user_in_table", (req, res) => {
 
 app.post('/user_data',(req,res)=>
 {
-    const {username}=req.body
-    pool.query('select * from public.users where email=$1',[username],(err,results)=>
+    const {email,token}=req.body
+    let log_in=false
+    pool.query(`select "${email}" from public.chats`,(err,results)=>
     {
-        res.json(results.rows)
+        if(!results)
+        {
+            log_in=false
+        }
+        else{log_in=true}
     })
+    if(email)
+    {
+        pool.query('select * from public.users where email=$1',[email],(err,results)=>
+        {
+            return res.json({result:results.rows,log_in:log_in})
+        })
+    }
+    else if(token){
+        pool.query('select * from public.users where token=$1',[token],(err,results)=>
+        {
+            console.log(results.rows)
+            return res.json({result:results.rows,log_in:log_in})
+        })
+    }
+    else{return res.json({result:[]})}
 })
 
 app.post('/get_messages',(req,res)=>
 {
     let messages={}
     let frontend_messages=[]
-    const {username}=req.body;
-    pool.query(`select "${username}",chat_with from public.chats `, (err1, results) => {
-        pool.query(`select * from public.chats where chat_with=$1`,[username], (err2, results2) => {
+    const {email}=req.body;
+    pool.query(`select "${email}",chat_with from public.chats `, (err1, results) => {
+        pool.query(`select * from public.chats where chat_with=$1`,[email], (err2, results2) => {
             if( err1 || err2) {}
             let a_list=results.rows
             for(let i=0;i<a_list.length;i++)
             {
-                if(Array.isArray(a_list[i][username]))
+                if(Array.isArray(a_list[i][email]))
                 {
-                    messages[a_list[i]['chat_with']]=a_list[i][username];
+                    messages[a_list[i]['chat_with']]=a_list[i][email];
                 }
             }
             let a_list2=results2.rows[0]
@@ -113,11 +221,11 @@ app.post('/get_messages',(req,res)=>
                 frontend_messages.push(Object.keys(messages)[i])
                 for(let j=0;j<messages[Object.keys(messages)[i]].length;j++)
                 {
-                    if(messages[Object.keys(messages)[i]][j].startsWith(`${username}`))
+                    if(messages[Object.keys(messages)[i]][j].startsWith(`${email}`))
                     {
-                        sent_received.push(messages[Object.keys(messages)[i]][j].replace(`${username}:`,'✔✔'))
+                        sent_received.push(messages[Object.keys(messages)[i]][j].replace(`${email}:`,'✔✔'))
                     }
-                    if([Object.keys(messages)[i]]!=username)
+                    if([Object.keys(messages)[i]]!=email)
                     {
                         if(messages[Object.keys(messages)[i]][j].startsWith(`${Object.keys(messages)[i]}`))
                         {
@@ -156,68 +264,60 @@ app.post('/get_messages',(req,res)=>
 })
 
 app.post("/save_info", (req, res) => {
-    const { previous,username,profile, name,bio } = req.body;
-    pool.query("select * from public.users where email=$1 union all select * from public.users where name=$2", [username,name], (err, results) => {
-        if(results.rows.length>0)
+    const { token, name,bio } = req.body;
+    pool.query('select * from public.users where name=$1',[name],(err,results)=>
+    {
+        if(results.rows.length===0 || results.rows[0].token===token)
         {
-            if(username==previous && profile==name)
-            {pool.query("update public.users set name=$1,bio=$2 where email=$3", [name,bio,previous], (err1, results1) => {
-                if(results1.rowCount===1){return res.json({success:true});}
-            });}
-            else if(username==previous && profile!=name)
-            {
-                for(let i=0;i<results.rows.length;i++)
-                {
-                    if(results.rows[i].name==name && results.rows[i].email!=username)
-                    {
-                        pool.query("update public.users set bio=$1 where email=$2", [bio,previous], (err2, results2) => {
-                            if(results2.rowCount===1){return res.json({success:false,msg:'Profile name is taken already.Choose Another!',person:false,user:true});}
-                        });
-                    }
-                }
-                pool.query("update public.users set bio=$1,name=$2 where email=$3", [bio,name,previous], (err3, results3) => {
-                    if(results3.rowCount===1){return res.json({success:true});}
-                });
-            }
-            else if(profile==name && username!=previous)
-            {
-                for(let i=0;i<results.rows.length;i++)
-                {
-                    if(results.rows[i].email==username && results.rows[i].profile!=name)
-                    {
-                        pool.query("update public.users set bio=$1 where name=$2", [bio,name], (err4, results4) => {
-                            if(results4.rowCount===1){return res.json({success:false,msg:'Username name is taken already.Choose Another!',user:false,person:true});}
-                        });
-                    }
-                }
-                pool.query("update public.users set bio=$1,email=$2 where name=$3", [bio,username,name], (err5, results5) => {
-                    if(results5.rowCount===1){return res.json({success:true});}
-                });
-                
-            }
-            else
-            {return res.json({success:false,msg:'Username & Profile name is taken already.Choose Another!'});}
+            pool.query("update public.users set name=$1,bio=$2 where token=$3", [name,bio,token], (err, results) => {   
+                if(results.rowCount===1){return res.json({success:true});} 
+            });
         }
         else{
-            pool.query("update public.users set name=$1,bio=$2,email=$3 where email=$4", [name,bio,username,previous], (err6, results6) => {   
-                if(results6.rowCount===1){return res.json({success:true})}
-            });            
+            return res.json({success:false});
         }
-    });
+    })
+    
 });
 
-app.post("/save_settings", (req, res) => {
-    const { username,password, bg } = req.body;
-    pool.query("update public.users set password=$1,bg=$2 where email=$3", [password,bg,username], (err, results) => {   
-        if(results.rowCount===1){return res.json({success:true});}
-    });
+app.post("/save_settings",async (req, res) => {
+    const { token,password,change, bg } = req.body;
+    pool.query("update public.users set bg=$1 where token=$2", [bg,token])
+    if(change && password!=='')
+    {
+        let hashed_password=await bcrypt.hash(String(password),10)
+        let new_token=generatetoken()
+        let results=await pool.query("update public.users set password=$1,token=$2 where token=$3", [hashed_password,new_token,token]) 
+        if(results.rowCount===1){return res.json({success:true,new_token:new_token});}
+    }
+    else{
+        return res.json({success:false});
+    }
 });
 
-app.post("/forpass", (req, res) => {
-    const { email } = req.body;
-    pool.query("select * from public.users where email=$1", [email], (err, results) => {
-        return res.json(results.rows);
-    });
+app.post("/forpass",async (req, res) => {
+    const { email,token } = req.body;
+    let results=await pool.query("select * from public.users where email=$1", [email])
+    if(results)
+    {
+        if(results.rows[0].token===token){ return res.json({success:true,token:token})}
+        else{
+            let otp=parseInt(Math.random()*1000000)
+            var hashed_otp=await bcrypt.hash(String(otp),10)
+            await transporter.sendMail(
+            {
+                from:process.env.EMAIL,
+                to:email,
+                subject:'WhatsUpp OTP',
+                text:`Your WhatsUpp Account OTP is ${otp}`
+            })
+            let results3=await pool.query("update public.users set otp=$1,lastlogin=$2 where email=$3", [hashed_otp,new Date(),email]) 
+            return res.json({email:email,success:true})
+                
+        }
+    }
+    else{ return res.json({success:false})}
+    
 });
 
 app.post('/save_msg',(req,res)=>
@@ -282,6 +382,57 @@ app.post('/edit_message',(req,res)=>
         else if(results1.rowCount===1){res.json({success:true})}
     })
 res.json({success:true})
+})
+
+app.post('/upload_pic',upload.single('file'), (req,res)=>
+{
+    console.log(req.file)
+    cloudinary.uploader.upload_stream({
+        folder:'my_app_assets'
+    },(err,results)=>
+    {
+        if(results.secure_url)
+        {
+            pool.query('update public.users set profilepicture=$1 where token=$2',[results.secure_url,req.body.token],(err2,results2)=>
+            {
+                if(req.body.previous_dp!=='dp.png')
+                {
+                    cloudinary.uploader.destroy(`my_app_assets/${req.body.previous_dp.slice(req.body.previous_dp.lastIndexOf('/')+1,req.body.previous_dp.lastIndexOf('.'))}`,(err3,results3)=>
+                    {
+                        console.log(results3)
+                        if(results3.result)
+                        {
+                            if(results2.rowCount===1){ res.json({url:results.secure_url})}
+                            else{res.json({success:false})}
+                        }
+                    })
+                }
+                else{
+                    if(results2.rowCount===1){ res.json({url:results.secure_url})}
+                    else{res.json({success:false})}
+                }
+            })
+        }
+        else{
+            res.json({success:false})
+        }
+    }).end(req.file.buffer);
+    
+})
+
+app.post('/remove_pic',(request,responce)=>
+{
+    console.log(request.body)
+    cloudinary.uploader.destroy(`my_app_assets/${request.body.public_id}`,(err,res)=>
+    {
+        if(res.result)
+        {
+            pool.query('update public.users set profilepicture=$1 where token=$2',['',request.body.token],(error,results)=>
+            {
+                if(results.rowCount===1){responce.json({success:true})}
+            })
+        }
+    })
 })
 
 const PORT = process.env.PORT || 8080;

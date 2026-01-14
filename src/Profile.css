@@ -8,16 +8,14 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background:darkgreen; 
+    background:white; 
     width: auto;
     min-height: 100dvh;
     overflow-y: auto;
 }
 .Profile label{
-    align-self: center;
-    justify-self: center;
     font-weight: bold;
-    color: green;
+    color: white;
     font-size: 20px;
     margin: 10px;
 }
@@ -37,9 +35,33 @@ body{
     border-radius: 5px;
     cursor: pointer;
     font-size: 20px;
-    transition: all 0.3s;
 }
-.Profile button:hover{
-    background-color: green;
-    color: white;
+.loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100dvh;
+
+}
+.circle{
+    width: 50px;
+    height: 50px;
+    border: 5px solid green;
+    border-top: 5px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin{
+    to {transform: rotate(360deg);}
+}
+dialog button{
+    width: fit-content;
+    padding: 5px;
+    color: darkgreen;
+    font-weight: bold;
+    border-radius: 5px;
+    border: 1px darkgreen solid;
+    background-color: white;
+    font-size: 16px;
+    cursor:pointer;
 }

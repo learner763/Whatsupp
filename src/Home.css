@@ -60,7 +60,8 @@ body{
     background-color: lightgreen;
     width: 100%;
     text-align: center;
-    border: none;
+    border: darkgreen solid;
+    border-width: 1px 0px;
     border-radius: 30px;
     font-size: 25px;
     font-weight: bolder;
@@ -80,6 +81,7 @@ body{
     overflow-y: scroll;
     flex: .5 ;
     flex-direction: column;
+    scrollbar-width: none;
 }
 
 .userinfo{
@@ -99,6 +101,7 @@ body{
     cursor: pointer;
     border: none;
     border-radius: 10px;
+    font-family: 'Inter';
 }
 .userinfo i, .userinfo button, .userinfo span{
     font-weight: bold;
@@ -127,6 +130,7 @@ body{
 .profile_section label,.settings_section label{
     font-size: 25px;
     font-weight: bolder;
+    align-self: flex-start;
 }
 .profile_section input,.settings_section input,.settings_section select{
     font-size: 25px;
@@ -134,6 +138,12 @@ body{
     border: darkgreen solid;
     border-width: 1px 0px 1px 0px;
     border-radius: 20px;
+}
+.profile_section input,.settings_section input{
+    width: 314px;
+}
+.settings_section select{
+    width: 318px;
 }
 .settings_section a{
     font-size: 25px;
@@ -143,16 +153,18 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     width: auto;
+    height: auto;
     margin: 20px 0px;
     border-radius: 20px;
     background-color: darkgreen;
-    padding: 0px 5px;
-    
+    padding: 10px;
+    gap:20px;
 }
 .profile_section button,.settings_section button{
-    background-color: lightgreen;
+    background-color: white;
+    padding: 5px;
     color: darkgreen;
     cursor: pointer;
     border: none;
@@ -160,6 +172,7 @@ body{
     align-self: center;
     font-size: 20px;
     font-weight: bold;
+    width: -webkit-fill-available;
 }
 
 .chat_detail_section{
@@ -178,7 +191,7 @@ body{
     color: darkgreen;
 }
 #profile_name{
-    background-color: lightgreen;
+    background-color: forestgreen;
     width: auto;
     text-align: center;
     position: fixed;
@@ -187,6 +200,18 @@ body{
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 0px 0px 10px 10px;
+    border:1px white solid;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+#profile_name img{
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
 }
 #refresh_people{
     cursor: pointer;
@@ -222,8 +247,9 @@ body{
     padding: 5px;
 }
 .msg_div span{
-    border: black solid;
+    border: white solid;
     border-width: 1px;
+    margin-bottom: 1px;
 }
 .msg_div div{
     display: flex;
@@ -238,9 +264,9 @@ body{
     padding-top: 29px;
     flex-direction: column;
     overflow-y: scroll;
+    gap:15px;
 }
 .chat_bar{
-    border-width: 0px 0px 1px 0px !important;
     flex: .1;
     justify-content: center;
     align-items: start;
@@ -261,7 +287,7 @@ body{
     color: white;
 }
 .chat_detail{
-    padding-top: 29px;
+    padding-top: 60px;
 }
 .chat_detail_section{
     margin-bottom: 70px;
@@ -272,12 +298,29 @@ body{
 select{
     cursor: pointer;
 }
-.settings_section select{
-    width: 100%;
+dialog button{
+    width: fit-content;
+    padding: 5px;
+    color: darkgreen;
+    font-weight: bold;
+    border-radius: 5px;
+    border: 1px darkgreen solid;
+    background-color: white;
+    font-size: 16px;
+    cursor:pointer;
+}
+.waiting_loader{
+    animation: spin 1s linear infinite;
+}
+@keyframes spin{
+    to {transform: rotate(360deg);}
 }
 @media (max-width: 1100px)
 {
-    .msg_div div,.msg_div span{
+    #profile_name{
+        border-radius: 0px;
+    }
+    .msg_div div{
         border:none;
     }
     .desktop_icons{
@@ -305,10 +348,29 @@ select{
     .msg_div{
         position: fixed;
         bottom: 30px;
-        background-color: lightgreen;
+        background-color: forestgreen;
+        border:1px white solid;
     }
 }
 @media (max-width:500px) {
+    .profile_section input,.settings_section input{
+        width: 243px;
+    }
+    .settings_section select{
+        width: 247px;
+    }
+    .top{
+        justify-content: space-between;
+    }
+    .top label:first-of-type{
+        padding-left: 5px;
+    }
+    .top label:nth-of-type(2){
+        padding-right: 5px;
+    }
+    .profile_section button,.settings_section button{
+        padding: 2px;
+    }
     .profile_section div,.settings_section div{
         margin: 50px 0px;
     }

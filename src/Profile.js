@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import './Profile.css';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 
@@ -6,96 +6,96 @@ function Profile() {
     const [name, setname] = useState('');
     const [bio, setbio] = useState('');
     const nav1=useNavigate();
-    const [email_key,set_email_key]=useState(localStorage.getItem("email"))
-    const [proceed,set_proceed]=useState('none')
+    const [token,set_token]=useState (localStorage.getItem("token"))
     const [load1,set_load1]=useState(false)
-
-    useEffect(()=>
-    {
-        if(!localStorage.getItem("email")){set_proceed('none');alert('Please register yourself first!');nav1('/')}
-        else{set_proceed('flex')}
-    },[email_key])
-
+    const [dialog_value,set_dialog_value]=useState('')
+    const dialogref=useRef(null);
     function personal_info(name,bio)
     {
         let flag=false
-        if(name.length<16 && bio.length<26)
+        fetch("/accounts",
         {
-            fetch("/accounts",
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({test:'test'})
+        })
+        .then(response => response.json())
+        .then(data=>{
+        for(let i=0;i<data.length;i++)
+        {
+            if(data[i].name===name && data[i].token!==token)
             {
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({test:'test'})
+                flag=true;
+                set_dialog_value(
+                  <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+                    <label style={{fontWeight:'bold',color:'darkgreen'}}>Duplicate Name</label>
+                    <label>This name is already taken!Choose Another.</label>
+                    <button onClick={()=>dialogref.current.close()}>Close</button>
+                  </div>
+                )
+                dialogref.current.showModal();
+            }
+        }
+        if(!flag)
+        {
+            fetch('/personal', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token: token, name: name,bio:bio }),
             })
             .then(response => response.json())
-            .then(data=>{
-            for(let i=0;i<data.length;i++)
-            {
-                if(data[i].name===name && data[i].email!==email_key)
+            .then(data => {
+                if(data.success===true)
                 {
-                    flag=true;
-                    alert(`${name} is taken by another user!Choose different.`)
+                    nav1('/home');
                 }
-            }
-            if(!flag)
-            {
-                localStorage.setItem('profile',name)
-                fetch('/personal', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username: email_key, name: name,bio:bio }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.success===true)
-                    {
-                        nav1('/home');
-                    }
-                })
-            }})
-        }
-        else{
-            alert("Name and About should be 15 and 25 characters max respectively!");
-        }
+            })
+        }})
+        
     }
 
     useEffect(()=>
     {
+        if(!localStorage.getItem('logged_in')){nav1('/')}
         fetch('/user_data',
         {
           method:'POST',
           headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({username:email_key})
+          body:JSON.stringify({token:token})
         })
         .then(response => response.json())
         .then(data=>{
-            if(data.length>0 && data[0].email===email_key)
+            if(data.result.length>0)
             {
-                if(data[0].name===null){setname('')}
-                else{setname(data[0].name);}
-                if(data[0].bio===null){setbio('')}
-                else{setbio(data[0].bio);}
+                if(data.result[0].name===null){setname('')}
+                else{setname(data.result[0].name);}
+                if(data.result[0].bio===null){setbio('')}
+                else{setbio(data.result[0].bio);}
                 set_load1(true)
             }
-            else{alert(`No account exists with '${email_key}'`);nav1('/')}
+            else{nav1('/')}
         })
-    },[email_key])
+    },[token])
 
     return (
-      <div className="Profile" style={{display:load1?proceed:'none'}}>
-        <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'lightgreen'}}>
-        <a href='https://whatsupp-feedback.vercel.app/' style={{margin:'10px',fontWeight:'bold',color:'darkgreen',alignSelf:'center'}}>View Docs</a>
-        <label style={{padding:'5px', color:'white',backgroundColor:'darkgreen',borderRadius:'5px'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
+    <>
+      <div className='loader' style={{display:load1?'none':'flex'}}>
+        <div className='circle'></div>
+      </div>
+      <div className="Profile" style={{display:load1?'flex':'none'}}>
+        <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'darkgreen'}}>
+        <a href='https://whatsupp-feedback.vercel.app/' style={{margin:'10px',fontWeight:'bold',color:'white',alignSelf:'center'}}>View Docs</a>
+        <label style={{alignSelf:'center',padding:'5px', color:'darkgreen',backgroundColor:'white',borderRadius:'5px'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
         <label >Profile Name 🏷️</label>
         <input
           type="text"
           value={name}
-          placeholder='Name:'
+          maxLength={15}
+          placeholder='Arshad_Khan'
           onChange={(e) => 
           {
-            if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
             setname(e.target.value.replace(/[^a-zA-Z_]/g,''))} 
           }
         />
@@ -103,7 +103,8 @@ function Profile() {
         <input
           type="text"
           value={bio}
-          placeholder='Bio:'
+          maxLength={25}
+          placeholder='...'
           onChange={(e) => 
             {
               if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
@@ -114,11 +115,11 @@ function Profile() {
           {
             if(name.length>0 && bio.length>0){personal_info(name,bio)}
           }}>Save</button>
-        <label>Help people find you easily. 
-        </label>
-        <label style={{maxWidth:'270px'}}>For security,keep profile name & username different.</label>
+        <label style={{fontWeight:'normal'}}>Help people find you easily.</label>
         </div>
       </div>
+      <dialog style={{borderRadius:'10px'}} ref={dialogref}>{dialog_value}</dialog>
+    </>
   );
 }
 

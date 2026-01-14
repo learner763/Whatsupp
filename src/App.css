@@ -8,7 +8,7 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color:darkgreen; 
+    background-color:white; 
     width: auto;
     min-height: 100dvh;
     overflow-y: auto;
@@ -17,7 +17,7 @@ body{
     align-self: center;
     justify-self: center;
     font-weight: bold;
-    color: green;
+    color: white;
     font-size: 20px;
     margin: 10px;
 }
@@ -32,16 +32,29 @@ body{
 .App button{
     margin: 10px;
     background-color: white;
-    color: green;
+    color: darkgreen;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 20px;
-    transition: all 0.3s;
 }
-.App button:hover{
-    background-color: green;
-    color: white;
+.loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100dvh;
+
+}
+.circle{
+    width: 50px;
+    height: 50px;
+    border: 5px solid green;
+    border-top: 5px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin{
+    to {transform: rotate(360deg);}
 }
 #s{
     text-decoration: underline;
