@@ -1337,7 +1337,7 @@ function Home()
                             {
                                 return(
                                     <div onClick={()=>{set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'row',alignItems:'center'}} >
-                                        <img style={{flexShrink: '0',borderRadius:'50%',width:'55px',height:'55px',objectFit:'cover',marginLeft:'5px',border:bg==='black'?'none':'1px darkgreen solid'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
+                                        <img style={{flexShrink: '0',borderRadius:'50%',width:'55px',height:'55px',objectFit:'cover',marginLeft:'5px',border:bgr==='black'?'none':'1px darkgreen solid'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
                                         <div style={{display:'flex',flexDirection:'column',height:'70px'}}>    
                                             <div style={{height:'30px',fontWeight:'bold',alignItems:'center'}}>
                                                 <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?profile:info[indices.indexOf(value[0])*2]}</span>
