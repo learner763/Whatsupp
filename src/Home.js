@@ -1242,7 +1242,7 @@ function Home()
                 <div className='main_body_section'>
                     <div className='chat_detail_section' style={{display:disp}} >
                         <label  id="profile_name" >
-                            <img src={profile_images[indices.indexOf(receiver)]}></img>
+                            <img style={{borderRadius:'50%',width:'65px',height:'65px',objectFit:'cover'}}  src={profile_images[indices.indexOf(receiver)]}></img>
                             <label style={{display:'flex',flexDirection:'column',gap:'5px'}}>
                                 <label style={{color:'white',fontWeight:'bold',fontSize:'20px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]}</label> 
                                 <label style={{color:'white',fontWeight:'normal',fontSize:'20px',alignSelf:'flex-start'}}>{status[indices.indexOf(receiver)]}</label>
