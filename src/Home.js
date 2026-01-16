@@ -1224,7 +1224,7 @@ function Home()
     {
         document.addEventListener('click',(e)=>
         {
-            if(e.target.tagName==='IMG' && e.target.src!=='dp.png')
+            if(e.target.tagName==='IMG' && e.target.src.slice(e.target.src.lastIndexOf('/')+1,e.target.src.length)!=='dp.png')
             {
                 set_dialog_value(
                     <img onLoad={dialogref.current.showModal()} style={{width:'300px',height:'300px',objectFit:'cover',flexShrink:'0'}} src={e.target.src}></img>
@@ -1338,7 +1338,7 @@ function Home()
                                 return(
                                     <div onClick={()=>{set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'row',alignItems:'center'}} >
                                         <img style={{flexShrink: '0',borderRadius:'50%',width:'55px',height:'55px',objectFit:'cover',marginLeft:'5px',border:bgr==='black'?'none':'1px darkgreen solid'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
-                                        <div style={{display:'flex',flexDirection:'column',height:'70px'}}>    
+                                        <div style={{display:'flex',flexDirection:'column',height:'60px'}}>    
                                             <div style={{height:'30px',fontWeight:'bold',alignItems:'center'}}>
                                                 <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?profile:info[indices.indexOf(value[0])*2]}</span>
                                                 <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
