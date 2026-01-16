@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App'; 
 import Home from './Home'; 
 import Profile from './Profile'; 
-import Pr from './Pr'; 
 import reportWebVitals from './reportWebVitals';
 import { Navigate } from 'react-router-dom';
 function Root_Route()
@@ -30,7 +29,6 @@ root.render(
                 <Route path="/" element={<Root_Route/>} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/pr" element={<Pr />} />
             </Routes>
         </Router>
     </React.StrictMode>
