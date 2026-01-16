@@ -8,7 +8,6 @@ import validator from 'validator';
 import nodemailer from 'nodemailer';
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const upload = multer({ storage:multer.memoryStorage() });
@@ -23,8 +22,8 @@ cloudinary.config({
 const transporter=nodemailer.createTransport({
     service:'gmail',
     auth:{
-        user:process.env.EMAIL,
-        pass:process.env.PASSWORD
+        user:'whatsuppchatapp@gmail.com',
+        pass:'higsrxaeudsbrsab'
     }
 })
 
@@ -258,6 +257,7 @@ app.post('/get_messages',(req,res)=>
                     }
                 }
             }
+            console.log(frontend_messages)
             res.json(frontend_messages);
         })
     })

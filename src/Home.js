@@ -1317,7 +1317,7 @@ function Home()
                                         <div style={{display:'flex',flexDirection:'column',height:'70px'}}>    
                                             <div style={{height:'35px',fontWeight:'bold',alignItems:'center'}}>
                                                 <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?profile:info[indices.indexOf(value[0])*2]}</span>
-                                                <span style={{color:bgr==='black'?'white':'#222',paddingRight:'5px',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
+                                                <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
                                                     {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()=== new Date().toLocaleDateString()?
                                                     new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
                                                     new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()}
