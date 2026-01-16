@@ -1227,13 +1227,12 @@ function Home()
             if(e.target.tagName==='IMG')
             {
                 set_dialog_value(
-                    <img style={{width:'300px',height:'300px',objectFit:'cover',flexShrink:'0'}} src={e.target.src}></img>
+                    <img onLoad={dialogref.current.showModal()} style={{width:'300px',height:'300px',objectFit:'cover',flexShrink:'0'}} src={e.target.src}></img>
                 )
                 document.getElementsByTagName('dialog')[0].style.width='300px'
                 document.getElementsByTagName('dialog')[0].style.height='300px'
                 document.getElementsByTagName('dialog')[0].style.padding='0'
                 document.getElementsByTagName('dialog')[0].style.scrollbarWidth='none'
-                dialogref.current.showModal()
             }
             else{
                 if(dialogref.current.open)
