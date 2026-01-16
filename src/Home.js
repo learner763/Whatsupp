@@ -1242,7 +1242,7 @@ function Home()
                 <div className='main_body_section'>
                     <div className='chat_detail_section' style={{display:disp}} >
                         <label  id="profile_name" >
-                            <img style={{borderRadius:'50%',width:'65px',height:'65px',objectFit:'cover'}}  src={profile_images[indices.indexOf(receiver)]}></img>
+                            <img src={profile_images[indices.indexOf(receiver)]}></img>
                             <label style={{display:'flex',flexDirection:'column',gap:'5px'}}>
                                 <label style={{color:'white',fontWeight:'bold',fontSize:'20px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]}</label> 
                                 <label style={{color:'white',fontWeight:'normal',fontSize:'20px',alignSelf:'flex-start'}}>{status[indices.indexOf(receiver)]}</label>
@@ -1313,7 +1313,7 @@ function Home()
                             {
                                 return(
                                     <div onClick={()=>{set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}} className='chat_bar' key={index} style={{display:'flex',flexDirection:'row',alignItems:'center'}} >
-                                        <img style={{borderRadius:'50%',width:'65px',height:'65px',objectFit:'cover'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
+                                        <img style={{flexShrink: '0',borderRadius:'50%',width:'65px',height:'65px',objectFit:'cover'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
                                         <div style={{display:'flex',flexDirection:'column',height:'70px'}}>    
                                             <div style={{height:'35px',fontWeight:'bold',alignItems:'center'}}>
                                                 <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?profile:info[indices.indexOf(value[0])*2]}</span>
@@ -1335,7 +1335,7 @@ function Home()
                     </div>
                     <div className='profile_section' style={{display:profile_section}} >
                         <div>
-                            <img style={{borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
+                            <img style={{flexShrink: '0',borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
                             <div style={{display:'flex',flexDirection:'row',margin:'0',padding:'0',color:'white'}}>
                             <label className='waiting_loader' style={{
                                     display:updating_pic?'block':'none',width:'20px',height:'20px',borderRadius:'50%',border:'5px white solid',borderTop:'5px darkgreen solid'
@@ -1409,7 +1409,7 @@ function Home()
                     </div>
                     <div className='settings_section' style={{display:settings_section}} >
                         <div>
-                            <img style={{borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
+                            <img style={{flexShrink: '0',borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
                             <label style={{color:'white'}}>Password 🔒</label>
                             <select value={change_pass} onChange={(e)=>set_change_pass(e.target.value)} >
                                 <option value='false'>Retain</option>
@@ -1456,7 +1456,7 @@ function Home()
                             return (
                                 <div className='userinfo' key={index} style={{display:search_filter[index]}}> 
                                     <div style={{display:search_filter[index],flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'220px',backgroundColor:'darkgreen',borderRadius:'20px',padding:'5px'}}>
-                                        <img style={{borderRadius:'50%',width:'100px',height:'100px',objectFit:'cover'}} src={up_user===indices[index]?profile_pic: profile_images[index]}></img>
+                                        <img style={{flexShrink: '0',borderRadius:'50%',width:'100px',height:'100px',objectFit:'cover'}} src={up_user===indices[index]?profile_pic: profile_images[index]}></img>
                                         <span className='connect_people' >{info[index + w ]}{status[index]==='(Online)' || status[index]==='(Typing...)'?'🟢':''}</span> 
                                         <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
                                         <button onClick={()=>
