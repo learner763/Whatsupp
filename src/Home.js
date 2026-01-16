@@ -1220,6 +1220,31 @@ function Home()
         set_search_filter(values)
     },[search_value,info])
 
+    useEffect(()=>
+    {
+        document.addEventListener('click',(e)=>
+        {
+            if(e.target.tagName==='IMG')
+            {
+                set_dialog_value(
+                    <img style={{width:'300px',height:'300px',objectFit:'cover',flexShrink:'0'}} src={e.target.src}></img>
+                )
+                document.getElementsByTagName('dialog')[0].style.width='300px'
+                document.getElementsByTagName('dialog')[0].style.height='300px'
+                document.getElementsByTagName('dialog')[0].style.padding='0'
+                document.getElementsByTagName('dialog')[0].style.scrollbarWidth='none'
+                dialogref.current.showModal()
+            }
+            else{
+                if(dialogref.current.open)
+                {
+                    dialogref.current.close()
+                }
+            }
+
+        })
+    },[profile_images])
+
     return(
         <>
         <div style={{display:loaded==true? 'none':'flex',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
@@ -1242,7 +1267,7 @@ function Home()
                 <div className='main_body_section'>
                     <div className='chat_detail_section' style={{display:disp}} >
                         <label  id="profile_name" >
-                            <img src={profile_images[indices.indexOf(receiver)]}></img>
+                            <img src={receiver===up_user?profile_pic: profile_images[indices.indexOf(receiver)]}></img>
                             <label style={{display:'flex',flexDirection:'column',gap:'5px'}}>
                                 <label style={{color:'white',fontWeight:'bold',fontSize:'20px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]}</label> 
                                 <label style={{color:'white',fontWeight:'normal',fontSize:'20px',alignSelf:'flex-start'}}>{status[indices.indexOf(receiver)]}</label>
