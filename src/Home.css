@@ -299,6 +299,9 @@ body{
 select{
     cursor: pointer;
 }
+img{
+    cursor: pointer;
+}
 dialog button{
     width: fit-content;
     padding: 5px;
