@@ -477,7 +477,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let deleted_messages=snapshot.docChanges().filter(change=> change.doc.data().delete || !on_reload.current?!change.doc.data().neondb:1).map(function(change)
+            let deleted_messages=snapshot.docChanges().filter(change=> change.doc.data().delete || (!on_reload.current?!change.doc.data().neondb:1)).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
