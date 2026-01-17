@@ -477,7 +477,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let deleted_messages=snapshot.docChanges().filter(change=> change.doc.data().delete || !change.doc.data().neondb).map(function(change)
+            let deleted_messages=snapshot.docChanges().filter(change=> change.doc.data().delete || !on_reload.current?!change.doc.data().neondb:1).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
@@ -1339,7 +1339,7 @@ function Home()
                                     <div onClick={(e)=>{
                                         if(e.target.tagName!=='IMG'){set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}
                                         }} className='chat_bar' key={index} style={{display:'flex',flexDirection:'row',alignItems:'center'}} >
-                                        <img style={{flexShrink: '0',borderRadius:'50%',width:'55px',height:'55px',objectFit:'cover',marginLeft:'5px',border:bgr==='black'?'none':'1px darkgreen solid'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
+                                        <img style={{flexShrink: '0',borderRadius:'50%',width:'55px',height:'55px',objectFit:'cover',marginLeft:'5px',border:bgr!=='black' && up_user===value[0]?profile_pic:profile_images[indices.indexOf(value[0])]==='dp.png'    ?'1px darkgreen solid':'none'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
                                         <div style={{display:'flex',flexDirection:'column',height:'60px'}}>    
                                             <div style={{height:'30px',fontWeight:'bold',alignItems:'center'}}>
                                                 <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?profile:info[indices.indexOf(value[0])*2]}</span>
