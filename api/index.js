@@ -293,6 +293,9 @@ app.post("/save_settings",async (req, res) => {
     else if(change && password===''){
         return res.json({success:false});
     }
+    else{
+        return res.json({success:true});
+    }
 });
 
 app.post("/forpass",async (req, res) => {
