@@ -331,9 +331,18 @@ function Home()
                     })
                     return previous
                 })
+                set_dialog_value('')
+                set_dialog_value(
+                    <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+                      <label style={{fontWeight:'bold',color:'darkgreen'}}>Profile Saved</label>
+                      <button onClick={()=>dialogref.current.close()}>Close</button>
+                    </div>
+                )
+                dialogref.current.showModal();
             }
             else 
             {
+                set_dialog_value('')
                 set_dialog_value(
                     <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                       <label style={{fontWeight:'bold',color:'darkgreen'}}>Duplicate Name</label>
@@ -364,6 +373,14 @@ function Home()
             {
                 localStorage.setItem('token',data.new_token)
                 set_token(data.new_token)
+                set_dialog_value('')
+                set_dialog_value(
+                    <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+                      <label style={{fontWeight:'bold',color:'darkgreen'}}>Settings Saved</label>
+                      <button onClick={()=>dialogref.current.close()}>Close</button>
+                    </div>
+                )
+                dialogref.current.showModal();
             }
         }
         )
@@ -414,7 +431,7 @@ function Home()
                 if(all_nameatfirst[i]===nameatfirst)
                 {
                     console.log(active_users[all_nameatfirst[i]].display)
-                    set_live_status(active_users[all_nameatfirst[i]].display===null?'true':active_users[all_nameatfirst[i]].display)
+                    set_live_status(!active_users[all_nameatfirst[i]].display?'true':active_users[all_nameatfirst[i]].display)
                 }
                 if(Object.keys(active_users).includes(all_nameatfirst[i] ))
                 {
@@ -1227,6 +1244,7 @@ function Home()
         {
             if(e.target.tagName==='IMG' && e.target.src.slice(e.target.src.lastIndexOf('/')+1,e.target.src.length)!=='dp.png')
             {
+                set_dialog_value('')
                 set_dialog_value(
                     <img onLoad={dialogref.current.showModal()} style={{width:'300px',height:'300px',objectFit:'cover',flexShrink:'0'}} src={e.target.src}></img>
                 )
@@ -1236,7 +1254,7 @@ function Home()
                 document.getElementsByTagName('dialog')[0].style.scrollbarWidth='none'
             }
             else{
-                if(dialogref.current.open)
+                if(dialogref.current?.open)
                 {
                     dialogref.current.close()
                 }
