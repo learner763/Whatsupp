@@ -291,7 +291,7 @@ app.post("/save_settings",async (req, res) => {
         if(results.rowCount===1){return res.json({success:true,new_token:new_token});}
     }
     else{
-        return res.json({success:false});
+        return res.json({success:true});
     }
 });
 

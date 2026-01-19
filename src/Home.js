@@ -335,6 +335,7 @@ function Home()
                 set_dialog_value(
                     <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                       <label style={{fontWeight:'bold',color:'darkgreen'}}>Profile Saved</label>
+                      <label>Profile details were saved.</label>
                       <button onClick={()=>dialogref.current.close()}>Close</button>
                     </div>
                 )
@@ -371,12 +372,15 @@ function Home()
         {
             if(data.success)
             {
-                localStorage.setItem('token',data.new_token)
-                set_token(data.new_token)
+                if(data.new_token){
+                    localStorage.setItem('token',data.new_token)
+                    set_token(data.new_token)
+                }
                 set_dialog_value('')
                 set_dialog_value(
                     <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                       <label style={{fontWeight:'bold',color:'darkgreen'}}>Settings Saved</label>
+                      <label>Account Settings were saved.</label>
                       <button onClick={()=>dialogref.current.close()}>Close</button>
                     </div>
                 )
