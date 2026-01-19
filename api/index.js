@@ -290,8 +290,8 @@ app.post("/save_settings",async (req, res) => {
         let results=await pool.query("update public.users set password=$1,token=$2 where token=$3", [hashed_password,new_token,token]) 
         if(results.rowCount===1){return res.json({success:true,new_token:new_token});}
     }
-    else{
-        return res.json({success:true});
+    else if(change && password===''){
+        return res.json({success:false});
     }
 });
 

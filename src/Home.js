@@ -386,6 +386,17 @@ function Home()
                 )
                 dialogref.current.showModal();
             }
+            else{
+                set_dialog_value('')
+                set_dialog_value(
+                    <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+                      <label style={{fontWeight:'bold',color:'darkgreen'}}>Empty Password</label>
+                      <label>Password cannot be empty.</label>
+                      <button onClick={()=>dialogref.current.close()}>Close</button>
+                    </div>
+                )
+                dialogref.current.showModal();
+            }
         }
         )
     }
