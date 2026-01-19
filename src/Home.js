@@ -413,11 +413,12 @@ function Home()
             {
                 if(all_nameatfirst[i]===nameatfirst)
                 {
+                    console.log(active_users[all_nameatfirst[i]].display)
                     set_live_status(active_users[all_nameatfirst[i]].display===null?'true':active_users[all_nameatfirst[i]].display)
                 }
                 if(Object.keys(active_users).includes(all_nameatfirst[i] ))
                 {
-                    if(!active_users[all_nameatfirst[i]].display || active_users[all_nameatfirst[i]].display==='false'){statuses.push('')}
+                    if(active_users[all_nameatfirst[i]].display==='false'){statuses.push('')}
                     else if(active_users[all_nameatfirst[i]].online)
                     {
                         if(active_users[all_nameatfirst[i]].typing && active_users[all_nameatfirst[i]].recipient===index)
