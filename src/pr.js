@@ -1,4 +1,1 @@
-if(1)
-{
-    console.log(9)
-}
+let r=[3,4]

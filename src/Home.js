@@ -71,7 +71,7 @@ function Home()
     const [profile_pic,set_profile_pic]=useState('dp.png')
     const [profile_images,set_images]=useState([])
     const [updating_pic,set_updating_pic]=useState(false)
-
+    const [consecutive_keys,set_consecutive_keys]=useState([])
     let w=-1;
 
     async function set_seen(user)
@@ -331,19 +331,21 @@ function Home()
                     })
                     return previous
                 })
-                set_dialog_value('')
                 set_dialog_value(
                     <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                       <label style={{fontWeight:'bold',color:'darkgreen'}}>Profile Saved</label>
                       <label>Profile details were saved.</label>
-                      <button onClick={()=>dialogref.current.close()}>Close</button>
+                      <button onClick={()=>
+                        {
+                            set_dialog_value('')
+                            dialogref.current.close()
+                        }}>Close</button>
                     </div>
                 )
                 dialogref.current.showModal();
             }
             else 
             {
-                set_dialog_value('')
                 set_dialog_value(
                     <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                       <label style={{fontWeight:'bold',color:'darkgreen'}}>Duplicate Name</label>
@@ -898,7 +900,7 @@ function Home()
         let container=document.getElementsByClassName('chat_detail_section');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
         set_text('')
-        document.getElementById('message').style.height='51px'
+        document.getElementById('message').style.height='50px'
         document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
         document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='70px'
         focus_input.current.focus()
@@ -1175,6 +1177,7 @@ function Home()
                         .then(response => response.json())
                         .then( async data_neon=>
                         {   
+                            console.log(data_neon)
                             if(data_neon.success)
                             {
                                 setmessages(prev=>
@@ -1259,7 +1262,6 @@ function Home()
         {
             if(e.target.tagName==='IMG' && e.target.src.slice(e.target.src.lastIndexOf('/')+1,e.target.src.length)!=='dp.png')
             {
-                set_dialog_value('')
                 set_dialog_value(
                     <img onLoad={dialogref.current.showModal()} style={{width:'300px',height:'300px',objectFit:'cover',flexShrink:'0'}} src={e.target.src}></img>
                 )
@@ -1268,6 +1270,7 @@ function Home()
             else{
                 if(dialogref.current?.open)
                 {
+                    set_dialog_value('')
                     dialogref.current.close()
                 }
             }
@@ -1312,7 +1315,7 @@ function Home()
                                         {value[1].map((text,ind)=>
                                         (
                                             text.startsWith('✔')?
-                                            (<span style={{marginRight:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'270px',padding:'5px',fontSize:'20px'}}>
+                                            (<span style={{whiteSpace:'pre-line',marginRight:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'270px',padding:'5px',fontSize:'20px'}}>
                                                 <select id='options1' value={selectval} onChange={(e)=>
                                                     { 
                                                     if(e.target.value==='Delete'){set_edit('none'); set_msg_value('');set_reply('none');set_reply_to('');delete_msg(receiver,text);}
@@ -1336,7 +1339,7 @@ function Home()
                                                 <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             text.startsWith(' ')?
-                                            (<span style={{marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'rebeccapurple',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
+                                            (<span style={{whiteSpace:'pre-line',marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'rebeccapurple',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'20px'}}>
                                                 <select id='options2' value={selectval} onChange={(e)=>
                                                     { 
                                                     if(e.target.value==="Reply"){reply_msg(receiver,text);}
@@ -1371,7 +1374,7 @@ function Home()
                                         if(e.target.tagName!=='IMG'){set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}
                                         }} className='chat_bar' key={index} style={{display:'flex',flexDirection:'row',alignItems:'center'}} >
                                         <img style={{flexShrink: '0',borderRadius:'50%',width:'55px',height:'55px',objectFit:'cover',marginLeft:'5px',border:bgr!=='black'?up_user===value[0]?profile_pic==='dp.png'?'1px darkgreen solid':'none':profile_images[indices.indexOf(value[0])]==='dp.png'?'1px darkgreen solid':'none':'none'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
-                                        <div style={{display:'flex',flexDirection:'column',height:'60px'}}>    
+                                        <div style={{display:'flex',flexDirection:'column',height:'60px',minWidth:'0'}}>    
                                             <div style={{height:'30px',fontWeight:'bold',alignItems:'center'}}>
                                                 <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?profile:info[indices.indexOf(value[0])*2]}</span>
                                                 <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
@@ -1533,20 +1536,40 @@ function Home()
             </div>
             <div className='msg_div' style={{display:disp}}>
                 <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',backgroundColor:'darkgreen',color:'white'}}>
-                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');set_text('');document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='51px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
+                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');set_text('');document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='50px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
                     <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)*2])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
                     <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'50px',maxHeight:'97px'}} placeholder='Type...'
                     onKeyDown={(e)=>
                     {
+                        console.log(e.key)
+                        set_consecutive_keys(previous_keys=>
+                        {
+                            let previous_array=[...previous_keys]
+                            if(previous_array.length<2)
+                            {
+                                previous_array.push(e.key)
+                            }
+                            else{
+                                previous_array.splice(0,1)
+                                previous_array.push(e.key)
+                            }
+                            return previous_array
+                        })
                         if(e.key==='Enter')
                         {
-                            if(message_text.length>0)
+                            console.log(consecutive_keys)
+                            if(consecutive_keys[1]==='Shift')
+                            {
+                                document.getElementById('message').scrollTop=document.getElementById('message').scrollHeight
+                                return
+                            }
+                            else if(message_text.length>0)
                             {
                                 e.preventDefault()
                                 set_text('')
-                                document.getElementById('message').style.height='51px'
+                                document.getElementById('message').style.height='50px'
                                 document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
                                 edit_icon==='flex'?write_edit(message_text):Send(message_text)
                             }
@@ -1574,7 +1597,8 @@ function Home()
                         if(edit_icon==='none'){Send(message_text)};
                         if(edit_icon==='flex'){write_edit(message_text)}
                         set_text('')
-                        document.getElementById('message').style.height='51px'
+                        set_consecutive_keys([])
+                        document.getElementById('message').style.height='50px'
                         document.getElementById('Send_Button').style.backgroundColor="#EEEEEE"}}} ><i className='fas fa-arrow-up'></i></button>
                 </div>
             </div>

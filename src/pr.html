@@ -1,18 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Hyperlink Detection Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 16px;
+      padding: 10px;
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      min-height: 60px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    a {
+      color: #0066cc;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <input type="file" id="fileInput" hidden />
 
-    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
-      <i class="fa-solid fa-paperclip"></i>
-      <span>Upload file</span>
-    </button>
-    
-    <p id="fileName"></p>
-    </body>
+  <h2>Hyperlink Detection</h2>
+
+  <textarea id="input" placeholder="Type text with links like https://example.com"></textarea>
+
+  <div class="output" id="output"></div>
+
+  <script>
+    function linkify(text) {
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+      return text.replace(urlRegex, function (url) {
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+      });
+    }
+
+    const input = document.getElementById("input");
+    const output = document.getElementById("output");
+
+    input.addEventListener("input", () => {
+      output.innerHTML = linkify(input.value);
+    });
+  </script>
+
+</body>
 </html>
