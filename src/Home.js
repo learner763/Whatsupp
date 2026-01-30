@@ -320,7 +320,6 @@ function Home()
                 {
                     let previous=[...prev]
                     let my_data=0
-                    console.log(up_user)
                     my_data=previous.indexOf(up_user)
                     setinfo(pre=>
                     {
@@ -447,7 +446,6 @@ function Home()
             {
                 if(all_nameatfirst[i]===nameatfirst)
                 {
-                    console.log(active_users[all_nameatfirst[i]].display)
                     set_live_status(!active_users[all_nameatfirst[i]].display?'true':active_users[all_nameatfirst[i]].display)
                 }
                 if(Object.keys(active_users).includes(all_nameatfirst[i] ))
@@ -490,7 +488,6 @@ function Home()
         let action=onSnapshot(action_query,(snapshot)=>
         {
             if(!on_reload.current)sent_once.current=snapshot.docs.map(doc => doc.id)
-                console.log(snapshot.docs)
             let sent_messages=snapshot.docChanges().filter(change=>(change.doc.data().from===index? change.type==='added':change.type==='modified' && change.doc.data().neondb) && on_reload.current).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
@@ -516,7 +513,6 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            console.log(sent_messages)
             if(sent_messages.length>0 && !sent_once.current.includes(sent_messages[0].id))
             {
                 sent_once.current.push(sent_messages[0].id)
@@ -707,7 +703,6 @@ function Home()
                         {
                             for(let k=0;k<previous[j][1].length;k++)
                             {
-                                console.log(read_messages[i],read_messages[i].createdAt.toDate().toISOString(),previous[j][1][k])
                                 if(read_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(" ")+1,previous[j][1][k].length))
                                 {
                                     previous[j][1][k]=`✔✔${previous[j][1][k]}`
@@ -1009,7 +1004,6 @@ function Home()
             {
                 if(data[i].token===token)
                 {
-                    console.log('hi')
                     change_profile(data[i].name)
                     change_index(data[i].email)
                     set_nameatfirst(data[i].nameatfirst)
@@ -1137,6 +1131,7 @@ function Home()
     
     async function Send(message)
     {
+        document.getElementById('message').disabled=true
         let ids=[]
         let msg_being_replied=""
         if(reply_icon==='flex')
@@ -1155,35 +1150,36 @@ function Home()
             replied_to:msg_being_replied.startsWith('✔')? msg_being_replied.replace(msg_being_replied.slice(0,msg_being_replied.indexOf(' ')),'✔'):msg_being_replied.startsWith(' ')?msg_being_replied:'',
             reply: msg_being_replied===''?false:true,
         });
-        onSnapshot(inserted_msg,(document)=>
+        onSnapshot(inserted_msg,(message_document)=>
         {
-            let data=document.data()
+            let data=message_document.data()
             if(data!==undefined)
             {
                 if(!data.createdAt){return}
                 else
                 {
-                    if(ids.includes(document.id)===false)
+                    if(ids.includes(message_document.id)===false)
                     {
-                        ids.push(document.id)
+                        ids.push(message_document.id)
                         fetch('/save_msg',
                         {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ from: index, to: receiver, message: message,time:data.createdAt.toDate().toISOString() }),
+                            body: JSON.stringify({ from: index, to: receiver, message: message,time:data.createdAt.toDate().toISOString(),client_time: set_time_stamp.current}),
                         })
                         .then(response => response.json())
                         .then( async data_neon=>
                         {   
-                            console.log(data_neon)
+                            document.getElementById('message').disabled=false
+                            focus_input.current.focus()
                             if(data_neon.success)
                             {
                                 setmessages(prev=>
                                 {
                                     let previous=[...prev]
-                                    previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${set_time_stamp.current}` )]=`✔✔ ${data.text}     ${data.createdAt.toDate().toISOString()}`
+                                    previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${data_neon.client_time}` )]=`✔✔ ${data.text}     ${data.createdAt.toDate().toISOString()}`
                                     return previous
                                 })
                                 await updateDoc(inserted_msg,{neondb:true})
@@ -1543,7 +1539,6 @@ function Home()
                     <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'50px',maxHeight:'97px'}} placeholder='Type...'
                     onKeyDown={(e)=>
                     {
-                        console.log(e.key)
                         set_consecutive_keys(previous_keys=>
                         {
                             let previous_array=[...previous_keys]
@@ -1559,7 +1554,6 @@ function Home()
                         })
                         if(e.key==='Enter')
                         {
-                            console.log(consecutive_keys)
                             if(consecutive_keys[1]==='Shift')
                             {
                                 document.getElementById('message').scrollTop=document.getElementById('message').scrollHeight
