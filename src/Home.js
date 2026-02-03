@@ -106,7 +106,7 @@ function Home()
             if(urlRegex.test(value))
             {
                 return(
-                    <a style={{color:'white'}} key={index} href={value}>
+                    <a style={{color:'lime'}} key={index} href={value}>
                         {value}
                     </a>
                 )
