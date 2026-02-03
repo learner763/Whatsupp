@@ -97,6 +97,24 @@ function Home()
         })
     } 
 
+    function find_url(message)
+    {
+        const urlRegex = /(https?:\/\/[^\s]+)/g
+        let portions=message.split(urlRegex)
+        return portions.map((value,index)=>
+        {
+            if(urlRegex.test(value))
+            {
+                return(
+                    <a style={{color:'white'}} key={index} href={value}>
+                        {value}
+                    </a>
+                )
+            }
+            return value
+        })
+    }
+
     async function delete_msg(user,message)
     {
         if(message.startsWith('✔✔'))
@@ -1331,7 +1349,7 @@ function Home()
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
-                                                <span style={{minWidth:'100px',maxWidth:'270px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),'')}</span>
+                                                <span style={{minWidth:'100px',maxWidth:'270px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{find_url( text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),''))}</span>
                                                 <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             text.startsWith(' ')?
