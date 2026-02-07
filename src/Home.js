@@ -106,7 +106,7 @@ function Home()
             if(urlRegex.test(value))
             {
                 return(
-                    <a style={{color:'lime'}} key={index} href={value}>
+                    <a style={{color:'lime',textDecoration:'none'}} key={index} href={value}>
                         {value}
                     </a>
                 )
@@ -1194,13 +1194,13 @@ function Home()
                             focus_input.current.focus()
                             if(data_neon.success)
                             {
+                                await updateDoc(inserted_msg,{neondb:true})
                                 setmessages(prev=>
                                 {
                                     let previous=[...prev]
                                     previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${data_neon.client_time}` )]=`✔✔ ${data.text}     ${data.createdAt.toDate().toISOString()}`
                                     return previous
                                 })
-                                await updateDoc(inserted_msg,{neondb:true})
                             }
                         })
                     }
@@ -1368,7 +1368,7 @@ function Home()
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
-                                                <span style={{minWidth:'100px', maxWidth:'270px'}}>{text.slice(0,text.lastIndexOf(' '))}</span>
+                                                <span style={{minWidth:'100px', maxWidth:'270px'}}>{find_url(text.slice(0,text.lastIndexOf(' ')))}</span>
                                                 <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'rebeccapurple',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
