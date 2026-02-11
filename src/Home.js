@@ -367,7 +367,11 @@ function Home()
                     <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                       <label style={{fontWeight:'bold',color:'darkgreen'}}>Duplicate Name</label>
                       <label>This name is already taken!Choose Another.</label>
-                      <button onClick={()=>dialogref.current.close()}>Close</button>
+                      <button onClick={()=>
+                        {
+                            set_dialog_value('')
+                            dialogref.current.close()
+                        }}>Close</button>
                     </div>
                 )
                 dialogref.current.showModal();
@@ -400,7 +404,11 @@ function Home()
                     <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                       <label style={{fontWeight:'bold',color:'darkgreen'}}>Settings Saved</label>
                       <label>Account Settings were saved.</label>
-                      <button onClick={()=>dialogref.current.close()}>Close</button>
+                      <button onClick={()=>
+                        {
+                            set_dialog_value('')
+                            dialogref.current.close()
+                        }}>Close</button>
                     </div>
                 )
                 dialogref.current.showModal();
@@ -411,7 +419,11 @@ function Home()
                     <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                       <label style={{fontWeight:'bold',color:'darkgreen'}}>Empty Password</label>
                       <label>Password cannot be empty.</label>
-                      <button onClick={()=>dialogref.current.close()}>Close</button>
+                      <button onClick={()=>
+                        {
+                            set_dialog_value('')
+                            dialogref.current.close()
+                        }}>Close</button>
                     </div>
                 )
                 dialogref.current.showModal();
@@ -1282,7 +1294,7 @@ function Home()
             if(e.target.tagName==='IMG' && e.target.src.slice(e.target.src.lastIndexOf('/')+1,e.target.src.length)!=='dp.png')
             {
                 set_dialog_value(
-                    <img onLoad={dialogref.current.showModal()} style={{width:'300px',height:'300px',objectFit:'cover',flexShrink:'0'}} src={e.target.src}></img>
+                    <img onLoad={dialogref.current.showModal()} style={{width:'280px',height:'280px',objectFit:'cover',flexShrink:'0'}} src={e.target.src}></img>
                 )
                 document.getElementsByTagName('dialog')[0].style.scrollbarWidth='none'
             }
@@ -1293,7 +1305,6 @@ function Home()
                     dialogref.current.close()
                 }
             }
-
         })
     },[profile_images])
 

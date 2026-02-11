@@ -109,7 +109,7 @@ app.post("/login",async (req, res) => {
     }
     else if(bt=="Sign Up")
     {
-        var results2=await pool.query("select * from public.users where email=$1 union all select * from public.users where index=$1", [email])
+        var results2=await pool.query("select * from public.users where email=$1", [email])
         if(results2.rows.length>0){return res.json({success:false,duplicate:true});}
         else{     
             if(!validator.isEmail(email)){return res.json({success:false,invalid:true});}
@@ -124,7 +124,7 @@ app.post("/login",async (req, res) => {
                 subject:'WhatsUpp OTP',
                 text:`Your WhatsUpp Account OTP is ${otp}`
             })
-            let results3=await pool.query("insert into public.users(email,password,index,token,otp,lastlogin,bg,profilepicture) values($1,$2,$3,$4,$5,$6,$7,$8)", [email,hashed_password,email,token,hashed_otp,new Date(),'white',''])
+            let results3=await pool.query("insert into public.users(email,password,token,otp,lastlogin,bg,profilepicture) values($1,$2,$3,$4,$5,$6,$7)", [email,hashed_password,token,hashed_otp,new Date(),'white',''])
             if(results3.rowCount===1){return res.json({success:true,password:password,email:email});}  
         }
     }   
