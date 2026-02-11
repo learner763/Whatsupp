@@ -1,6 +1,6 @@
 import React, {  useEffect, useRef, useState } from 'react';
 import './Home.css';
-import { BrowserRouter ,  useNavigate } from 'react-router-dom';
+import { BrowserRouter ,  data,  useNavigate } from 'react-router-dom';
 import {db,real_time_db,auth_app} from './firebase';
 import { signInAnonymously } from 'firebase/auth';
 import {
@@ -537,8 +537,7 @@ function Home()
                 let to=sent_messages[0].to;
                 let from=sent_messages[0].from;
                 let message_text=sent_messages[0].text;
-                set_time_stamp.current=new Date().toISOString()
-                let time=sent_messages[0].createdAt===null?set_time_stamp.current:sent_messages[0].createdAt.toDate().toISOString();                    
+                let time=sent_messages[0].client_time; 
                 setmessages(prev=>
                 {
                     let previous=[...prev]
@@ -1007,6 +1006,36 @@ function Home()
             set_innerwidth(window.innerWidth);
             set_innerheight(window.innerHeight);
         })
+        fetch('/user_data',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({token:token})
+        })
+        .then(response => response.json())
+        .then(data=>
+        {
+            let flag=[false,null]
+            if(data.result[0]?.token===token)
+            {
+                change_profile(data.result[0].name)
+                change_index(data.result[0].email)
+                set_nameatfirst(data.result[0].nameatfirst)
+                set_profile_pic(data.result[0].profilepicture===''?'dp.png':data.result[0].profilepicture)
+                retrieve_messages(data.result[0].email)
+                flag=[true,data.result[0].name]
+                set_flag1(true)
+                setup_user(data.result[0].email);
+                setup_name(data.result[0].name);
+                setup_bio(data.result[0].bio);
+                setpass('');
+                setbg(data.result[0].bg);
+            }
+            if(flag[0]===false){set_flag1(false);set_loaded(false);nav2('/');}
+            else if(flag[1]===null || flag[1]===undefined){set_flag1(false);set_loaded(false);nav2('/profile')}
+        }
+        )
         fetch("/accounts",
         {
             method:'POST',
@@ -1016,28 +1045,6 @@ function Home()
         .then(response => response.json())
         .then(data => 
         {
-            let flag=[false,null]
-            
-            for(let i=0;i<data.length;i++)
-            {
-                if(data[i].token===token)
-                {
-                    change_profile(data[i].name)
-                    change_index(data[i].email)
-                    set_nameatfirst(data[i].nameatfirst)
-                    set_profile_pic(data[i].profilepicture===''?'dp.png':data[i].profilepicture)
-                    retrieve_messages(data[i].email)
-                    flag=[true,data[i].name]
-                    set_flag1(true)
-                    setup_user(data[i].email);
-                    setup_name(data[i].name);
-                    setup_bio(data[i].bio);
-                    setpass('');
-                    setbg(data[i].bg);
-                }
-            }
-            if(flag[0]===false){set_flag1(false);set_loaded(false);nav2('/');}
-            else if(flag[1]===null || flag[1]===undefined){set_flag1(false);set_loaded(false);nav2('/profile')}
             let ind=[]
             let accounts=[] 
             let images=[]
@@ -1149,7 +1156,6 @@ function Home()
     
     async function Send(message)
     {
-        document.getElementById('message').disabled=true
         let ids=[]
         let msg_being_replied=""
         if(reply_icon==='flex')
@@ -1167,6 +1173,7 @@ function Home()
             seenAt:index===receiver?serverTimestamp():null,
             replied_to:msg_being_replied.startsWith('✔')? msg_being_replied.replace(msg_being_replied.slice(0,msg_being_replied.indexOf(' ')),'✔'):msg_being_replied.startsWith(' ')?msg_being_replied:'',
             reply: msg_being_replied===''?false:true,
+            client_time: new Date().toISOString()
         });
         onSnapshot(inserted_msg,(message_document)=>
         {
@@ -1185,20 +1192,18 @@ function Home()
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ from: index, to: receiver, message: message,time:data.createdAt.toDate().toISOString(),client_time: set_time_stamp.current}),
+                            body: JSON.stringify({ from: index, to: receiver, message: message,time:data.createdAt.toDate().toISOString()}),
                         })
                         .then(response => response.json())
                         .then( async data_neon=>
                         {   
-                            document.getElementById('message').disabled=false
-                            focus_input.current.focus()
                             if(data_neon.success)
                             {
                                 await updateDoc(inserted_msg,{neondb:true})
                                 setmessages(prev=>
                                 {
                                     let previous=[...prev]
-                                    previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${data_neon.client_time}` )]=`✔✔ ${data.text}     ${data.createdAt.toDate().toISOString()}`
+                                    previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${data.client_time}` )]=`✔✔ ${data.text}     ${data.createdAt.toDate().toISOString()}`
                                     return previous
                                 })
                             }

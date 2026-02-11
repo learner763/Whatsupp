@@ -34,7 +34,7 @@ app.use(express.static(buildPath));
 app.use(express.json());
 
 app.post('/accounts', (req, res) => {
-    pool.query('select * from public.users', (err, results) => {
+    pool.query('select email,bio,name,profilepicture,nameatfirst from public.users', (err, results) => {
         if (err) {}
         else res.json(results.rows);
     });
@@ -325,8 +325,7 @@ app.post("/forpass",async (req, res) => {
 
 app.post('/save_msg',(req,res)=>
 {
-    const {from,to,message,time,client_time}=req.body;
-    console.log(client_time)
+    const {from,to,message,time}=req.body;
     pool.query(`select "${from}" as chat from public.chats where chat_with=$1 
                 union all 
                 select "${to}" from public.chats where chat_with=$2`,[to,from],(err,results)=>
@@ -335,7 +334,7 @@ app.post('/save_msg',(req,res)=>
             {
                 pool.query(`update public.chats set "${to}"= coalesce("${to}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[from,[`${from}: ${message}     ${time}`]],(err1,results1)=>
                 {
-                    if(results1.rowCount===1){return res.json({success:true,client_time:client_time})}
+                    if(results1.rowCount===1){return res.json({success:true})}
                     else if(err1){return res.json({success:false})}
                     else{return res.json({success:false})}
                 })
@@ -344,7 +343,7 @@ app.post('/save_msg',(req,res)=>
             {
                 pool.query(`update public.chats set "${from}"= coalesce("${from}", ARRAY[]::text[]) || $2  where chat_with=$1;`,[to,[`${from}: ${message}     ${time}`]],(err2,results2)=>
                 {
-                    if(results2.rowCount===1){return res.json({success:true,client_time:client_time})}
+                    if(results2.rowCount===1){return res.json({success:true})}
                     else if(err2){return res.json({success:false})}
                     else{return res.json({success:false})}
                 })
