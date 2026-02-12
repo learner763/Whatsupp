@@ -8,6 +8,9 @@ body{
     font-family: 'Inter';
     scroll-behavior: smooth;
 }
+html{
+    scrollbar-width:none;
+}
 @keyframes highlight{
     0% { align-self: center;margin-right: 0px;margin-left: 0px; }
     100% { align-self: center;margin-right: 0px;margin-left: 0px; }
