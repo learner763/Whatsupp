@@ -63,7 +63,6 @@ function Home()
     const receiver_again=useRef('-');
     const [message_text,set_text]=useState('')
     const [msg_attributes,set_msg_attributes]=useState([])
-    const set_time_stamp=useRef(null)
     const sent_once=useRef([])
     const unseen_once=useRef([])
     const [dialog_value,set_dialog_value]=useState('')
@@ -1353,7 +1352,9 @@ function Home()
                                                     else if(e.target.value==="Reply"){set_edit('none');set_msg_value('');reply_msg(receiver,text);}
                                                     else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
                                                     set_selectval('Select')}}
-                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
+                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px',
+                                                            border:'none',backgroundColor:'darkgreen',color:'white'
+                                                        }}>
                                                     <option value='Select'>Select</option>
                                                     <option value='Edit'>✏️ Edit</option>
                                                     <option value='Delete'>🗑️ Delete</option>
@@ -1375,7 +1376,9 @@ function Home()
                                                     if(e.target.value==="Reply"){reply_msg(receiver,text);}
                                                     else{set_reply('none');set_reply_to('')}
                                                     set_selectval('Select')}}
-                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px'}}>
+                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px',
+                                                            border:'none',backgroundColor:'rebeccapurple',color:'white'
+                                                        }}>
                                                     <option value='Select'>Select</option>
                                                     <option value='Reply'>💬 Reply</option>
                                                 </select>

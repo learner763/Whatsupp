@@ -364,7 +364,7 @@ function App() {
       <div className="App" style={{display:ready===true?'flex':'none'}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'darkgreen'}}>
         <a href='https://whatsupp-feedback.vercel.app/' style={{margin:'10px',fontWeight:'bold',color:'white',alignSelf:'center'}}>View Docs</a>
-        <label style={{padding:'5px', color:'darkgreen',backgroundColor:'white',borderRadius:'5px'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
+        <label style={{padding:'5px', color:'darkgreen',backgroundColor:'white',border:'darkgreen solid',borderWidth:'0px 1px',borderRadius:'5px',textAlign:'center',width:'-webkit-fill-available'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
         <label style={{alignSelf:'flex-start'}}  >Email 🔑</label>
         <input
           type="text"
