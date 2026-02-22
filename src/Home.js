@@ -656,7 +656,6 @@ function Home()
                 });  
                 set_msg_transfer(prev=>prev+1)
             }
-            console.log(delivered_messages)
             if(delivered_messages.length>0)
             {
                 setmessages(prev=>
@@ -665,7 +664,6 @@ function Home()
                     let receiver_index=previous.findIndex(x=>x[0]===delivered_messages[0].to)
                     let message_index=previous[receiver_index][1].findIndex(x=>x===`✔ ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )
                     if(message_index!==-1)previous[previous.findIndex(x=>x[0]===delivered_messages[0].to)][1][previous[previous.findIndex(x=>x[0]===delivered_messages[0].to)][1].findIndex(x=>x===`✔ ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )]=`✔✔ ${delivered_messages[0].text}     ${delivered_messages[0].createdAt.toDate().toISOString()}`
-                    console.log(previous)
                     return previous
                 })
             }
@@ -1341,7 +1339,7 @@ function Home()
                         <label  id="profile_name" >
                             <img src={receiver===up_user?profile_pic: profile_images[indices.indexOf(receiver)]}></img>
                             <label style={{display:'flex',flexDirection:'column',gap:'5px'}}>
-                                <label style={{color:'white',fontWeight:'bold',fontSize:'20px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]}</label> 
+                                <label style={{color:'white',fontWeight:'bold',fontSize:'20px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]===profile?`${profile} (Me)`:info[indices.indexOf(receiver)*2] }</label> 
                                 <label style={{color:'white',fontWeight:'normal',fontSize:'20px',alignSelf:'flex-start'}}>{status[indices.indexOf(receiver)]}</label>
                             </label>
                         </label>
@@ -1419,7 +1417,7 @@ function Home()
                                         <img style={{flexShrink: '0',borderRadius:'50%',width:'55px',height:'55px',objectFit:'cover',marginLeft:'5px',border:bgr!=='black'?up_user===value[0]?profile_pic==='dp.png'?'1px darkgreen solid':'none':profile_images[indices.indexOf(value[0])]==='dp.png'?'1px darkgreen solid':'none':'none'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
                                         <div style={{display:'flex',flexDirection:'column',height:'60px',minWidth:'0'}}>    
                                             <div style={{height:'30px',fontWeight:'bold',alignItems:'center'}}>
-                                                <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?profile:info[indices.indexOf(value[0])*2]}</span>
+                                                <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?`${profile} (Me)`:info[indices.indexOf(value[0])*2]}</span>
                                                 <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
                                                     {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()=== new Date().toLocaleDateString()?
                                                     new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
@@ -1559,7 +1557,7 @@ function Home()
                             w = w + 1; 
                             return (
                                 <div className='userinfo' key={index} style={{display:search_filter[index]}}> 
-                                    <div style={{display:search_filter[index],flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'220px',backgroundColor:'darkgreen',borderRadius:'20px',padding:'5px'}}>
+                                    <div style={{display:search_filter[index],flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'220px',backgroundColor:indices[index]===up_user?'forestgreen':'darkgreen',borderRadius:'20px',padding:'5px'}}>
                                         <img style={{flexShrink: '0',borderRadius:'50%',width:'100px',height:'100px',objectFit:'cover'}} src={up_user===indices[index]?profile_pic: profile_images[index]}></img>
                                         <span className='connect_people' >{info[index + w ]}{status[index]==='(Online)' || status[index]==='(Typing...)'?'🟢':''}</span> 
                                         <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
