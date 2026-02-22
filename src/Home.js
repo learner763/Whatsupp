@@ -662,7 +662,9 @@ function Home()
                 setmessages(prev=>
                 {
                     let previous=[...prev]
-                    previous[previous.findIndex(x=>x[0]===delivered_messages[0].to)][1][previous[previous.findIndex(x=>x[0]===delivered_messages[0].to)][1].findIndex(x=>x===`✔ ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )]=`✔✔ ${delivered_messages[0].text}     ${delivered_messages[0].createdAt.toDate().toISOString()}`
+                    let receiver_index=previous.findIndex(x=>x[0]===delivered_messages[0].to)
+                    let message_index=previous[receiver_index][1].findIndex(x=>x===`✔ ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )
+                    if(message_index!==-1)previous[previous.findIndex(x=>x[0]===delivered_messages[0].to)][1][previous[previous.findIndex(x=>x[0]===delivered_messages[0].to)][1].findIndex(x=>x===`✔ ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )]=`✔✔ ${delivered_messages[0].text}     ${delivered_messages[0].createdAt.toDate().toISOString()}`
                     return previous
                 })
             }
