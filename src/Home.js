@@ -491,7 +491,7 @@ function Home()
                         }
                     }
                     else if(active_users[all_nameatfirst[i]].lastseen && active_users[all_nameatfirst[i]].online==false){
-                        statuses.push('('+(new Date(active_users[all_nameatfirst[i]].lastseen).toLocaleDateString()
+                        statuses.push('Active '+'('+(new Date(active_users[all_nameatfirst[i]].lastseen).toLocaleDateString()
                         ===new Date().toLocaleDateString()?new Date(active_users[all_nameatfirst[i]].lastseen).toLocaleTimeString():
                         new Date(active_users[all_nameatfirst[i]].lastseen).toLocaleDateString())+')')
                     }
@@ -1364,7 +1364,7 @@ function Home()
                                                 <span onClick={()=> find_qouted_msg(text)}
                                                     style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?"none":msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'forestgreen',border:'1px white solid'}}>
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
-                                                    <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'17px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
+                                                    <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'18px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
                                                 <span style={{minWidth:'100px',maxWidth:innerwidth>500?'370px':'270px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{find_url( text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),''))}</span>
                                                 <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
@@ -1385,7 +1385,7 @@ function Home()
                                                 <span onClick={()=> find_qouted_msg(text)}
                                                     style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?'none':msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'mediumpurple',border:'1px white solid'}}>
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
-                                                    <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'17px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
+                                                    <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'18px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
                                                 <span style={{minWidth:'100px', maxWidth:innerwidth>500?'370px':'270px'}}>{find_url(text.slice(0,text.lastIndexOf(' ')))}</span>
                                                 <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
@@ -1516,11 +1516,12 @@ function Home()
                             </select>
                             <label style={{color:'white'}}>Theme 🎨</label>
                             <select value={bgr} onChange={(e)=>setbg(e.target.value)} >
-                                <option  value="white">Light</option>
-                                <option  value="yellow">Yellow</option>
-                                <option  value="black">Dark</option>
+                                <option value="white">Light</option>
+                                <option value="yellow">Yellow</option>
+                                <option value="black">Dark</option>
+                                <option value='#ffc0ef'>Pink</option>
                             </select>
-                            <a href='https://whatsupp-feedback.vercel.app/' style={{color:'white'}}>🔗Documentation</a>
+                            <a href='https://whatsupp-feedback.vercel.app/' style={{color:'lime',textDecoration:'none'}}>🔗Documentation</a>
                             <button onClick={()=>
                                 {
                                     update_settings(pass,bgr,nameatfirst,change_pass,live_status)
