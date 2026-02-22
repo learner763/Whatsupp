@@ -1417,7 +1417,7 @@ function Home()
                                         <img style={{flexShrink: '0',borderRadius:'50%',width:'55px',height:'55px',objectFit:'cover',marginLeft:'5px',border:bgr!=='black'?up_user===value[0]?profile_pic==='dp.png'?'1px darkgreen solid':'none':profile_images[indices.indexOf(value[0])]==='dp.png'?'1px darkgreen solid':'none':'none'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
                                         <div style={{display:'flex',flexDirection:'column',height:'60px',minWidth:'0'}}>    
                                             <div style={{height:'30px',fontWeight:'bold',alignItems:'center'}}>
-                                                <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?`${profile} (Me)`:info[indices.indexOf(value[0])*2]}</span>
+                                                <span style={{paddingLeft:'5px',color:bgr==='black'?'lime':'darkgreen'}}>{ info[indices.indexOf(value[0])*2]===profile?`${profile}🟣`:info[indices.indexOf(value[0])*2]}</span>
                                                 <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap'}}>
                                                     {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()=== new Date().toLocaleDateString()?
                                                     new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
