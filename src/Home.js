@@ -521,6 +521,10 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
+            let delivered_messages=snapshot.docChanges().filter(change=>change.doc.data().from===index && change.doc.data().neondb && on_reload.current).map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
             let edited_messages=snapshot.docChanges().filter(change=>change.doc.data().edit && !change.doc.data().delete ).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
@@ -652,7 +656,16 @@ function Home()
                 });  
                 set_msg_transfer(prev=>prev+1)
             }
-
+            console.log(delivered_messages)
+            if(delivered_messages.length>0)
+            {
+                setmessages(prev=>
+                {
+                    let previous=[...prev]
+                    previous[previous.findIndex(x=>x[0]===delivered_messages[0].to)][1][previous[previous.findIndex(x=>x[0]===delivered_messages[0].to)][1].findIndex(x=>x===`✔ ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )]=`✔✔ ${delivered_messages[0].text}     ${delivered_messages[0].createdAt.toDate().toISOString()}`
+                    return previous
+                })
+            }
             setmessages(prev=>
             {
                 let previous=[...prev]
@@ -1211,12 +1224,6 @@ function Home()
                             if(data_neon.success)
                             {
                                 await updateDoc(inserted_msg,{neondb:true})
-                                setmessages(prev=>
-                                {
-                                    let previous=[...prev]
-                                    previous[previous.findIndex(x=>x[0]===data.to)][1][previous[previous.findIndex(x=>x[0]===data.to)][1].findIndex(x=>x===`✔ ${data.text}     ${data.client_time}` )]=`✔✔ ${data.text}     ${data.createdAt.toDate().toISOString()}`
-                                    return previous
-                                })
                             }
                         })
                     }
