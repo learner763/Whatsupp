@@ -521,7 +521,7 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let delivered_messages=snapshot.docChanges().filter(change=>change.doc.data().from===index && change.doc.data().neondb && on_reload.current).map(function(change)
+            let delivered_messages=snapshot.docChanges().filter(change=>(change.doc.data().to===index || change.doc.data().from===index) && change.doc.data().neondb && on_reload.current).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
@@ -661,9 +661,11 @@ function Home()
                 setmessages(prev=>
                 {
                     let previous=[...prev]
-                    let receiver_index=previous.findIndex(x=>x[0]===delivered_messages[0].to)
-                    let message_index=previous[receiver_index][1].findIndex(x=>x===`✔ ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )
-                    if(message_index!==-1)previous[previous.findIndex(x=>x[0]===delivered_messages[0].to)][1][previous[previous.findIndex(x=>x[0]===delivered_messages[0].to)][1].findIndex(x=>x===`✔ ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )]=`✔✔ ${delivered_messages[0].text}     ${delivered_messages[0].createdAt.toDate().toISOString()}`
+                    let receiver_index=previous.findIndex(x=>x[0]===delivered_messages[0].from===index?delivered_messages[0].to:delivered_messages[0].from)
+                    console.log(previous[receiver_index])
+                    console.log(previous[receiver_index][1])
+                    let message_index=previous[receiver_index][1].findIndex(x=>x===`${delivered_messages[0].from===index?'✔':''} ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )
+                    if(message_index!==-1)previous[receiver_index][1][message_index]=`${delivered_messages[0].from===index?'✔✔':''} ${delivered_messages[0].text}     ${delivered_messages[0].createdAt.toDate().toISOString()}`
                     return previous
                 })
             }
@@ -701,6 +703,7 @@ function Home()
                 {
                     if(!unseen_once.current.includes(unseen_messages[i].id))
                     {
+                        console.log(unseen_messages)
                         unseen_once.current.push(unseen_messages[i].id)
                         let stop=false
                         for(let j=0;j<previous.length;j++)                    
@@ -709,12 +712,15 @@ function Home()
                             {
                                 for(let k=0;k<previous[j][1].length;k++)
                                 {
+                                    console.log(unseen_messages[i].createdAt.toDate().toISOString(),previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                     if(unseen_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                     {
+                                        console.log(9)
                                         if(receiver_again.current!==unseen_messages[i].from)
                                         {
                                             previous[j][2]=previous[j][2]===undefined?0:previous[j][2]
                                             previous[j][2]+=1
+                                            console.log(previous)
                                         }
                                         else{
                                             let msgref=doc(db,'messages',unseen_messages[i].id)
@@ -1426,7 +1432,7 @@ function Home()
                                             </div>
                                             <div style={{height:'30px',alignItems:'center'}}>
                                                 <span style={{fontWeight:'normal',paddingLeft:'5px',color:status[indices.indexOf(value[0])]==="(Typing...)"?bgr==='black'?'lime':'darkgreen':bgr==='black'?'white':'#222'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
-                                                <span style={{color:bgr==='black'?'lime':'darkgreen',paddingRight:'5px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
+                                                <span style={{marginRight:'5px',paddingRight:'5px',paddingLeft:'5px',borderRadius:'50%',color:bgr==='black'?'darkgreen':'white',backgroundColor:bgr==='black'?'lime':'darkgreen',marginLeft:'auto',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
                                             </div>
                                         </div>
                                     </div>
