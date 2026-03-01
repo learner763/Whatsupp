@@ -985,25 +985,21 @@ function Home()
                         let present_date=new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).toLocaleDateString()
                         if(present_date!==String(new Date().toLocaleDateString()))
                         {
-                            if(present_date.slice(0,present_date.indexOf('/'))===String(new Date().getMonth()+1) && present_date.slice(present_date.lastIndexOf('/')+1,present_date.length)===String(new Date().getFullYear()))
+                            if(new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getMonth===new Date().getMonth() && new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getFullYear===new Date().getFullYear())
                             {
-                                let difference=new Date().getDate()-Number(present_date.slice(present_date.indexOf('/')+1,present_date.lastIndexOf('/')))
+                                let difference=new Date().getDate()-new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getDate()
                                 if(difference===1){present_date='Yesterday'}
                                 else if(difference<7)
                                 {
                                     present_date=days[new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getDay()]
                                 }
                                 else{
-                                present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
-                                present_date=present_date.replace(present_date[present_date.indexOf('/')],' ')
-                                present_date=present_date.replace(present_date[present_date.lastIndexOf('/')],',')
+                                present_date=`${months[new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getMonth()]} ${new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getDate()}, ${new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getFullYear()}`
                                 }
                             }
                             else
                             {
-                                present_date=present_date.replace(present_date.slice(0,present_date.indexOf('/')),months[Number(present_date.slice(0,present_date.indexOf('/')))-1])
-                                present_date=present_date.replace(present_date[present_date.indexOf('/')],' ')
-                                present_date=present_date.replace(present_date[present_date.lastIndexOf('/')],',')
+                                present_date=`${months[new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getMonth()]} ${new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getDate()}, ${new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getFullYear()}`
                             }
                         }
                         else{present_date='Today'}

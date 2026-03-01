@@ -1,1 +1,1 @@
-console.log('rr'[0])
+console.log(new Date().getMonth())
