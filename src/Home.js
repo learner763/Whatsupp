@@ -662,8 +662,6 @@ function Home()
                 {
                     let previous=[...prev]
                     let receiver_index=previous.findIndex(x=>x[0]===delivered_messages[0].from===index?delivered_messages[0].to:delivered_messages[0].from)
-                    console.log(previous[receiver_index])
-                    console.log(previous[receiver_index][1])
                     let message_index=previous[receiver_index][1].findIndex(x=>x===`${delivered_messages[0].from===index?'✔':''} ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )
                     if(message_index!==-1)previous[receiver_index][1][message_index]=`${delivered_messages[0].from===index?'✔✔':''} ${delivered_messages[0].text}     ${delivered_messages[0].createdAt.toDate().toISOString()}`
                     return previous
@@ -703,7 +701,6 @@ function Home()
                 {
                     if(!unseen_once.current.includes(unseen_messages[i].id))
                     {
-                        console.log(unseen_messages)
                         unseen_once.current.push(unseen_messages[i].id)
                         let stop=false
                         for(let j=0;j<previous.length;j++)                    
@@ -712,15 +709,12 @@ function Home()
                             {
                                 for(let k=0;k<previous[j][1].length;k++)
                                 {
-                                    console.log(unseen_messages[i].createdAt.toDate().toISOString(),previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                     if(unseen_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                     {
-                                        console.log(9)
                                         if(receiver_again.current!==unseen_messages[i].from)
                                         {
                                             previous[j][2]=previous[j][2]===undefined?0:previous[j][2]
                                             previous[j][2]+=1
-                                            console.log(previous)
                                         }
                                         else{
                                             let msgref=doc(db,'messages',unseen_messages[i].id)
