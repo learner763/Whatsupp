@@ -979,7 +979,7 @@ function Home()
                         let present_date=new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).toLocaleDateString()
                         if(present_date!==String(new Date().toLocaleDateString()))
                         {
-                            if(new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getMonth()===new Date().getMonth() && new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getFullYear()===new Date().getFullYear())
+                            if(new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getMonth(%)===new Date().getMonth() && new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getFullYear()===new Date().getFullYear())
                             {
                                 let difference=new Date().getDate()-new Date(previous[i][1][j].slice(previous[i][1][j].lastIndexOf(' ')+1,previous[i][1][j].length)).getDate()
                                 if(difference===1){present_date='Yesterday'}
@@ -1359,7 +1359,7 @@ function Home()
                                                         style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px',
                                                             border:'none',backgroundColor:'darkgreen',color:'white'
                                                         }}>
-                                                    <option value='Select'>Select</option>
+                                                    <option value='Select'>📋 Select</option>
                                                     <option value='Edit'>✏️ Edit</option>
                                                     <option value='Delete'>🗑️ Delete</option>
                                                     <option value='Reply'>💬 Reply</option>
@@ -1383,7 +1383,7 @@ function Home()
                                                         style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px',
                                                             border:'none',backgroundColor:'rebeccapurple',color:'white'
                                                         }}>
-                                                    <option value='Select'>Select</option>
+                                                    <option value='Select'>📋 Select</option>
                                                     <option value='Reply'>💬 Reply</option>
                                                 </select>
                                                 <span onClick={()=> find_qouted_msg(text)}
