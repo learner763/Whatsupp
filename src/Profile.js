@@ -85,7 +85,7 @@ function Profile() {
         <div className='circle'></div>
       </div>
       <div className="Profile" style={{display:load1?'flex':'none'}}>
-        <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'darkgreen'}}>
+        <div style={{padding:'10px',display:'flex',flexDirection:'column',borderRadius:'20px',backgroundColor:'darkgreen'}}>
         <a href='https://whatsupp-feedback.vercel.app/' style={{margin:'10px',fontWeight:'bold',color:'white',alignSelf:'center'}}>View Docs</a>
         <label style={{padding:'5px', color:'darkgreen',backgroundColor:'white',border:'darkgreen solid',borderWidth:'0px 1px',borderRadius:'5px',textAlign:'center',width:'-webkit-fill-available'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
         <label >Profile Name 🏷️</label>
