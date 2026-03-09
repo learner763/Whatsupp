@@ -362,7 +362,7 @@ function App() {
         <div className='circle'></div>
       </div>
       <div className="App" style={{display:ready===true?'flex':'none'}}>
-        <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'darkgreen'}}>
+        <div style={{display:'flex',flexDirection:'column',borderRadius:'40px',backgroundColor:'darkgreen',padding:'10px'}}>
         <a href='https://whatsupp-feedback.vercel.app/' style={{margin:'10px',fontWeight:'bold',color:'white',alignSelf:'center'}}>View Docs</a>
         <label style={{padding:'5px', color:'darkgreen',backgroundColor:'white',border:'darkgreen solid',borderWidth:'0px 1px',borderRadius:'5px',textAlign:'center',width:'-webkit-fill-available'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
         <label style={{alignSelf:'flex-start'}}  >Email 🔑</label>
@@ -380,7 +380,7 @@ function App() {
           maxLength={15}
           onChange={(e) => setpassword(e.target.value.replace(' ',''))}
         />
-        <hr style={{display:f, width: 'auto',  borderTop: "1px solid white", margin: "10px 0" }} />        
+        <hr style={{display:f, width: 'auto',  borderTop: "1px solid white", margin: "10px" }} />        
         <input placeholder='Enter Account Email:' style={{display:f}} type='text' value={email1} 
         onChange={(e) => 
         {
@@ -388,7 +388,7 @@ function App() {
         }}></input>
         <button style={{display:f}} onClick={()=>forget(email1)}>Find Account</button>
         <label style={{display:disp,maxWidth:'270px'}}>{text}</label>
-        <hr style={{display:f, width: 'auto',  borderTop: "1px solid white", margin: "10px 0" }} />        
+        <hr style={{display:f, width: 'auto',  borderTop: "1px solid white", margin: "10px" }} />        
         <button onClick={() =>{ setvisibility("none") ; df("block");}}style={{display:visibility}}>Forgot Password?</button>
         <button onClick={() => 
               {
