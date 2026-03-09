@@ -56,6 +56,7 @@ html{
     justify-content: space-around;
     align-items: center;
     height: 100%;
+    scrollbar-width: none;
 }
 .desktop_icons label{
     color: darkgreen;
@@ -140,7 +141,7 @@ html{
     color:black;
     border: darkgreen solid;
     border-width: 1px 0px 1px 0px;
-    border-radius: 20px;
+    border-radius: 10px;
 }
 .profile_section input,.settings_section input{
     width: 314px;
