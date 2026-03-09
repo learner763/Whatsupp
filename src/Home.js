@@ -1536,7 +1536,7 @@ function Home()
                 </div>
                 <div className='people_section' >
                     <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'darkgreen'}}><i style={{marginTop:'2.5px'}} id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
-                    <aa style={{display:'flex',justifyContent:'center',width:'100%'}}>
+                    <aa style={{display:'flex',justifyContent:'center',width:'100%',marginBottom:'10px'}}>
                         <input placeholder='Search ...' value={search_value} 
                         onChange={(e)=>
                             {
@@ -1553,7 +1553,7 @@ function Home()
                             w = w + 1; 
                             return (
                                 <div className='userinfo' key={index} style={{display:search_filter[index]}}> 
-                                    <div style={{display:search_filter[index],flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'220px',backgroundColor:indices[index]===up_user?'forestgreen':'darkgreen',borderRadius:'20px',padding:'5px'}}>
+                                    <div style={{display:search_filter[index],flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'center',width:'260px',height:'220px',backgroundColor:indices[index]===up_user?'forestgreen':'darkgreen',borderRadius:'20px',padding:'5px',marginBottom:info.length/2===index+1?'10px':'0px'}}>
                                         <img style={{flexShrink: '0',borderRadius:'50%',width:'100px',height:'100px',objectFit:'cover'}} src={up_user===indices[index]?profile_pic: profile_images[index]}></img>
                                         <span className='connect_people' >{info[index + w ]}{status[index]==='(Online)' || status[index]==='(Typing...)'?'🟢':''}</span> 
                                         <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
