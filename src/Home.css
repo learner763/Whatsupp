@@ -67,7 +67,7 @@ html{
     border: darkgreen solid;
     border-width: 1px 0px;
     border-radius: 30px;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bolder;
     padding-top: 5px ;
     padding-bottom: 5px ;
@@ -110,14 +110,14 @@ html{
 }
 .userinfo i, .userinfo button, .userinfo span{
     font-weight: bold;
-    font-size: 25px;
+    font-size: 20px;
 }
 .people_section span ,.desktop_icons,.people_section{
     word-wrap: break-word;
     word-break: break-word;
 }
 #youmayknow{
-    font-size: 25px;
+    font-size: 20px;
     padding-top: 29px;
 }
 .profile_section,.settings_section{
@@ -133,12 +133,12 @@ html{
     font-size: 60px;
 }
 .profile_section label,.settings_section label{
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bolder;
     align-self: flex-start;
 }
 .profile_section input,.settings_section input,.settings_section select{
-    font-size: 25px;
+    font-size: 20px;
     color:black;
     border: darkgreen solid;
     border-width: 1px 0px 1px 0px;
@@ -153,7 +153,7 @@ html{
     padding: 4.51px;
 }
 .settings_section a{
-    font-size: 25px;
+    font-size: 20px;
     text-decoration: underline;
 }
 .settings_section div,.profile_section div{
@@ -192,7 +192,7 @@ html{
 
 .chat_detail_section label,.chats label{
     font-weight: bold;
-    font-size: 25px;
+    font-size: 20px;
     align-self: center;
     justify-self: center;
     color: darkgreen;
@@ -281,7 +281,7 @@ html{
     cursor: pointer;
 }
 .chat_bar span{
-    font-size: 25px;
+    font-size: 20px;
     color: darkgreen;
     overflow-x: hidden; 
     white-space: nowrap;
@@ -385,10 +385,7 @@ sup{
     .msg_div textarea{
         width: 270px;
     }
-    .settings_section a,.top label,#youmayknow,.profile_section label,.settings_section label,.userinfo i,.userinfo span,.userinfo button,#connect_msg,#profile_name,.chat_bar span{
-        font-size: 20px;
-    }
-    .profile_section input,.settings_section input,.settings_section select{
+    .top label{
         font-size: 20px;
     }
     .top{
