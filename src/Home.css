@@ -143,6 +143,7 @@ html{
     border: darkgreen solid;
     border-width: 1px 0px 1px 0px;
     border-radius: 5px;
+    padding: 5px;
 }
 .profile_section input,.settings_section input{
     width: 314px;
@@ -370,9 +371,6 @@ sup{
     }
     .settings_section select{
         width: 247px;
-    }
-    .profile_section button,.settings_section button{
-        padding: 2px;
     }
     .profile_section div,.settings_section div{
         margin: 50px 0px;
