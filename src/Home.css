@@ -56,9 +56,7 @@ html{
     justify-content: space-around;
     align-items: center;
     height: 100%;
-    scrollbar-width: none;
-    margin-top: 15px;
-
+    scrollbar-width: none
 }
 .desktop_icons label{
     color: darkgreen;
