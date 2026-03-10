@@ -57,6 +57,8 @@ html{
     align-items: center;
     height: 100%;
     scrollbar-width: none;
+    margin-bottom: 15px;
+
 }
 .desktop_icons label{
     color: darkgreen;
