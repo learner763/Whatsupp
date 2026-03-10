@@ -87,7 +87,7 @@ function Profile() {
       <div className="Profile" style={{display:load1?'flex':'none'}}>
         <div style={{padding:'10px',display:'flex',flexDirection:'column',borderRadius:'20px',backgroundColor:'darkgreen'}}>
         <a href='https://whatsupp-feedback.vercel.app/' style={{margin:'10px',fontWeight:'bold',color:'white',alignSelf:'center'}}>View Docs</a>
-        <label style={{color:'white',fontSize:'25px'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
+        <label style={{color:'white',fontSize:'25px',alignSelf:'center'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
         <label >Profile Name 🏷️</label>
         <input
           type="text"
