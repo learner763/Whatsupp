@@ -1500,7 +1500,7 @@ function Home()
                                 {
                                     if( up_name.length>0 && up_bio.length>0 )
                                     {update_info(up_user,up_name,up_bio)}
-                                }} id="save">Save
+                                }} id="save">Save Profile
                             </button>
                         </div>
                     </div>
@@ -1525,11 +1525,11 @@ function Home()
                                 <option value="black">Dark</option>
                                 <option value='#ffc0ef'>Pink</option>
                             </select>
-                            <a href='https://whatsupp-feedback.vercel.app/' style={{color:'lime',textDecoration:'none'}}>🔗Documentation</a>
+                            <a href='https://whatsupp-feedback.vercel.app/' style={{color:'lime',textDecoration:'none'}}>🔗 Read Documentation</a>
                             <button onClick={()=>
                                 {
                                     update_settings(pass,bgr,nameatfirst,change_pass,live_status)
-                                }} id="save">Save
+                                }} id="save">Save Settings
                             </button>
                         </div>
                     </div>
@@ -1563,7 +1563,7 @@ function Home()
                                                 receiver_again.current=indices[index]
                                                 set_seen(indices[index])
                                             }
-                                        } className='connect_buttons'><i className='fas fa-envelope'></i>Message</button>
+                                        } className='connect_buttons'><i className='fas fa-envelope'></i> Message</button>
                                     </div>
                                 </div>
                             );
