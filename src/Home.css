@@ -104,7 +104,7 @@ html{
     color: darkgreen;
     cursor: pointer;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     font-family: 'Inter';
     padding: 3px 5px;
 }
@@ -150,6 +150,7 @@ html{
 }
 .settings_section select{
     width: 324px;
+    padding: 4.51px;
 }
 .settings_section a{
     font-size: 25px;
@@ -366,6 +367,9 @@ sup{
     }
 }
 @media (max-width:500px) {
+    .profile_section button,.settings_section button{
+        height: 34.8px;
+    }
     .profile_section input,.settings_section input{
         width: 243px;
     }
