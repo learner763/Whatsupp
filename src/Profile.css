@@ -27,6 +27,7 @@ body{
     border: none;
     font-size: 20px;
     padding: 5px;
+    width: 237px;
 }
 .Profile button{
     margin: 10px;
@@ -37,6 +38,7 @@ body{
     cursor: pointer;
     padding: 5px;
     font-size: 20px;
+    width: 247px;
 }
 .loader{
     display: flex;
