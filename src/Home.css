@@ -149,7 +149,7 @@ html{
     width: 314px;
 }
 .settings_section select{
-    width: 318px;
+    width: 324px;
 }
 .settings_section a{
     font-size: 25px;
@@ -370,7 +370,7 @@ sup{
         width: 243px;
     }
     .settings_section select{
-        width: 247px;
+        width: 253px;
     }
     .profile_section div,.settings_section div{
         margin: 50px 0px;
