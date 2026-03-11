@@ -97,7 +97,7 @@ function Profile() {
           {
             if(name.length>0 && bio.length>0){personal_info(name,bio)}
           }}>Save</button>
-        <label style={{fontWeight:'normal',alignSelf:'center'}}>Help people find you easily.</label>
+        <label style={{fontWeight:'normal',alignSelf:'center'}}>Let people know you.</label>
         </div>
       </div>
       <dialog style={{borderRadius:'10px'}} ref={dialogref}>{dialog_value}</dialog>
