@@ -151,7 +151,7 @@ app.post("/personal",async (req, res) => {
         });     
     }
     else{
-        return res.json({success:false})
+        return res.json({success:false,n:names})
     }
 });
 
