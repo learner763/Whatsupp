@@ -12,48 +12,30 @@ function Profile() {
     const dialogref=useRef(null);
     function personal_info(name,bio)
     {
-        let flag=false
-        fetch("/accounts",
-        {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({test:'test'})
+        fetch('/personal', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: token, name: name,bio:bio }),
         })
         .then(response => response.json())
-        .then(data=>{
-        for(let i=0;i<data.length;i++)
-        {
-            if(data[i].name===name && data[i].token!==token)
+        .then(data => {
+            if(data.success===true)
             {
-                flag=true;
-                set_dialog_value(
-                  <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
-                    <label style={{fontWeight:'bold',color:'darkgreen'}}>Duplicate Name</label>
-                    <label>This name is already taken!Choose Another.</label>
-                    <button onClick={()=>dialogref.current.close()}>Close</button>
-                  </div>
-                )
-                dialogref.current.showModal();
+                nav1('/home');
             }
-        }
-        if(!flag)
-        {
-            fetch('/personal', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ token: token, name: name,bio:bio }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success===true)
-                {
-                    nav1('/home');
-                }
-            })
-        }})
-        
+            else{
+              set_dialog_value(
+              <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+                <label style={{fontWeight:'bold',color:'darkgreen'}}>Duplicate Name</label>
+                <label>This name is already taken!Choose Another.</label>
+                <button onClick={()=>dialogref.current.close()}>Close</button>
+              </div>
+            )
+            dialogref.current.showModal();
+            }
+        })        
     }
 
     useEffect(()=>

@@ -143,9 +143,16 @@ app.post('/verify_otp',async (req,res)=>
 
 app.post("/personal", (req, res) => {
     const { token, name,bio } = req.body;
-    pool.query("update public.users set name=$1,bio=$2,nameatfirst=$3 where token=$4", [name,bio,name,token], (err, results) => {   
-        if(results.rowCount===1){return res.json({success:true});} 
-    });
+    let names=pool.query('select name from public.users')
+    if(names.rows.length===0 || names.rows[0].token===token)
+    {
+        pool.query("update public.users set name=$1,bio=$2,nameatfirst=$3 where token=$4", [name,bio,name,token], (err, results) => {   
+            if(results.rowCount===1){return res.json({success:true});} 
+        });     
+    }
+    else{
+        return res.json({success:false})
+    }
 });
 
 app.post("/user_in_table", (req, res) => {
