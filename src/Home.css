@@ -125,7 +125,7 @@ html{
     justify-content: space-evenly;
     align-items: center;
     overflow: scroll;
-    margin: 30px 0px 2px 0px;
+    margin: 31px 0px 2px 0px;
     scrollbar-width: none;
 }
 .profile_section i,.settings_section i{
