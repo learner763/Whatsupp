@@ -185,7 +185,7 @@ html{
     flex-direction: column;
     overflow-y: scroll;
     align-items: center;
-    padding-top: 29px;
+    padding-top: 30px;
 }
 
 .chat_detail_section label,.chats label{
