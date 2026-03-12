@@ -125,7 +125,7 @@ html{
     justify-content: space-evenly;
     align-items: center;
     overflow: scroll;
-    margin-top: 30px;
+    margin: 30px 0px 2px 0px;
     scrollbar-width: none;
 }
 .profile_section i,.settings_section i{
@@ -162,7 +162,6 @@ html{
     justify-content: center;
     width: auto;
     height: auto;
-    margin: 20px 0px;
     border-radius: 20px;
     background-color: darkgreen;
     padding: 10px;
@@ -374,9 +373,6 @@ sup{
     }
     .settings_section select{
         width: 253px;
-    }
-    .profile_section div,.settings_section div{
-        margin: 50px 0px;
     }
     .msg_div div,.msg_div span{
         width: 300px;
