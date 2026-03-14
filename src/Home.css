@@ -369,7 +369,7 @@ sup{
         height: 34.8px;
     }
     .profile_section input,.settings_section input{
-        width: 243px;
+        width: 243px; 
     }
     .settings_section select{
         width: 253px;
