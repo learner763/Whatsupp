@@ -365,6 +365,9 @@ sup{
     }
 }
 @media (max-width:500px) {
+    .chat_detail_section{
+        padding-top: 29px;
+    }
     .profile_section button,.settings_section button{
         height: 34.8px;
     }
