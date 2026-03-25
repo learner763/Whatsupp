@@ -308,7 +308,7 @@ app.post("/save_settings",async (req, res) => {
 app.post("/forpass",async (req, res) => {
     const { email,token } = req.body;
     let results=await pool.query("select * from public.users where email=$1", [email])
-    if(results)
+    if(results.rows.length>0)
     {
         if(results.rows[0].token===token){ return res.json({success:true,token:token})}
         else{
