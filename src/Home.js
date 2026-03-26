@@ -1053,7 +1053,7 @@ function Home()
                 setpass('');
                 setbg(data.result[0].bg);
             }
-            if(flag[0]===false){set_flag1(false);set_loaded(false);nav2('/');}
+            if(flag[0]===false){set_flag1(false);set_loaded(false);localStorage.removeItem('logged_in');nav2('/');}
             else if(flag[1]===null || flag[1]===undefined){set_flag1(false);set_loaded(false);nav2('/profile')}
         }
         )
