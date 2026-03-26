@@ -50,7 +50,8 @@ function App() {
               set_dialog_value(
                 <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                   <label style={{fontWeight:'bold',color:'darkgreen'}}>OTP Alert</label>
-                  <label>Check {email_key} for OTP and will be expired in 2 minutes.</label>
+                  <label>Check {email_key} for OTP.</label>
+                  <p style={{margin:'0'}}>It will be valid for 2 minutes.</p>
                   <input id='otp' type='number' style={{padding:'3px', fontSize:'16px',border:'1px black solid',borderRadius:'5px'}}></input>
                   <label style={{color:'red',alignSelf:'center',display:'none',fontWeight:'bold'}} id='otp_label'></label>
                   <div style={{display:'flex',justifyContent:'space-evenly',gap:'10px'}}>
@@ -152,7 +153,8 @@ function App() {
                 set_dialog_value(
                   <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                     <label style={{fontWeight:'bold',color:'darkgreen'}}>OTP Alert</label>
-                    <label>Check {response.data.email} for OTP and will be expired in 2 minutes.</label>
+                    <label>Check {response.data.email} for OTP.</label>
+                    <p style={{margin:'0'}}>It will be valid for 2 minutes.</p>
                     <input id='otp' type='number' style={{padding:'3px', fontSize:'16px',border:'1px black solid',borderRadius:'5px'}}></input>
                     <label style={{color:'red',alignSelf:'center',display:'none',fontWeight:'bold'}} id='otp_label'></label>
                     <div style={{display:'flex',justifyContent:'space-evenly',gap:'10px'}}>
@@ -212,7 +214,8 @@ function App() {
                 set_dialog_value(
                   <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                     <label style={{fontWeight:'bold',color:'darkgreen'}}>OTP Alert</label>
-                    <label>Check {response.data.email} for OTP and will be expired in 2 minutes.</label>
+                    <label>Check {response.data.email} for OTP.</label>
+                    <p style={{margin:'0'}}>It will be valid for 2 minutes.</p>
                     <input id='otp' type='number' style={{padding:'3px', fontSize:'16px',border:'1px black solid',borderRadius:'5px'}}></input>
                     <label style={{color:'red',alignSelf:'center',display:'none',fontWeight:'bold'}} id='otp_label'></label>
                     <div style={{display:'flex',justifyContent:'space-evenly',gap:'10px'}}>
@@ -307,7 +310,8 @@ function App() {
                 set_dialog_value(
                   <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                     <label style={{fontWeight:'bold',color:'darkgreen'}}>OTP Alert</label>
-                    <label>Check {data.email} for OTP and will be expired in 2 minutes.</label>
+                    <label>Check {data.email} for OTP.</label>
+                    <p style={{margin:'0'}}>It will be valid for 2 minutes.</p>
                     <input id='otp' type='number' style={{padding:'3px', fontSize:'16px',border:'1px black solid',borderRadius:'5px'}}></input>
                     <label style={{color:'red',alignSelf:'center',display:'none',fontWeight:'bold'}} id='otp_label'></label>
                     <div style={{display:'flex',justifyContent:'space-evenly',gap:'10px'}}>
