@@ -939,7 +939,7 @@ function Home()
         set_text('')
         document.getElementById('message').style.height='45px'
         document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
-        document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='70px'
+        document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='60px'
         focus_input.current.focus()
         set_edit('none')
         set_msg_value('')
@@ -949,16 +949,16 @@ function Home()
 
     useEffect(()=>
     {
-        if(parseInt(getComputedStyle(document.getElementById('message')).height)<60)
+        if(parseInt(getComputedStyle(document.getElementById('message')).height)<50)
         {
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=70+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=60+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
         }
-        else if(parseInt(getComputedStyle(document.getElementById('message')).height)>60 && parseInt(getComputedStyle(document.getElementById('message')).height)<85)
+        else if(parseInt(getComputedStyle(document.getElementById('message')).height)>50 && parseInt(getComputedStyle(document.getElementById('message')).height)<70)
         {
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=95+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=80+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
         }
         else{
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=120+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=100+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
         }
     },[reply_to,msg_before_edit,message_text])
 
