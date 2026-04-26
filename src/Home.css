@@ -33,6 +33,7 @@ html{
     top: 0;
     background-color:darkgreen;
     flex-wrap: wrap;
+    height: 28px;
 }
 #connect_people{
     padding-left: 3px;
@@ -382,12 +383,6 @@ sup{
     }
     .msg_div textarea{
         width: 270px;
-    }
-    .top label{
-        font-size: 20px;
-    }
-    .top{
-        height: 29px;
     }
     .phone_icons{
         height: auto;
