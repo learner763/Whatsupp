@@ -1356,7 +1356,7 @@ function Home()
                                                     else if(e.target.value==="Reply"){set_edit('none');set_msg_value('');reply_msg(receiver,text);}
                                                     else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
                                                     set_selectval('Select')}}
-                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px',
+                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'auto',
                                                             border:'none',backgroundColor:'darkgreen',color:'white'
                                                         }}>
                                                     <option value='Select'>📋 Select</option>
@@ -1380,7 +1380,7 @@ function Home()
                                                     if(e.target.value==="Reply"){reply_msg(receiver,text);}
                                                     else{set_reply('none');set_reply_to('')}
                                                     set_selectval('Select')}}
-                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'10px',
+                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'auto',
                                                             border:'none',backgroundColor:'rebeccapurple',color:'white'
                                                         }}>
                                                     <option value='Select'>📋 Select</option>
