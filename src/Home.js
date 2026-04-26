@@ -1318,17 +1318,17 @@ function Home()
         </div>
         <div className='home' style={{display:loaded==true? 'flex':'none'}}>
             <div className='top'>
-                <label><i class='fas fa-mobile-alt'></i>WhatsUpp</label>
-                <label><i class='fas fa-user'></i>{profile}</label>
+                <label><i class='fas fa-mobile-alt'></i> WhatsUpp</label>
+                <label><i class='fas fa-user'></i> {profile}</label>
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
                 <div className='desktop_icons'>
-                    <label style={{marginTop:'30px'}}><i class='fas fa-comment-dots'></i>Read Chats<sup>{unread===0?'':unread}</sup></label>
-                    <label><i class='fas fa-user'></i>Update Profile</label>
-                    <label><i class='fas fa-cog'></i>Alter Settings</label>
+                    <label style={{marginTop:'30px'}}><i class='fas fa-comment-dots'></i> Read Chats<sup> {unread===0?'':unread}</sup></label>
+                    <label><i class='fas fa-user'></i> Update Profile</label>
+                    <label><i class='fas fa-cog'></i> Alter Settings</label>
                     <label style={{marginBottom:'30px'}} onClick=
                     {()=>{localStorage.removeItem('logged_in');nav2('/');}} 
-                    ><i class='fas fa-solid fa-sign-out-alt'></i>Log Out</label>
+                    ><i class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
                 </div>
                 <div className='main_body_section'>
                     <div className='chat_detail_section' style={{display:disp}} >
@@ -1639,11 +1639,11 @@ function Home()
                 </div>
             </div>
             <div className='phone_icons' style={{display:'none'}}>
-                <label ><i class='fas fa-comment-dots'></i>Chats<sup>{unread===0?'':unread}</sup></label>
-                <label ><i class='fas fa-user'></i>Profile</label>
-                <label ><i class='fas fa-cog'></i>Settings</label>
-                <label onClick={()=>{localStorage.removeItem('logged_in');nav2('/')}} ><i class='fas fa-solid fa-sign-out-alt'></i>Log Out</label>
-                <label  id="people"><i class='fas fa-users'></i>People</label>
+                <label ><i class='fas fa-comment-dots'></i> Chats<sup> {unread===0?'':unread}</sup></label>
+                <label ><i class='fas fa-user'></i> Profile</label>
+                <label ><i class='fas fa-cog'></i> Settings</label>
+                <label onClick={()=>{localStorage.removeItem('logged_in');nav2('/')}} ><i class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
+                <label  id="people"><i class='fas fa-users'></i> People</label>
             </div>
         </div>
         <dialog style={{borderRadius:'10px'}} ref={dialogref}>{dialog_value}</dialog>
