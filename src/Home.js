@@ -1574,7 +1574,7 @@ function Home()
             </div>
             <div className='msg_div' style={{display:disp}}>
                 <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',backgroundColor:'darkgreen',color:'white'}}>
-                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');set_text('');document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='50px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
+                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');set_text('');document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='45px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
                     <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)*2])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
@@ -1605,7 +1605,7 @@ function Home()
                             {
                                 e.preventDefault()
                                 set_text('')
-                                document.getElementById('message').style.height='50px'
+                                document.getElementById('message').style.height='45px'
                                 document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
                                 edit_icon==='flex'?write_edit(message_text):Send(message_text)
                             }
@@ -1634,7 +1634,7 @@ function Home()
                         if(edit_icon==='flex'){write_edit(message_text)}
                         set_text('')
                         set_consecutive_keys([])
-                        document.getElementById('message').style.height='50px'
+                        document.getElementById('message').style.height='45px'
                         document.getElementById('Send_Button').style.backgroundColor="#EEEEEE"}}} ><i className='fas fa-arrow-up'></i></button>
                 </div>
             </div>
