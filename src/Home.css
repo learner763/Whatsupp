@@ -279,7 +279,7 @@ html{
     cursor: pointer;
 }
 .chat_bar span{
-    font-size: 20px;
+    font-size: 18px;
     color: darkgreen;
     overflow-x: hidden; 
     white-space: nowrap;
