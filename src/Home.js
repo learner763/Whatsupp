@@ -1409,7 +1409,7 @@ function Home()
                                 return(
                                     <div onClick={(e)=>{
                                         if(e.target.tagName!=='IMG'){set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}
-                                        }} className='chat_bar' key={index} style={{display:'flex',flexDirection:'row',alignItems:'center'}} >
+                                        }} className='chat_bar' key={index} style={{display:'flex',flexDirection:'row',alignItems:'center',marginBottom:index===messages.length-1?'15px':'0px'}} >
                                         <img style={{flexShrink: '0',borderRadius:'50%',width:'55px',height:'55px',objectFit:'cover',marginLeft:'5px',border:bgr!=='black'?up_user===value[0]?profile_pic==='dp.png'?'1px darkgreen solid':'none':profile_images[indices.indexOf(value[0])]==='dp.png'?'1px darkgreen solid':'none':'none'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
                                         <div style={{display:'flex',flexDirection:'column',height:'60px',minWidth:'0'}}>    
                                             <div style={{height:'30px',fontWeight:'bold',alignItems:'center'}}>

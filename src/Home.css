@@ -117,7 +117,7 @@ html{
 }
 #youmayknow{
     font-size: 20px;
-    padding-top: 29px;
+    padding-top: 24px;
 }
 .profile_section,.settings_section{
     display: flex;
@@ -267,10 +267,11 @@ html{
 }
 .chats{
     display: flex;
-    padding-top: 29px;
+    padding-top: 24px;
     flex-direction: column;
     overflow-y: scroll;
     gap:15px;
+    margin-bottom: 15px;
 }
 .chat_bar{
     flex: .1;
