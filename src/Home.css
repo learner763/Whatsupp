@@ -67,7 +67,7 @@ html{
     text-align: center;
     border: darkgreen solid;
     border-width: 1px 0px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bolder;
     padding-top: 5px ;
     padding-bottom: 5px ;
@@ -129,16 +129,13 @@ html{
     margin: 31px 0px 2px 0px;
     scrollbar-width: none;
 }
-.profile_section i,.settings_section i{
-    font-size: 60px;
-}
 .profile_section label,.settings_section label{
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bolder;
     align-self: flex-start;
 }
 .profile_section input,.settings_section input,.settings_section select{
-    font-size: 20px;
+    font-size: 18px;
     color:black;
     border: darkgreen solid;
     border-width: 1px 0px 1px 0px;
@@ -153,7 +150,7 @@ html{
     padding: 4.51px;
 }
 .settings_section a{
-    font-size: 20px;
+    font-size: 18px;
     text-decoration: underline;
 }
 .settings_section div,.profile_section div{
@@ -176,7 +173,7 @@ html{
     border: none;
     border-radius: 5px;
     align-self: center;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     width: -webkit-fill-available;
 }
