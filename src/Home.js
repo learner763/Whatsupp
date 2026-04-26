@@ -937,7 +937,7 @@ function Home()
         let container=document.getElementsByClassName('chat_detail_section');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
         set_text('')
-        document.getElementById('message').style.height='50px'
+        document.getElementById('message').style.height='45px'
         document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
         document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='70px'
         focus_input.current.focus()
@@ -951,14 +951,14 @@ function Home()
     {
         if(parseInt(getComputedStyle(document.getElementById('message')).height)<60)
         {
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=70+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=70+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
         }
         else if(parseInt(getComputedStyle(document.getElementById('message')).height)>60 && parseInt(getComputedStyle(document.getElementById('message')).height)<85)
         {
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=95+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=95+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
         }
         else{
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=120+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=120+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
         }
     },[reply_to,msg_before_edit,message_text])
 
@@ -1578,7 +1578,7 @@ function Home()
                     <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)*2])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
-                    <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'40px',maxHeight:'85px'}} placeholder='Type...'
+                    <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'45px',maxHeight:'85px'}} placeholder='Type...'
                     onKeyDown={(e)=>
                     {
                         set_consecutive_keys(previous_keys=>
