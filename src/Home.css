@@ -143,10 +143,10 @@ html{
     padding: 5px;
 }
 .profile_section input,.settings_section input{
-    width: 314px;
+    width: 243px;
 }
 .settings_section select{
-    width: 324px;
+    width: 253px;
     padding: 4.51px;
 }
 .settings_section a{
@@ -176,6 +176,8 @@ html{
     font-size: 18px;
     font-weight: bold;
     width: -webkit-fill-available;
+    height: 31.82px;
+    
 }
 
 .chat_detail_section{
@@ -363,15 +365,6 @@ sup{
     }
 }
 @media (max-width:500px) {
-    .profile_section button,.settings_section button{
-        height: 34.8px;
-    }
-    .profile_section input,.settings_section input{
-        width: 243px; 
-    }
-    .settings_section select{
-        width: 253px;
-    }
     .msg_div div,.msg_div span{
         width: 300px;
     }
