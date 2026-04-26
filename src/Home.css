@@ -271,7 +271,6 @@ html{
     flex-direction: column;
     overflow-y: scroll;
     gap:15px;
-    margin-bottom: 15px;
 }
 .chat_bar{
     flex: .1;
