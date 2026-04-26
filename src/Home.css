@@ -110,7 +110,7 @@ html{
 }
 .userinfo i, .userinfo button, .userinfo span{
     font-weight: bold;
-    font-size: 20px;
+    font-size: 18px;
 }
 .people_section span ,.desktop_icons,.people_section{
     word-wrap: break-word;
