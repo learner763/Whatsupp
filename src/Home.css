@@ -54,10 +54,10 @@ html{
     border-width: 0px 1px 0px 0px;
     flex-direction: column;
     overflow-y: scroll;
-    justify-content: space-around;
     align-items: center;
     height: 100%;
-    scrollbar-width: none
+    scrollbar-width: none;
+    gap: 30px;
 }
 .desktop_icons label{
     color: darkgreen;
@@ -177,7 +177,6 @@ html{
     font-weight: bold;
     width: -webkit-fill-available;
     height: 31.82px;
-    
 }
 
 .chat_detail_section{
