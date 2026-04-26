@@ -1578,7 +1578,7 @@ function Home()
                     <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)*2])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
                 </span>
                 <div>
-                    <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'45px',maxHeight:'85px'}} placeholder='Type...'
+                    <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'40px',maxHeight:'85px'}} placeholder='Type...'
                     onKeyDown={(e)=>
                     {
                         set_consecutive_keys(previous_keys=>
