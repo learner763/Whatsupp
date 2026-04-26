@@ -1335,8 +1335,8 @@ function Home()
                         <label  id="profile_name" >
                             <img src={receiver===up_user?profile_pic: profile_images[indices.indexOf(receiver)]}></img>
                             <label style={{display:'flex',flexDirection:'column',gap:'5px'}}>
-                                <label style={{color:'white',fontWeight:'bold',fontSize:'20px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]===profile?`${profile}🟣`:info[indices.indexOf(receiver)*2] }</label> 
-                                <label style={{color:'white',fontWeight:'normal',fontSize:'20px',alignSelf:'flex-start'}}>{status[indices.indexOf(receiver)]}</label>
+                                <label style={{color:'white',fontWeight:'bold',fontSize:'18px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]===profile?`${profile}🟣`:info[indices.indexOf(receiver)*2] }</label> 
+                                <label style={{color:'white',fontWeight:'normal',fontSize:'17px',alignSelf:'flex-start'}}>{status[indices.indexOf(receiver)]}</label>
                             </label>
                         </label>
                         {messages.map((value,index)=>

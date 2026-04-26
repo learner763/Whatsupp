@@ -186,7 +186,7 @@ html{
     flex-direction: column;
     overflow-y: scroll;
     align-items: center;
-    padding-top: 30px;
+    padding-top: 28px;
 }
 
 .chat_detail_section label,.chats label{
@@ -294,7 +294,7 @@ html{
     color: white;
 }
 .chat_detail{
-    padding-top: 60px;
+    padding-top: 54px;
 }
 .chat_detail_section{
     margin-bottom: 70px;
@@ -366,9 +366,6 @@ sup{
     }
 }
 @media (max-width:500px) {
-    .chat_detail_section{
-        padding-top: 29px;
-    }
     .profile_section button,.settings_section button{
         height: 34.8px;
     }
