@@ -1323,7 +1323,7 @@ function Home()
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
                 <div className='desktop_icons'>
-                    <label style={{marginTop:'53px'}}><i class='fas fa-comment-dots'></i> Read Chats<sup> {unread===0?'':unread}</sup></label>
+                    <label style={{marginTop:'51px'}}><i class='fas fa-comment-dots'></i> Read Chats<sup> {unread===0?'':unread}</sup></label>
                     <label><i class='fas fa-user'></i> Update Profile</label>
                     <label><i class='fas fa-cog'></i> Alter Settings</label>
                     <label style={{marginBottom:'24px',marginTop:'auto'}} onClick=
