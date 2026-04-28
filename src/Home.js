@@ -951,14 +951,14 @@ function Home()
     {
         if(parseInt(getComputedStyle(document.getElementById('message')).height)<50)
         {
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=65+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=70+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
         }
         else if(parseInt(getComputedStyle(document.getElementById('message')).height)>50 && parseInt(getComputedStyle(document.getElementById('message')).height)<70)
         {
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=90+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=95+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
         }
         else{
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=115+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=120+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
         }
     },[reply_to,msg_before_edit,message_text])
 
