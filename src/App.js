@@ -46,7 +46,7 @@ function App() {
                 setpassword('')
             }
             if(email_key)
-            {
+            { 
               set_dialog_value(
                 <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
                   <label style={{fontWeight:'bold',color:'darkgreen'}}>OTP Alert</label>
