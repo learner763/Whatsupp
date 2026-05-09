@@ -168,7 +168,7 @@ app.post("/user_in_table", (req, res) => {
     });
 })
 
-app.post('/api/user_data',(req,res)=>
+app.post('/user_data',(req,res)=>
 {
     const {email,token}=req.body
     let log_in=false
