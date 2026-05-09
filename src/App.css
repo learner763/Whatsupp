@@ -18,7 +18,7 @@ body{
     justify-self: center;
     font-weight: bold;
     color: white;
-    font-size: 20px;
+    font-size: 18px;
     margin: 10px;
 }
 .App input{
@@ -27,7 +27,7 @@ body{
     justify-self: center;
     border-radius: 5px;
     border: none;
-    font-size: 20px;
+    font-size: 18px;
     padding: 5px;
     width: 237px;
 }
@@ -38,7 +38,7 @@ body{
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 18px;
     padding: 5px;
     width: 247px;
 }
