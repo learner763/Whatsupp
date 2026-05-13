@@ -172,9 +172,9 @@ app.post('/user_data',(req,res)=>
 {
     const {email,token}=req.body
     let log_in=false
-    pool.query(`select "${email}" from public.chats`,(err,results)=>
+    pool.query(`select * from public.users where email=$1`,[email],(err,results)=>
     {
-        if(!results)
+        if(results.rows[0].name!==null)
         {
             log_in=false
         }
