@@ -23,7 +23,7 @@ const transporter=nodemailer.createTransport({
     service:'gmail',
     auth:{
         user:'whatsuppchatapp@gmail.com',
-        pass:'higsrxaeudsbrsab'
+        pass:'kzrsagifgyuioapi'
     }
 })
 
@@ -73,9 +73,11 @@ function generatetoken()
 
 app.post("/login",async (req, res) => {
     const { email, password,bt,token } = req.body;
+    console.log(email,password,bt,token)
     if(bt=="Log In")   
     {
         let results1=await pool.query("select * from public.users where email=$1", [email])
+        console.log(results1.rows)
         if (results1.rows.length>0)
         {
             let check=await bcrypt.compare(password,results1.rows[0].password)
