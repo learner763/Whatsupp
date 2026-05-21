@@ -174,7 +174,8 @@ app.post('/user_data',(req,res)=>
     let log_in=false
     pool.query(`select * from public.users where email=$1`,[email],(err,results)=>
     {
-        if(results.rows[0].name!==null)
+        console.log(results)
+        if(results?.rows[0]?.name!==null)
         {
             log_in=false
         }
