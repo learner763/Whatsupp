@@ -65,6 +65,7 @@ function Home()
     const [msg_attributes,set_msg_attributes]=useState([])
     const sent_once=useRef([])
     const unseen_once=useRef([])
+    const read_by_me_once=useRef([])
     const [dialog_value,set_dialog_value]=useState('')
     const dialogref=useRef(null);
     const [profile_pic,set_profile_pic]=useState('dp.png')
@@ -81,19 +82,6 @@ function Home()
         {
             await updateDoc(unseen.docs[i].ref,{seen:true,seenAt:serverTimestamp()})
         }
-        setmessages(prev=>
-        {
-            let previous=[...prev]
-            if(previous.findIndex(x=>x[0]===user)===-1){return previous;}
-            previous[previous.findIndex(x=>x[0]===user)][2]=0
-            let unread=0
-            for(let i=0;i<previous.length;i++)
-            {
-                if(previous[i][2]>0){unread+=1}
-            }
-            set_unread(unread)
-            return previous
-        })
     } 
 
     function find_url(message)
@@ -529,10 +517,15 @@ function Home()
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
-            let unseen_messages=snapshot.docChanges().filter(change=>!change.doc.data().seen && change.doc.data().to===index && change.doc.data().neondb).map(function(change)
+            let unseen_messages=snapshot.docChanges().filter(change=>!change.doc.data().seen && change.doc.data().to===index && !change.doc.data().delete && change.doc.data().neondb).map(function(change)
             {
                 return {id:change.doc.id,...change.doc.data()}
             })
+            let read_by_me_messages=snapshot.docChanges().filter(change=>change.doc.data().seen && change.doc.data().to===index && !change.doc.data().delete && change.doc.data().neondb).map(function(change)
+            {
+                return {id:change.doc.id,...change.doc.data()}
+            })
+            if(!on_reload.current)read_by_me_once.current=snapshot.docs.map(doc => doc.id && doc.data().seen && doc.data().to===index && doc.data().neondb)
             if(!on_reload.current)unseen_once.current=snapshot.docs.map(doc => doc.id && !doc.data().seen && doc.data().to===index && doc.data().neondb)
             let read_messages=snapshot.docChanges().filter(change=>change.doc.data().neondb && change.doc.data().seen && change.doc.data().from===index && !change.doc.data().delete).map(function(change)
             {
@@ -726,6 +719,17 @@ function Home()
                                 }
                             } 
                             if(stop){break}
+                        }
+                    }
+                }
+                if(on_reload.current)
+                {
+                    for(let i=0;i<read_by_me_messages.length;i++)
+                    {
+                        if(!read_by_me_once.current.includes(read_by_me_messages[i].id))
+                        {
+                            let other_person_index=previous.findIndex(x=>x[0]===read_by_me_messages[i].from)
+                            if(other_person_index!==-1 && previous[other_person_index][2]>0)previous[other_person_index][2]-=1
                         }
                     }
                 }
