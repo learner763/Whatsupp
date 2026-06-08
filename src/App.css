@@ -17,37 +17,35 @@ body{
     align-self: center;
     justify-self: center;
     font-weight: bold;
-    color: white;
+    color: #000000cc;
     font-size: 18px;
-    margin: 10px;
 }
 .App input{
     align-items: center;
-    margin: 10px;
     justify-self: center;
-    border-radius: 5px;
-    border: none;
+    border-radius: 20px;
+    border: 1px #000000cc solid;
     font-size: 18px;
-    padding: 5px;
-    width: 237px;
+    padding: 10px;
+    width: -webkit-fill-available;
+    color: #000000cc;
 }
 .App button{
     margin: 10px;
-    background-color: white;
-    color: darkgreen;
-    border: none;
-    border-radius: 5px;
+    background: linear-gradient(180deg, green 70%, darkgreen );
+    color: white;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 18px;
-    padding: 5px;
-    width: 247px;
+    padding: 10px;
+    width: -webkit-fill-available;
+    border: 1px green solid;
 }
 .loader{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100dvh;
-
 }
 .circle{
     width: 50px;
@@ -61,9 +59,82 @@ body{
     to {transform: rotate(360deg);}
 }
 #s{
-    text-decoration: underline;
     cursor: pointer;
 }
 #t{
     font-weight: normal;
+    margin: 10px 0px;
+}
+.main_div{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 20px;
+    border: 1px solid green;
+}
+#title_label{
+    color: white;
+    font-size: 25px;
+    margin: 0px;
+    padding: 40px;
+    background: linear-gradient(180deg, green 70%, darkgreen);
+    width: -webkit-fill-available;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    border-radius: 20px 20px 0px 0px;
+}
+i{
+    cursor: pointer;
+}
+#password_input{
+    width: 400px;
+}
+#otp_div{
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+#otp_div input{
+    border: 1px solid darkgreen;
+    border-radius: 20px;
+    font-size: 16px;
+    padding: 5px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    color: darkgreen;
+    font-weight: bold;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+#otp_div input::-webkit-outer-spin-button,
+#otp_div input::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+}
+dialog label,dialog p,dialog input{
+    color: #000000cc;
+}
+@media(max-width:500px)
+{
+    #password_input{
+        width: -webkit-fill-available;
+    }
+    .App{
+        align-items: stretch;
+        justify-content: start;
+    }
+    .main_div{
+        min-height: 100dvh;
+        border: none;
+    }
+    #title_label,.main_div{
+        border-radius: 0;
+    }
+    #login_button{
+        margin-top: auto;
+    }
 }

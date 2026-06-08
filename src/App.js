@@ -14,6 +14,7 @@ function App() {
     const [text,settext]=useState("");
     const [visibility,setvisibility]=useState("block");
     const [msg,cmsg]=useState("New to this app?");
+    const [welcome_msg,setwelcome]=useState("Sign In");
     const [f,df]=useState("none");
     const nav=useNavigate();
     const email_key=localStorage.getItem("email")
@@ -22,6 +23,27 @@ function App() {
     const [ready,set_is_ready]=useState(false)
     const [dialog_value,set_dialog_value]=useState('')
     const dialogref=useRef(null)
+    const [password_icon_content,set_content]=useState('fas fa-eye-slash')
+    useEffect(()=>
+    {
+        let otp_inputs=document.querySelectorAll('#otp_div input');
+        for (let i=0;i<otp_inputs.length;i++)
+        {
+            otp_inputs[i].type='number'
+            otp_inputs[i].addEventListener('keydown',function(e)
+            {
+                if(/^[0-9]$/.test(e.key))
+                {
+                    e.preventDefault();
+                    otp_inputs[i].value=e.key;
+                    otp_inputs[i+1]?.focus();
+                }
+                else{
+                  e.preventDefault();
+                }
+            })
+        }
+    },[dialog_value])
     useEffect(()=>
     {
         fetch("/user_data",
@@ -49,17 +71,24 @@ function App() {
             { 
               set_dialog_value(
                 <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
-                  <label style={{fontWeight:'bold',color:'darkgreen'}}>OTP Alert</label>
+                  <label style={{fontWeight:'bold',color:'darkgreen',fontSize:'18px'}}>OTP Alert</label>
                   <label>Check {email_key} for OTP.</label>
                   <p style={{margin:'0'}}>It will be valid for 2 minutes.</p>
-                  <input id='otp' type='number' style={{padding:'3px', fontSize:'16px',border:'1px black solid',borderRadius:'5px'}}></input>
+                  <div id='otp_div'>
+                    <input></input>
+                    <input></input>
+                    <input></input>
+                    <input></input>
+                    <input></input>
+                    <input></input>
+                  </div>
                   <label style={{color:'red',alignSelf:'center',display:'none',fontWeight:'bold'}} id='otp_label'></label>
                   <div style={{display:'flex',justifyContent:'space-evenly',gap:'10px'}}>
-                    <button style={{padding:'5px', fontSize:'16px',backgroundColor:'darkgreen',color:'white',cursor:'pointer',border:'none',borderRadius:'5px',fontWeight:'bold',flex:'1'}}
+                    <button style={{padding:'5px', fontSize:'16px',backgroundColor:'darkgreen',color:'white',cursor:'pointer',border:'none',borderRadius:'20px',flex:'1'}}
                     onClick={()=>
                     {
                       document.getElementById('otp_label').style.display='none';
-                      let otp=document.getElementById('otp').value;
+                      let otp=`${document.querySelectorAll('#otp_div input')[0].value}${document.querySelectorAll('#otp_div input')[1].value}${document.querySelectorAll('#otp_div input')[2].value}${document.querySelectorAll('#otp_div input')[3].value}${document.querySelectorAll('#otp_div input')[4].value}${document.querySelectorAll('#otp_div input')[5].value}`;
                       fetch("/verify_otp",{
                         method: 'POST',
                         headers: {
@@ -103,7 +132,7 @@ function App() {
                       })
                     }
                     }>Submit</button>
-                    <button style={{padding:'5px', fontSize:'16px',backgroundColor:'white',color:'darkgreen',border:'1px darkgreen solid',cursor:'pointer',borderRadius:'5px',fontWeight:'bold',flex:'1'}} 
+                    <button style={{padding:'5px', fontSize:'16px',backgroundColor:'white',color:'darkgreen',border:'1px darkgreen solid',cursor:'pointer',borderRadius:'20px',flex:'1'}} 
                     onClick={()=>dialogref.current.close()
                     }>Close</button>
                   </div>
@@ -152,17 +181,24 @@ function App() {
                 localStorage.setItem('email',response.data.email)
                 set_dialog_value(
                   <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
-                    <label style={{fontWeight:'bold',color:'darkgreen'}}>OTP Alert</label>
+                    <label style={{fontWeight:'bold',color:'darkgreen',fontSize:'18px'}}>OTP Alert</label>
                     <label>Check {response.data.email} for OTP.</label>
                     <p style={{margin:'0'}}>It will be valid for 2 minutes.</p>
-                    <input id='otp' type='number' style={{padding:'3px', fontSize:'16px',border:'1px black solid',borderRadius:'5px'}}></input>
+                    <div id='otp_div'>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                    </div>
                     <label style={{color:'red',alignSelf:'center',display:'none',fontWeight:'bold'}} id='otp_label'></label>
                     <div style={{display:'flex',justifyContent:'space-evenly',gap:'10px'}}>
-                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'darkgreen',color:'white',cursor:'pointer',border:'none',borderRadius:'5px',fontWeight:'bold',flex:'1'}}
+                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'darkgreen',color:'white',cursor:'pointer',border:'none',borderRadius:'20px',flex:'1'}}
                       onClick={()=>
                       {
                         document.getElementById('otp_label').style.display='none';
-                        let otp=document.getElementById('otp').value;
+                        let otp=`${document.querySelectorAll('#otp_div input')[0].value}${document.querySelectorAll('#otp_div input')[1].value}${document.querySelectorAll('#otp_div input')[2].value}${document.querySelectorAll('#otp_div input')[3].value}${document.querySelectorAll('#otp_div input')[4].value}${document.querySelectorAll('#otp_div input')[5].value}`;
                         fetch("/verify_otp",{
                           method: 'POST',
                           headers: {
@@ -189,7 +225,7 @@ function App() {
                         })
                       }
                       }>Submit</button>
-                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'white',color:'darkgreen',border:'1px darkgreen solid',cursor:'pointer',borderRadius:'5px',fontWeight:'bold',flex:'1'}} 
+                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'white',color:'darkgreen',border:'1px darkgreen solid',cursor:'pointer',borderRadius:'20px',flex:'1'}} 
                       onClick={()=>dialogref.current.close()
                       }>Close</button>
                     </div>
@@ -213,17 +249,24 @@ function App() {
                 localStorage.setItem('email',response.data.email)
                 set_dialog_value(
                   <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
-                    <label style={{fontWeight:'bold',color:'darkgreen'}}>OTP Alert</label>
+                    <label style={{fontWeight:'bold',color:'darkgreen',fontSize:'18px'}}>OTP Alert</label>
                     <label>Check {response.data.email} for OTP.</label>
                     <p style={{margin:'0'}}>It will be valid for 2 minutes.</p>
-                    <input id='otp' type='number' style={{padding:'3px', fontSize:'16px',border:'1px black solid',borderRadius:'5px'}}></input>
+                    <div id='otp_div'>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                    </div>
                     <label style={{color:'red',alignSelf:'center',display:'none',fontWeight:'bold'}} id='otp_label'></label>
                     <div style={{display:'flex',justifyContent:'space-evenly',gap:'10px'}}>
-                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'darkgreen',color:'white',cursor:'pointer',border:'none',borderRadius:'5px',fontWeight:'bold',flex:'1'}}
+                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'darkgreen',color:'white',cursor:'pointer',border:'none',borderRadius:'20px',flex:'1'}}
                       onClick={()=>
                       {
                         document.getElementById('otp_label').style.display='none';
-                        let otp=document.getElementById('otp').value;
+                        let otp=`${document.querySelectorAll('#otp_div input')[0].value}${document.querySelectorAll('#otp_div input')[1].value}${document.querySelectorAll('#otp_div input')[2].value}${document.querySelectorAll('#otp_div input')[3].value}${document.querySelectorAll('#otp_div input')[4].value}${document.querySelectorAll('#otp_div input')[5].value}`;
                         fetch("/verify_otp",{
                           method: 'POST',
                           headers: {
@@ -260,7 +303,7 @@ function App() {
                         })
                       }
                       }>Submit</button>
-                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'white',color:'darkgreen',border:'1px darkgreen solid',cursor:'pointer',borderRadius:'5px',fontWeight:'bold',flex:'1'}} 
+                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'white',color:'darkgreen',border:'1px darkgreen solid',cursor:'pointer',borderRadius:'20px',flex:'1'}} 
                       onClick={()=>dialogref.current.close()
                       }>Close</button>
                     </div>
@@ -309,17 +352,24 @@ function App() {
                 localStorage.setItem('email',data.email)
                 set_dialog_value(
                   <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
-                    <label style={{fontWeight:'bold',color:'darkgreen'}}>OTP Alert</label>
+                    <label style={{fontWeight:'bold',color:'darkgreen',fontSize:'18px'}}>OTP Alert</label>
                     <label>Check {data.email} for OTP.</label>
                     <p style={{margin:'0'}}>It will be valid for 2 minutes.</p>
-                    <input id='otp' type='number' style={{padding:'3px', fontSize:'16px',border:'1px black solid',borderRadius:'5px'}}></input>
+                    <div id='otp_div'>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                      <input></input>
+                    </div>
                     <label style={{color:'red',alignSelf:'center',display:'none',fontWeight:'bold'}} id='otp_label'></label>
                     <div style={{display:'flex',justifyContent:'space-evenly',gap:'10px'}}>
-                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'darkgreen',color:'white',cursor:'pointer',border:'none',borderRadius:'5px',fontWeight:'bold',flex:'1'}}
+                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'darkgreen',color:'white',cursor:'pointer',border:'none',borderRadius:'20px',flex:'1'}}
                       onClick={()=>
                       {
                         document.getElementById('otp_label').style.display='none';
-                        let otp=document.getElementById('otp').value;
+                        let otp=`${document.querySelectorAll('#otp_div input')[0].value}${document.querySelectorAll('#otp_div input')[1].value}${document.querySelectorAll('#otp_div input')[2].value}${document.querySelectorAll('#otp_div input')[3].value}${document.querySelectorAll('#otp_div input')[4].value}${document.querySelectorAll('#otp_div input')[5].value}`;
                         fetch("/verify_otp",{
                           method: 'POST',
                           headers: {
@@ -346,7 +396,7 @@ function App() {
                         })
                       }
                       }>Submit</button>
-                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'white',color:'darkgreen',border:'1px darkgreen solid',cursor:'pointer',borderRadius:'5px',fontWeight:'bold',flex:'1'}} 
+                      <button style={{padding:'5px', fontSize:'16px',backgroundColor:'white',color:'darkgreen',border:'1px darkgreen solid',cursor:'pointer',borderRadius:'20px',flex:'1'}} 
                       onClick={()=>dialogref.current.close()
                       }>Close</button>
                     </div>
@@ -366,67 +416,95 @@ function App() {
         <div className='circle'></div>
       </div>
       <div className="App" style={{display:ready===true?'flex':'none'}}>
-        <div style={{display:'flex',flexDirection:'column',borderRadius:'20px',backgroundColor:'darkgreen',padding:'10px'}}>
-        <a href='https://whatsupp-feedback.vercel.app/' style={{margin:'10px',fontWeight:'bold',color:'white',alignSelf:'center'}}>View Docs</a>
-        <label style={{color:'white',fontSize:'25px'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
-        <label style={{alignSelf:'flex-start'}}  >Email 🔑</label>
-        <input
-          type="text"
-          value={email}
-          placeholder='you@domain.tld'
-          onChange={(e) => setemail(e.target.value.replace(/[^a-zA-Z0-9_.@+]/g, ''))} 
-        />
-        <label style={{alignSelf:'flex-start'}} >Password 🔒</label>
-        <input
-          type="password"
-          value={password}
-          placeholder='********'
-          maxLength={15}
-          onChange={(e) => setpassword(e.target.value.replace(' ',''))}
-        />
-        <hr style={{display:f, width: 'auto',  borderTop: "1px solid white", margin: "10px" }} />        
-        <input placeholder='Enter Account Email:' style={{display:f}} type='text' value={email1} 
-        onChange={(e) => 
-        {
-          setemail1(e.target.value.replace(/[^a-zA-Z0-9_@.+]/g, ''))
-        }}></input>
-        <button style={{display:f}} onClick={()=>forget(email1)}>Find Account</button>
-        <label style={{display:disp,maxWidth:'270px'}}>{text}</label>
-        <hr style={{display:f, width: 'auto',  borderTop: "1px solid white", margin: "10px" }} />        
-        <button onClick={() =>{ setvisibility("none") ; df("block");}}style={{display:visibility}}>Forgot Password?</button>
-        <button onClick={() => 
+        <div className='main_div' >
+        <label id='title_label'><i class="fas fa-mobile-alt" style={{background: 'white',
+        padding: '10px',
+        color: 'green',
+        borderRadius: '10px'}}></i> WhatsUpp</label>
+          <label style={{margin:'10px 0px',fontSize:'20px'}}>{welcome_msg}</label>
+          <label style={{alignSelf:'flex-start',margin:'10px'}}  >Email 🔑</label>
+          <input
+            style={{margin:'0 10px'}}
+            type="text"
+            value={email}
+            placeholder='you@domain.tld'
+            onChange={(e) => setemail(e.target.value.replace(/[^a-zA-Z0-9_.@+]/g, ''))} 
+          />
+          <label style={{alignSelf:'flex-start',margin:'20px 10px 10px 10px'}} >Password 🔒</label>
+          <div style={{border: '1px solid #000000cc',
+          borderRadius: '20px',
+          paddingRight: '10px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          margin: '0px 10px 10px 10px'}}>
+            <input
+              type={password_icon_content==='fas fa-eye' ? "text" : "password"}
+              id='password_input'
+              style={{border:'none',margin:'0'}}
+              value={password}
+              placeholder='********'
+              maxLength={15}
+              onChange={(e) => setpassword(e.target.value.replace(' ',''))}
+            />
+            <i style={{width:'20px',color:'#000000cc',marginLeft:'auto'}} className={password_icon_content} 
+            onClick={()=>
+            {
+              if(password_icon_content==='fas fa-eye-slash')
               {
-                setdisp('none')
-                if(email.length>0 && password.length>0){post(email,password,bt)}
-              }}>{bt}
-        </button> 
-        <label  id="t">{msg}<label
-          id="s"
-          onClick={() => {
-            setdisp('none');
-            setemail('');
-            setpassword('');
-            if (lt==="Sign Up"){
-              setlt("Log In");
-              setbt("Sign Up");
-              setvisibility("none");
-              df("none");
-              cmsg("Signed in already?");
+                set_content('fas fa-eye')
+              }
+              else{
+                set_content('fas fa-eye-slash')
+              }
             }
-            else{
-              setlt("Sign Up");
-              setbt("Log In");
-              df("none");
-              setvisibility("block");
-              cmsg("New to this app?");
-            }
-          }}
-        >
-          {lt}
-        </label></label>
+            }></i>
+          </div>
+          <hr style={{display:f, width: 'auto',  borderTop: "1px solid gray", margin: "10px" }} />        
+          <input placeholder='Enter Account Email:' style={{display:f,margin:'10px'}} type='text' value={email1} 
+          onChange={(e) => 
+          {
+            setemail1(e.target.value.replace(/[^a-zA-Z0-9_@.+]/g, ''))
+          }}></input>
+          <button style={{display:f}} onClick={()=>forget(email1)}>Find Account</button>
+          <label style={{display:disp,color:'red',margin:'10px 0px'}}>{text}</label>
+          <hr style={{display:f, width: 'auto',  borderTop: "1px solid gray", margin: "10px" }} />        
+          <button onClick={() =>{ setvisibility("none") ; df("block");}}style={{display:visibility}}>Forgot Password?</button>
+          <button id='login_button' onClick={() => 
+                {
+                  setdisp('none')
+                  if(email.length>0 && password.length>0){post(email,password,bt)}
+                }}>{bt}
+          </button> 
+          <label  id="t">{msg}<label
+            id="s"
+            onClick={() => {
+              setdisp('none');
+              setemail('');
+              setpassword('');
+              if (lt==="Sign Up"){
+                setwelcome("Create Account");
+                setlt("Log In");
+                setbt("Sign Up");
+                setvisibility("none");
+                df("none");
+                cmsg("Signed in already?");
+              }
+              else{
+                setwelcome("Sign In");
+                setlt("Sign Up");
+                setbt("Log In");
+                df("none");
+                setvisibility("block");
+                cmsg("New to this app?");
+              }
+            }}
+          >
+            {lt}
+          </label></label>
         </div>
       </div>
-      <dialog style={{borderRadius:'10px'}} ref={dialogref}>{dialog_value}</dialog>
+      <dialog style={{borderRadius:'20px'}} ref={dialogref}>{dialog_value}</dialog>
     </>
   );
 }
