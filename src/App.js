@@ -38,8 +38,9 @@ function App() {
                     otp_inputs[i].value=e.key;
                     otp_inputs[i+1]?.focus();
                 }
-                else{
+                else if(e.key==='Backspace'){
                   e.preventDefault();
+                  otp_inputs[i].value='';
                 }
             })
         }
@@ -417,9 +418,9 @@ function App() {
       </div>
       <div className="App" style={{display:ready===true?'flex':'none'}}>
         <div className='main_div' >
-        <label id='title_label'><i class="fas fa-mobile-alt" style={{background: 'white',
-        padding: '10px',
-        color: 'green',
+        <label id='title_label'><i class="fas fa-mobile-alt" style={{background: 'green',
+        padding: '10px 0px 10px 10px',
+        color: 'white',
         borderRadius: '10px'}}></i> WhatsUpp</label>
           <label style={{margin:'10px 0px',fontSize:'20px'}}>{welcome_msg}</label>
           <label style={{alignSelf:'flex-start',margin:'10px'}}  >Email 🔑</label>

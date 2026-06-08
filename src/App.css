@@ -118,6 +118,10 @@ i{
 dialog label,dialog p,dialog input{
     color: #000000cc;
 }
+dialog button:first-of-type{
+    background: linear-gradient(180deg, green 70%, darkgreen);
+}
+
 @media(max-width:500px)
 {
     #password_input{
