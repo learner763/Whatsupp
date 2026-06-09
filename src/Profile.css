@@ -15,37 +15,42 @@ body{
 }
 .Profile label{
     font-weight: bold;
-    color: white;
+    color: #000000cc;
     font-size: 18px;
     margin: 10px;
 }
-.Profile input{
+.Profile input,textarea{
     align-items: center;
-    margin: 10px;
+    margin: 0px 10px 10px 10px;
     justify-self: center;
-    border-radius: 5px;
-    border: none;
+    border-radius: 20px;
+    border: 1px #000000cc solid;
     font-size: 18px;
-    padding: 5px;
-    width: 237px;
+    padding: 10px;
+    width: 440px;
 }
 .Profile button{
-    margin: 10px;
-    background-color: white;
-    color: green;
-    border: none;
-    border-radius: 5px;
+    background:linear-gradient(180deg, green 70%, darkgreen );
+    color: white;
+    border: 1px green solid;
+    border-radius: 20px;
     cursor: pointer;
-    padding: 5px;
+    padding: 10px;
     font-size: 18px;
-    width: 247px;
+    width: -webkit-fill-available;
+}
+textarea{
+    resize: none;
+    font-family: sans-serif;
+    font-size: 18px;
+    scrollbar-width: none;
+    height: 60px;
 }
 .loader{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100dvh;
-
 }
 .circle{
     width: 50px;
@@ -68,4 +73,40 @@ dialog button{
     background-color: white;
     font-size: 16px;
     cursor:pointer;
+}
+#title_label{
+    align-items: center;
+    background: linear-gradient(180deg, green 70%, #006400);
+    border-radius: 20px 20px 0 0;
+    color: #fff;
+    display: flex;
+    font-size: 30px;
+    gap: 10px;
+    justify-content: center;
+    margin: 0;
+    padding: 38px;
+    width: -webkit-fill-available;
+}
+#save_button{
+    margin: 10px 10px 0px 10px;
+}
+@media (max-width: 500px){
+    .Profile input,textarea{
+        width: -webkit-fill-available;
+    }
+    #save_button{
+        margin-top: auto;
+    }
+    .Profile div:first-child{
+        min-height: 100dvh;
+        overflow-y: auto;
+        border: none !important;
+    }
+    #title_label, .Profile div:first-child{
+        border-radius: 0px !important;
+    }
+    .Profile{
+        align-items: stretch;
+        justify-content: start;
+    }
 }

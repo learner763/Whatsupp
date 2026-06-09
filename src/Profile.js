@@ -67,10 +67,10 @@ function Profile() {
         <div className='circle'></div>
       </div>
       <div className="Profile" style={{display:load1?'flex':'none'}}>
-        <div style={{padding:'10px',display:'flex',flexDirection:'column',borderRadius:'20px',backgroundColor:'darkgreen'}}>
-        <a href='https://whatsupp-feedback.vercel.app/' style={{margin:'10px',fontWeight:'bold',color:'white',alignSelf:'center'}}>View Docs</a>
-        <label style={{color:'white',fontSize:'25px',alignSelf:'center'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label>
-        <label >Profile Name 🏷️</label>
+        <div style={{display:'flex',flexDirection:'column',borderRadius:'20px',border:'1px green solid'}}>
+        <label id='title_label'><i class="fas fa-comment-dots"></i> WhatsUpp</label>
+        <label style={{margin: '10px 0px', fontSize: '22px',alignSelf:'center'}}>Create Profile</label>
+        <label ><i style={{width:'21px'}} className="fas fa-user-circle"></i> Profile Name </label>
         <input
           type="text"
           value={name}
@@ -81,8 +81,8 @@ function Profile() {
             setname(e.target.value.replace(/[^a-zA-Z_]/g,''))} 
           }
         />
-        <label >About Me 📝</label>
-        <input
+        <label ><i style={{width:'21px'}} className="fas fa-solid fa-address-card"></i> About Me </label>
+        <textarea
           type="text"
           value={bio}
           maxLength={25}
@@ -92,8 +92,9 @@ function Profile() {
               if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
               setbio(e.target.value)}
             }
-        />
-        <button onClick={() => 
+        >
+        </textarea>
+        <button id='save_button' onClick={() => 
           {
             if(name.length>0 && bio.length>0){personal_info(name,bio)}
           }}>Save</button>

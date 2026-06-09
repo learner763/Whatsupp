@@ -133,6 +133,7 @@ dialog button:first-of-type{
     }
     .main_div{
         min-height: 100dvh;
+        overflow-y: auto;
         border: none;
     }
     #title_label,.main_div{
