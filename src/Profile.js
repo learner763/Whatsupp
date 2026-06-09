@@ -28,7 +28,7 @@ function Profile() {
             else{
               set_dialog_value(
               <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
-                <label style={{fontWeight:'bold',color:'darkgreen'}}>Duplicate Name</label>
+                <label style={{fontWeight:'bold',color:'darkgreen',fontSize:'18px'}}>Duplicate Name</label>
                 <label>This name is already taken!Choose Another.</label>
                 <button onClick={()=>dialogref.current.close()}>Close</button>
               </div>
@@ -74,10 +74,10 @@ function Profile() {
         <input
           type="text"
           value={name}
-          maxLength={15}
           placeholder='Arshad_Khan'
           onChange={(e) => 
           {
+            if(e.target.value.length>15){e.target.value=e.target.value.substring(0,15)}
             setname(e.target.value.replace(/[^a-zA-Z_]/g,''))} 
           }
         />
@@ -85,11 +85,11 @@ function Profile() {
         <textarea
           type="text"
           value={bio}
-          maxLength={25}
           placeholder='...'
           onChange={(e) => 
             {
               if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+              if(e.target.value.length>50){e.target.value=e.target.value.substring(0,50)}
               setbio(e.target.value)}
             }
         >

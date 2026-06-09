@@ -465,8 +465,11 @@ function App() {
               style={{border:'none',margin:'0'}}
               value={password}
               placeholder='********'
-              maxLength={15}
-              onChange={(e) => setpassword(e.target.value.replace(' ',''))}
+              onChange={(e) => 
+                {
+                  if(e.target.value.length>15){e.target.value=e.target.value.substring(0,15)}
+                  setpassword(e.target.value.replace(' ',''))}
+                }
             />
             <i style={{width:'20px',color:'#000000cc',marginLeft:'auto'}} className={password_icon_content} 
             onClick={()=>
