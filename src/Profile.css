@@ -19,7 +19,7 @@ body{
     font-size: 18px;
     margin: 10px;
 }
-.Profile input,textarea{
+.Profile input,.Profile textarea{
     align-items: center;
     margin: 0px 10px 10px 10px;
     justify-self: center;
@@ -40,7 +40,7 @@ body{
     font-size: 18px;
     width: -webkit-fill-available;
 }
-textarea{
+.Profile textarea{
     resize: none;
     font-family: sans-serif;
     font-size: 18px;
@@ -93,7 +93,7 @@ dialog button{
     margin: 10px 10px 0px 10px;
 }
 @media (max-width: 500px){
-    .Profile input,textarea{
+    .Profile input,.Profile textarea{
         width: -webkit-fill-available;
     }
     #save_button{
