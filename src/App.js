@@ -129,6 +129,11 @@ function App() {
                         else{
                           document.getElementById('otp_label').style.display='block';
                           document.getElementById('otp_label').innerText=data_again.invalid?"Incorrect OTP!":"OTP Expired!";
+                          if(!data_again.invalid)
+                          {
+                            localStorage.removeItem('password');
+                            localStorage.removeItem('email');
+                          }
                         }
                       })
                     }
@@ -222,6 +227,11 @@ function App() {
                           else{
                             document.getElementById('otp_label').style.display='block';
                             document.getElementById('otp_label').innerText=data.invalid?"Incorrect OTP!":"OTP Expired!";
+                            if(!data.invalid)
+                            {
+                              localStorage.removeItem('password');
+                              localStorage.removeItem('email');
+                            }
                           }
                         })
                       }
@@ -300,6 +310,11 @@ function App() {
                           else{
                             document.getElementById('otp_label').style.display='block';
                             document.getElementById('otp_label').innerText=data.invalid?"Incorrect OTP!":"OTP Expired!";
+                            if(!data.invalid)
+                            {
+                              localStorage.removeItem('password');
+                              localStorage.removeItem('email');
+                            }
                           }
                         })
                       }
@@ -393,6 +408,11 @@ function App() {
                           else{
                             document.getElementById('otp_label').style.display='block';
                             document.getElementById('otp_label').innerText=data.invalid?"Incorrect OTP!":"OTP Expired!";
+                            if(!data.invalid)
+                            {
+                              localStorage.removeItem('password');
+                              localStorage.removeItem('email');
+                            }
                           }
                         })
                       }
@@ -418,12 +438,12 @@ function App() {
       </div>
       <div className="App" style={{display:ready===true?'flex':'none'}}>
         <div className='main_div' >
-        <label id='title_label'><i class="fas fa-mobile-alt" style={{background: 'green',
+        <label id='title_label'><i class="fas fa-comment-dots" style={{background: 'green',
         padding: '10px 0px 10px 10px',
         color: 'white',
         borderRadius: '10px'}}></i> WhatsUpp</label>
-          <label style={{margin:'10px 0px',fontSize:'20px'}}>{welcome_msg}</label>
-          <label style={{alignSelf:'flex-start',margin:'10px'}}  >Email 🔑</label>
+          <label style={{margin:'10px 0px',fontSize:'22px'}}>{welcome_msg}</label>
+          <label style={{alignSelf:'flex-start',margin:'10px'}}  ><i className='fas fa-envelope'></i> Email </label>
           <input
             style={{margin:'0 10px'}}
             type="text"
@@ -431,7 +451,7 @@ function App() {
             placeholder='you@domain.tld'
             onChange={(e) => setemail(e.target.value.replace(/[^a-zA-Z0-9_.@+]/g, ''))} 
           />
-          <label style={{alignSelf:'flex-start',margin:'20px 10px 10px 10px'}} >Password 🔒</label>
+          <label style={{alignSelf:'flex-start',margin:'20px 10px 10px 10px'}} ><i className='fas fa-lock' style={{width:'18px'}}></i> Password</label>
           <div style={{border: '1px solid #000000cc',
           borderRadius: '20px',
           paddingRight: '10px',

@@ -74,9 +74,9 @@ body{
 }
 #title_label{
     color: white;
-    font-size: 25px;
+    font-size: 30px;
     margin: 0px;
-    padding: 40px;
+    padding: 30px;
     background: linear-gradient(180deg, green 70%, darkgreen);
     width: -webkit-fill-available;
     justify-content: center;
