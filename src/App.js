@@ -488,7 +488,7 @@ function App() {
             }></i>
           </div>
           <hr style={{display:f, width: 'auto',  borderTop: "1px solid gray", margin: "10px" }} />        
-          <input placeholder='Enter Account Email:' style={{display:f,margin:'10px'}} type='text' value={email1} 
+          <input placeholder='Account Email' style={{display:f,margin:'10px'}} type='text' value={email1} 
           onChange={(e) => 
           {
             setemail1(e.target.value.replace(/[^a-zA-Z0-9_@.+]/g, ''))
