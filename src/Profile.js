@@ -68,7 +68,13 @@ function Profile() {
       </div>
       <div className="Profile" style={{display:load1?'flex':'none'}}>
         <div style={{display:'flex',flexDirection:'column',borderRadius:'20px',border:'1px green solid'}}>
-        <label id='title_label'><i class="fas fa-comment-dots"></i> WhatsUpp</label>
+        <label id='title_label'>
+          <svg width="50" height="50" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+            <rect width="512" height="512" rx="120" fill="#0F172A"></rect>
+            <path d="M100 150L150 360L256 210L362 360L412 150" fill="none" stroke="#22C55E" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg> 
+           WhatsUpp
+        </label>
         <label style={{margin: '10px 0px', fontSize: '22px',alignSelf:'center'}}>Create Profile</label>
         <label ><i style={{width:'21px'}} className="fas fa-user-circle"></i> Profile Name </label>
         <input

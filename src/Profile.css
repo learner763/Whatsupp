@@ -86,7 +86,7 @@ dialog button{
     gap: 10px;
     justify-content: center;
     margin: 0;
-    padding: 38px;
+    padding: 30px;
     width: -webkit-fill-available;
 }
 #save_button{

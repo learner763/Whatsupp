@@ -1318,7 +1318,10 @@ function Home()
     return(
         <>
         <div style={{display:loaded==true? 'none':'flex',height:'100dvh',justifyContent:'center',alignItems:'center',width:'auto'}}>
-            <div><label style={{fontSize:'40px',fontWeight:'bold', color:'darkgreen'}}><i class="fas fa-mobile-alt"></i> WhatsUpp</label></div>
+            <svg width="100" height="100" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" >
+              <rect width="512" height="512" rx="120" fill="#0F172A"></rect>
+              <path d="M100 150L150 360L256 210L362 360L412 150" fill="none" stroke="#22C55E" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>        
         </div>
         <div className='home' style={{display:loaded==true? 'flex':'none'}}>
             <div className='top'>

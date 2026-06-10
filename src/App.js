@@ -438,10 +438,13 @@ function App() {
       </div>
       <div className="App" style={{display:ready===true?'flex':'none'}}>
         <div className='main_div' >
-        <label id='title_label'><i class="fas fa-comment-dots" style={{background: 'green',
-        padding: '10px 0px 10px 10px',
-        color: 'white',
-        borderRadius: '10px'}}></i> WhatsUpp</label>
+          <label id='title_label'>
+            <svg width="50" height="50" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+              <rect width="512" height="512" rx="120" fill="#0F172A"></rect>
+              <path d="M100 150L150 360L256 210L362 360L412 150" fill="none" stroke="#22C55E" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg> 
+           WhatsUpp
+          </label>
           <label style={{margin:'10px 0px',fontSize:'22px'}}>{welcome_msg}</label>
           <label style={{alignSelf:'flex-start',margin:'10px'}}  ><i className='fas fa-envelope'></i> Email </label>
           <input
