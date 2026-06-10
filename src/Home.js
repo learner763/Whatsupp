@@ -1429,7 +1429,39 @@ function Home()
                                                 </span>
                                             </div>
                                             <div style={{height:'30px',alignItems:'center'}}>
-                                                <span style={{fontWeight:'normal',color:status[indices.indexOf(value[0])]==="(Typing...)"?bgr==='black'?'lime':'darkgreen':bgr==='black'?'white':'#555',fontSize:'17px'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
+                                                {status[indices.indexOf(value[0])]==="(Typing...)"?'':
+                                                value[1][value[1].length-1].startsWith('✔✔')?
+                                                (<>
+                                                    <svg width="20" height="20" viewBox="0 0 16 15" fill="none">
+                                                    <path
+                                                        d="M1.5 8L5.5 12L14.5 2"
+                                                        stroke={value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                    </svg>
+                                                    <svg width="20" height="20" viewBox="0 0 16 15" fill="none" style={{marginRight:'5px'}}>
+                                                    <path
+                                                        d="M1.5 8L5.5 12L14.5 2"
+                                                        stroke={value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                    </svg>
+                                                </>):
+                                                value[1][value[1].length-1].startsWith('✔')?
+                                                (<svg width="20" height="20" viewBox="0 0 16 15" fill="none" style={{marginRight:'5px'}}>
+                                                <path
+                                                    d="M1.5 8L5.5 12L14.5 2"
+                                                    stroke={value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                                </svg>):''}
+                                                <span style={{fontWeight:'normal',color:status[indices.indexOf(value[0])]==="(Typing...)"?bgr==='black'?'lime':'darkgreen':bgr==='black'?'white':'#555',fontSize:'17px'}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
                                                 <span style={{borderRadius:'50%',color:bgr==='black'?'darkgreen':'white',backgroundColor:bgr==='black'?'lime':'green',marginLeft:'auto',fontWeight:'bold',padding:value[2]===0?'0': '1px 5px 0px 5px'}}>{value[2]==0?"":value[2]}</span>
                                             </div>
                                         </div>

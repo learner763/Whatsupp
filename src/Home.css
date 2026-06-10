@@ -278,8 +278,8 @@ html{
     cursor: pointer;
 }
 .chat_bar span{
-    font-size: 18px;
-    color: darkgreen;
+    font-size: 17px;
+    color: #555;
     overflow-x: hidden; 
     white-space: nowrap;
     text-overflow: ellipsis;
