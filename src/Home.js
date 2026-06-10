@@ -1432,7 +1432,7 @@ function Home()
                                                 {status[indices.indexOf(value[0])]==="(Typing...)"?'':
                                                 value[1][value[1].length-1].startsWith('✔✔')?
                                                 (<>
-                                                    <svg width="20" height="20" viewBox="0 0 16 15" fill="none">
+                                                    <svg width="20" height="20" viewBox="0 0 16 15" fill="none" style={{minHeight:'20px',minWidth:'20px'}}>
                                                     <path
                                                         d="M1.5 8L5.5 12L14.5 2"
                                                         stroke={value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
@@ -1441,7 +1441,7 @@ function Home()
                                                         strokeLinejoin="round"
                                                     />
                                                     </svg>
-                                                    <svg width="20" height="20" viewBox="0 0 16 15" fill="none" style={{marginRight:'5px'}}>
+                                                    <svg width="20" height="20" viewBox="0 0 16 15" fill="none" style={{marginRight:'5px',minHeight:'20px',minWidth:'20px'}}>
                                                     <path
                                                         d="M1.5 8L5.5 12L14.5 2"
                                                         stroke={value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
@@ -1452,7 +1452,7 @@ function Home()
                                                     </svg>
                                                 </>):
                                                 value[1][value[1].length-1].startsWith('✔')?
-                                                (<svg width="20" height="20" viewBox="0 0 16 15" fill="none" style={{marginRight:'5px'}}>
+                                                (<svg width="20" height="20" viewBox="0 0 16 15" fill="none" style={{marginRight:'5px',minHeight:'20px',minWidth:'20px'}}>
                                                 <path
                                                     d="M1.5 8L5.5 12L14.5 2"
                                                     stroke={value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
