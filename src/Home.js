@@ -1322,7 +1322,7 @@ function Home()
               <rect width="512" height="512" rx="120" fill="#0F172A"></rect>
               <path d="M100 150L150 360L256 210L362 360L412 150" fill="none" stroke="#22C55E" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>   
-            <label style={{color:'green',fontWeight:'bold',fontSize:'30px',margin:'auto 30px 0px 0px'}}>WhatsUpp</label>     
+            <label style={{color:'green',fontWeight:'bold',fontSize:'30px',margin:'auto 0px 30px 0px'}}>WhatsUpp</label>     
         </div>
         <div className='home' style={{display:loaded==true? 'flex':'none'}}>
             <div className='top'>
