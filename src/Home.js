@@ -1421,7 +1421,7 @@ function Home()
                                         <img style={{flexShrink: '0',borderRadius:'50%',width:'50px',height:'50px',objectFit:'cover',margin:'0 10px',border:bgr!=='black'?up_user===value[0]?profile_pic==='dp.png'?'1px gray solid':'none':profile_images[indices.indexOf(value[0])]==='dp.png'?'1px gray solid':'none':'none'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
                                         <div style={{marginRight:'10px',display:'flex',flexDirection:'column',height:'60px',minWidth:'0'}}>    
                                             <div style={{height:'30px',fontWeight:'bold',alignItems:'center'}}>
-                                                <span style={{color:bgr==='black'?'lime':'black',fontWeight:'400'}}>{ info[indices.indexOf(value[0])*2]===profile?`${profile}🟣`:info[indices.indexOf(value[0])*2]}</span>
+                                                <span style={{color:bgr==='black'?'lime':'black'}}>{ info[indices.indexOf(value[0])*2]===profile?`${profile}🟣`:info[indices.indexOf(value[0])*2]}</span>
                                                 <span style={{color:bgr==='black'?'lime':'#555',fontSize:'12px',marginLeft:'auto',overflow:'visible',whiteSpace:'nowrap',fontWeight:'normal '}}>
                                                     {new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleDateString()=== new Date().toLocaleDateString()?
                                                     new Date(value[1][value[1].length-1].slice(value[1][value[1].length-1].lastIndexOf(' ')+1,value[1][value[1].length-1].length)).toLocaleTimeString():
@@ -1430,7 +1430,7 @@ function Home()
                                             </div>
                                             <div style={{height:'30px',alignItems:'center'}}>
                                                 <span style={{fontWeight:'normal',color:status[indices.indexOf(value[0])]==="(Typing...)"?bgr==='black'?'lime':'darkgreen':bgr==='black'?'white':'#555',fontSize:'17px'}}><span style={{color:`${value[1][value[1].length-1].startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"":value[1][value[1].length-1].startsWith('✔✔')?'✔✔':value[1][value[1].length-1].startsWith('✔')?"✔":''}</span>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
-                                                <span style={{borderRadius:'50%',color:bgr==='black'?'darkgreen':'green',marginLeft:'auto',fontWeight:'bold'}}>{value[2]==0?"":value[2]}</span>
+                                                <span style={{borderRadius:'50%',color:bgr==='black'?'darkgreen':'white',backgroundColor:bgr==='black'?'lime':'green',marginLeft:'auto',fontWeight:'bold',padding:'1px 5px 0px 5px'}}>{value[2]==0?"":value[2]}</span>
                                             </div>
                                         </div>
                                     </div>
