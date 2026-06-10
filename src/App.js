@@ -12,7 +12,7 @@ function App() {
     const [bt, setbt] = useState('Log In');
     const [disp,setdisp]=useState("none");
     const [text,settext]=useState("");
-    const [visibility,setvisibility]=useState("block");
+    const [visibility,setvisibility]=useState("visible");
     const [msg,cmsg]=useState("New to this app?");
     const [welcome_msg,setwelcome]=useState("Sign In");
     const [f,df]=useState("none");
@@ -496,7 +496,7 @@ function App() {
           <button style={{display:f}} onClick={()=>forget(email1)}>Find Account</button>
           <label style={{display:disp,color:'red',margin:'10px 0px'}}>{text}</label>
           <hr style={{display:f, width: 'auto',  borderTop: "1px solid gray", margin: "10px" }} />        
-          <button onClick={() =>{ setvisibility("none") ; df("block");}}style={{display:visibility}}>Forgot Password?</button>
+          <button id='forgot_pass_button' onClick={() =>{ setvisibility("hidden") ; df("block");}}style={{visibility:visibility}}>Forgot Password?</button>
           <button id='login_button' onClick={() => 
                 {
                   setdisp('none')
@@ -513,7 +513,7 @@ function App() {
                 setwelcome("Create Account");
                 setlt("Log In");
                 setbt("Sign Up");
-                setvisibility("none");
+                setvisibility("hidden");
                 df("none");
                 cmsg("Signed in already?");
               }
@@ -522,7 +522,7 @@ function App() {
                 setlt("Sign Up");
                 setbt("Log In");
                 df("none");
-                setvisibility("block");
+                setvisibility("visible");
                 cmsg("New to this app?");
               }
             }}
