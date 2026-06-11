@@ -1379,11 +1379,11 @@ function Home()
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'18px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
                                                 <span style={{minWidth:'100px',maxWidth:innerwidth>500?'370px':'270px'}}>{find_url( text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),''))}</span>
-                                                <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto',display:'flex',alignItems:'end',gap:'5px'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()} {
+                                                <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto',display:'flex',alignItems:'end'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':(<d style={{marginRight:'5px'}}>{msg_attributes[index][ind].edit_info}</d>)} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()} {
                                                     text.startsWith('✔✔')?
                                                     (
                                                     <>
-                                                       <svg width="12" height="12" viewBox="0 0 16 15" fill="none" style={{minHeight:'12px',minWidth:'12px'}}>
+                                                       <svg width="12" height="12" viewBox="0 0 16 15" fill="none" style={{minHeight:'12px',minWidth:'12px',marginLeft:'5px'}}>
                                                         <path
                                                             d="M1.5 8L5.5 12L14.5 2"
                                                             stroke={text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
@@ -1404,7 +1404,7 @@ function Home()
                                                     </>
                                                     ):
                                                     (
-                                                        <svg width="12" height="12" viewBox="0 0 16 15" fill="none" style={{minHeight:'12px',minWidth:'12px' }}>
+                                                        <svg width="12" height="12" viewBox="0 0 16 15" fill="none" style={{minHeight:'12px',minWidth:'12px',marginLeft:'5px'}}>
                                                         <path
                                                             d="M1.5 8L5.5 12L14.5 2"
                                                             stroke={text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
