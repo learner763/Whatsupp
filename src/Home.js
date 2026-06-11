@@ -1378,8 +1378,42 @@ function Home()
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'18px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
-                                                <span style={{minWidth:'100px',maxWidth:innerwidth>500?'370px':'270px'}}><span style={{color:`${text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}`}}>{text.startsWith('✔✔')?'✔✔':'✔'}</span>{find_url( text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),''))}</span>
-                                                <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
+                                                <span style={{minWidth:'100px',maxWidth:innerwidth>500?'370px':'270px'}}>{find_url( text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),''))}</span>
+                                                <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto',display:'flex',alignItems:'end'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()} {
+                                                    text.startsWith('✔✔')?
+                                                    (
+                                                    <>
+                                                       <svg width="12" height="12" viewBox="0 0 16 15" fill="none" style={{minHeight:'12px',minWidth:'12px',marginLeft:'5px'}}>
+                                                        <path
+                                                            d="M1.5 8L5.5 12L14.5 2"
+                                                            stroke={text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                        </svg> 
+                                                        <svg width="12" height="12" viewBox="0 0 16 15" fill="none" style={{minHeight:'12px',minWidth:'12px'}}>
+                                                        <path
+                                                            d="M1.5 8L5.5 12L14.5 2"
+                                                            stroke={text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                        </svg> 
+                                                    </>
+                                                    ):
+                                                    (
+                                                        <svg width="12" height="12" viewBox="0 0 16 15" fill="none" style={{minHeight:'12px',minWidth:'12px',marginLeft:'5px'}}>
+                                                        <path
+                                                            d="M1.5 8L5.5 12L14.5 2"
+                                                            stroke={text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                        </svg> 
+                                                    )}</span>
                                             </span>):
                                             text.startsWith(' ')?
                                             (<span style={{whiteSpace:'pre-line',marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'rebeccapurple',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
