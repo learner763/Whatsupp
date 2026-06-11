@@ -1404,7 +1404,7 @@ function Home()
                                                     </>
                                                     ):
                                                     (
-                                                        <svg width="12" height="12" viewBox="0 0 16 15" fill="none" style={{minHeight:'12px',minWidth:'12px'}}>
+                                                        <svg width="12" height="12" viewBox="0 0 16 15" fill="none" style={{minHeight:'12px',minWidth:'12px' }}>
                                                         <path
                                                             d="M1.5 8L5.5 12L14.5 2"
                                                             stroke={text.startsWith('✔✔✔✔')?'deepskyblue':'darksalmon'}
