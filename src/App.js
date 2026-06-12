@@ -474,7 +474,7 @@ function App() {
                   setpassword(e.target.value.replace(' ',''))}
                 }
             />
-            <i style={{maxHeight:'20px',maxWidth:'20px',color:'#000000cc',marginLeft:'auto'}} className={password_icon_content} 
+            <i style={{minWidth:'20px',maxWidth:'20px',color:'#000000cc',marginLeft:'auto'}} className={password_icon_content} 
             onClick={()=>
             {
               if(password_icon_content==='fas fa-eye-slash')
