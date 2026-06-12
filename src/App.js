@@ -496,7 +496,7 @@ function App() {
           <button style={{display:f}} onClick={()=>forget(email1)}>Find Account</button>
           <label style={{display:disp,color:'red',margin:'10px 0px'}}>{text}</label>
           <hr style={{display:f, width: 'auto',  borderTop: "1px solid gray", margin: "10px" }} />        
-          <button id='forgot_pass_button' onClick={() =>{ setvisibility("hidden") ; df("block");}}style={{visibility:visibility}}>Forgot Password?</button>
+          <button id='forgot_pass_button' style={{margin:visibility==='visible'?'10px':'0px'}} onClick={() =>{ setvisibility("hidden") ; df("block");}}style={{visibility:visibility}}>Forgot Password?</button>
           <button id='login_button' onClick={() => 
                 {
                   setdisp('none')
