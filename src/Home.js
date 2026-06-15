@@ -1672,7 +1672,7 @@ function Home()
                 </div>
             </div>
             <div className='phone_icons' style={{display:'none',backgroundColor:bgr==='black'?'black':'white'}}>
-                <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'lime':'green':'gray'}}><i class='fas fa-comment-dots'></i> Chats<sup> {unread===0?'':unread}</sup></label>
+                <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'lime':'green':'gray'}}><i class='fas fa-comment-dots'><sup> {unread===0?'':unread}</sup></i> Chats</label>
                 <label onClick={()=>set_menu('profile')} style={{color:menu==='profile'?bgr==='black'?'lime':'green':'gray'}}><i class='fas fa-user'></i> Profile</label>
                 <label onClick={()=>set_menu('settings')} style={{color:menu==='settings'?bgr==='black'?'lime':'green':'gray'}}><i class='fas fa-cog'></i> Settings</label>
                 <label onClick={()=>set_menu('people')} style={{color:menu==='people'?bgr==='black'?'lime':'green':'gray'}} id="people"><i class='fas fa-users'></i> People</label>

@@ -365,7 +365,9 @@ sup{
         padding: 5px;
     }
     .phone_icons label sup{
-        font-size: 15px;
+        font-size: 14px;
+        font-family: sans-serif;
+        font-weight: bold;
     }
     .phone_icons label i{
         font-size: 24px;
