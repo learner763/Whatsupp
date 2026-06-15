@@ -72,6 +72,7 @@ function Home()
     const [profile_images,set_images]=useState([])
     const [updating_pic,set_updating_pic]=useState(false)
     const [consecutive_keys,set_consecutive_keys]=useState([])
+    const [menu,set_menu]=useState('chat')
     let w=-1;
 
     async function set_seen(user)
@@ -913,9 +914,10 @@ function Home()
 
     useEffect(() => {
         if(window.innerWidth<=1100){
-            let people=document.getElementById('people');
-            if(window.getComputedStyle(people).color=='rgb(255, 255, 255)')
-            {document.getElementsByClassName('people_section')[0].style.flex=0;}
+            if(menu!=='people')
+            {
+                document.getElementsByClassName('people_section')[0].style.flex=0;
+            }
             else
             {document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0;}    
         }
@@ -925,7 +927,7 @@ function Home()
             document.getElementsByClassName('main_body_section')[0].style.flex=1;
             document.getElementsByClassName('main_body_section')[0].style.display='flex';
         }
-    },[innerwidth])
+    },[innerwidth,menu])
 
     useEffect(()=>
     {
@@ -1127,32 +1129,15 @@ function Home()
             })
         })
         let phone_icons=document.querySelectorAll(".phone_icons label");
-        phone_icons[0].style.color='lime'
         for(let i=0;i<phone_icons.length;i++)
         {
             phone_icons[i].addEventListener('click',()=>{
             update_receiver('-')
             receiver_again.current='-'
-            for(let j=0;j<phone_icons.length;j++)
-            {   
-                phone_icons[j].style.color='white';
-                if(j<3)
-                {
-                    icons[j].style.backgroundColor='lightgreen'
-                    icons[j].style.color='darkgreen'
-                }
-            }   
-            phone_icons[i].style.color='lime';
-            phone_icons[i].style.borderRadius='6px';
-            if(i<3)
-            {
-                icons[i].style.backgroundColor='darkgreen'
-                icons[i].style.color='white'
-            }
             if(i==0){set_profile_section('none');set_settings_section('none');setdisp('none');set_disp_chat('flex');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
             if(i==1){set_profile_section('flex');set_settings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
             if(i==2){set_profile_section('none');set_settings_section('flex');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='none';document.getElementsByClassName('people_section')[0].style.flex=0;document.getElementsByClassName('main_body_section')[0].style.flex=1}
-            if(i==4){set_profile_section('none');set_settings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='flex';document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0}
+            if(i==3){set_profile_section('none');set_settings_section('none');setdisp('none');set_disp_chat('none');document.getElementsByClassName('people_section')[0].style.display='flex';document.getElementsByClassName('people_section')[0].style.flex=1;document.getElementsByClassName('main_body_section')[0].style.flex=0}
             });
         }
         for(let i=0;i<icons.length;i++)
@@ -1160,18 +1145,6 @@ function Home()
             icons[i].addEventListener('click',()=>{
                 update_receiver('-')
                 receiver_again.current='-'
-                for(let j=0;j<icons.length;j++)
-                {
-                    icons[j].style.backgroundColor='lightgreen';
-                    icons[j].style.color='darkgreen';
-                }   
-                for(let k=0;k<phone_icons.length;k++)
-                {
-                    phone_icons[k].style.color='white';
-                }
-                icons[i].style.backgroundColor='darkgreen';
-                icons[i].style.color='white';
-                phone_icons[i].style.color='lime'
                 if(i==0){set_profile_section('none');set_settings_section('none');setdisp('none');set_disp_chat('flex')}
                 if(i==1){set_profile_section('flex');set_settings_section('none');setdisp('none');set_disp_chat('none')}
                 if(i==2){set_profile_section('none');set_settings_section('flex');setdisp('none');set_disp_chat('none')}
@@ -1244,20 +1217,6 @@ function Home()
                 set_profile_section('none');
                 set_settings_section('none');
                 set_disp_chat('none');
-                let phone_icons=document.querySelectorAll(".phone_icons label");
-                let icons=document.querySelectorAll(".desktop_icons label");
-                for(let j=0;j<phone_icons.length;j++)
-                {
-                    phone_icons[j].style.color='white';
-                } 
-                phone_icons[0].style.color='lime'
-                for(let j=0;j<icons.length;j++)
-                {
-                    icons[j].style.backgroundColor='lightgreen';
-                    icons[j].style.color='darkgreen';
-                }   
-                icons[0].style.backgroundColor='darkgreen';
-                icons[0].style.color='white';
             });
         }
     }, [info]);
@@ -1331,9 +1290,9 @@ function Home()
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
                 <div className='desktop_icons'>
-                    <label style={{marginTop:'51px'}}><i class='fas fa-comment-dots'></i> Read Chats<sup> {unread===0?'':unread}</sup></label>
-                    <label><i class='fas fa-user'></i> Update Profile</label>
-                    <label><i class='fas fa-cog'></i> Alter Settings</label>
+                    <label onClick={()=>set_menu('chat')} style={{marginTop:'51px',backgroundColor:menu==='chat'?'darkgreen':'lightgreen',color:menu==='chat'?'white':'darkgreen'}}><i class='fas fa-comment-dots'></i> Read Chats<sup> {unread===0?'':unread}</sup></label>
+                    <label onClick={()=>set_menu('profile')} style={{backgroundColor:menu==='profile'?'darkgreen':'lightgreen',color:menu==='profile'?'white':'darkgreen'}}><i class='fas fa-user'></i> Update Profile</label>
+                    <label onClick={()=>set_menu('settings')} style={{backgroundColor:menu==='settings'?'darkgreen':'lightgreen',color:menu==='settings'?'white':'darkgreen'}}><i class='fas fa-cog'></i> Alter Settings</label>
                     <label style={{marginBottom:'24px',marginTop:'auto'}} onClick=
                     {()=>{localStorage.removeItem('logged_in');nav2('/');}} 
                     ><i class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
@@ -1495,7 +1454,7 @@ function Home()
                                                     strokeLinejoin="round"
                                                 />
                                                 </svg>):''}
-                                                <span style={{fontWeight:'normal',color:status[indices.indexOf(value[0])]==="(Typing...)"?'lime':bgr==='black'?'#aaa':'#555',fontWeight:status[indices.indexOf(value[0])]==="(Typing...)"?'bold':'normal',fontSize:'17px'}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
+                                                <span style={{fontWeight:'normal',color:status[indices.indexOf(value[0])]==="(Typing...)"?bgr==='black'?'lime':'green':bgr==='black'?'#aaa':'#555',fontWeight:status[indices.indexOf(value[0])]==="(Typing...)"?'bold':'normal',fontSize:'17px'}}>{status[indices.indexOf(value[0])]==="(Typing...)"?"Typing...": value[1][value[1].length-1].slice(value[1][value[1].length-1].indexOf(' '),value[1][value[1].length-1].lastIndexOf(' '))}</span>
                                                 <span style={{borderRadius:'50%',color:'white',backgroundColor:'green',marginLeft:'auto',fontWeight:'bold',padding:value[2]===0?'0': '1px 5px 0px 5px'}}>{value[2]==0?"":value[2]}</span>
                                             </div>
                                         </div>
@@ -1712,12 +1671,11 @@ function Home()
                         document.getElementById('Send_Button').style.backgroundColor="#EEEEEE"}}} ><i className='fas fa-arrow-up'></i></button>
                 </div>
             </div>
-            <div className='phone_icons' style={{display:'none'}}>
-                <label ><i class='fas fa-comment-dots'></i> Chats<sup> {unread===0?'':unread}</sup></label>
-                <label ><i class='fas fa-user'></i> Profile</label>
-                <label ><i class='fas fa-cog'></i> Settings</label>
-                <label onClick={()=>{localStorage.removeItem('logged_in');nav2('/')}} ><i class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
-                <label  id="people"><i class='fas fa-users'></i> People</label>
+            <div className='phone_icons' style={{display:'none',backgroundColor:bgr==='black'?'black':'white'}}>
+                <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'lime':'green':'gray'}}><i class='fas fa-comment-dots'></i> Chats<sup> {unread===0?'':unread}</sup></label>
+                <label onClick={()=>set_menu('profile')} style={{color:menu==='profile'?bgr==='black'?'lime':'green':'gray'}}><i class='fas fa-user'></i> Profile</label>
+                <label onClick={()=>set_menu('settings')} style={{color:menu==='settings'?bgr==='black'?'lime':'green':'gray'}}><i class='fas fa-cog'></i> Settings</label>
+                <label onClick={()=>set_menu('people')} style={{color:menu==='people'?bgr==='black'?'lime':'green':'gray'}} id="people"><i class='fas fa-users'></i> People</label>
             </div>
         </div>
         <dialog style={{borderRadius:'10px'}} ref={dialogref}>{dialog_value}</dialog>

@@ -60,9 +60,7 @@ html{
     gap: 30px;
 }
 .desktop_icons label{
-    color: darkgreen;
     cursor: pointer;
-    background-color: lightgreen;
     width: 100%;
     text-align: center;
     border: darkgreen solid;
@@ -288,9 +286,6 @@ html{
     border-width: 0px 0px 1px 0px !important;
     width: 100%;
 }
-.phone_icons{
-    color: white;
-}
 .chat_detail{
     padding-top: 54px;
 }
@@ -299,6 +294,10 @@ html{
 }
 .phone_icons label{
     border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
 }
 select{
     cursor: pointer;
@@ -345,10 +344,9 @@ sup{
         justify-self: flex-end;
         bottom: 0 !important;
         position: fixed;
-        background-color: darkgreen;
-        height: 30px;
-        color: white;
+        height: auto;
         font-weight: bold;
+        border-top: 1px gray solid;
     }   
     .phone_icons label {
         cursor: pointer;
@@ -362,6 +360,16 @@ sup{
         background-color: forestgreen;
         border-bottom:1px white solid;
     }
+    .phone_icons label {
+        font-size: 16px;
+        padding: 5px;
+    }
+    .phone_icons label sup{
+        font-size: 15px;
+    }
+    .phone_icons label i{
+        font-size: 24px;
+    }
 }
 @media (max-width:500px) {
     .msg_div div,.msg_div span{
@@ -370,21 +378,7 @@ sup{
     .msg_div textarea{
         width: 270px;
     }
-    .phone_icons{
-        height: auto;
-    }
     .msg_div{
         bottom: 40px;
-    }
-    .phone_icons label {
-        font-size: 0px;
-        padding: 5px;
-        border-radius: 10px !important;
-    }
-    .phone_icons label sup{
-        font-size: 15px;
-    }
-    .phone_icons label i{
-        font-size: 30px;
     }
 }
