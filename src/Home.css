@@ -54,7 +54,6 @@ html{
     border-width: 0px 1px 0px 0px;
     flex-direction: column;
     overflow-y: scroll;
-    align-items: center;
     height: 100%;
     scrollbar-width: none;
     gap: 30px;
@@ -62,13 +61,13 @@ html{
 .desktop_icons label{
     cursor: pointer;
     width: 100%;
-    text-align: center;
-    border: darkgreen solid;
-    border-width: 1px 0px;
+    text-align: start;
     font-size: 18px;
     font-weight: bolder;
-    padding-top: 5px ;
-    padding-bottom: 5px ;
+    padding-left: 30px;
+}
+.desktop_icons label i{
+    margin-right: 5px;
 }
 .main_body_section
 {
@@ -371,6 +370,9 @@ sup{
     }
     .phone_icons label i{
         font-size: 24px;
+        width: 24px;
+        height: 24px;
+        text-align: center;
     }
 }
 @media (max-width:500px) {

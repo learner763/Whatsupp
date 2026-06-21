@@ -1093,8 +1093,6 @@ function Home()
             setinfo(accounts);
         });
         let icons=document.querySelectorAll(".desktop_icons label");
-        icons[0].style.backgroundColor='darkgreen'
-        icons[0].style.color='white'
         let refresh_people=document.getElementById("refresh_people");
         refresh_people.addEventListener("click",function()
         {
@@ -1290,12 +1288,19 @@ function Home()
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
                 <div className='desktop_icons'>
-                    <label onClick={()=>set_menu('chat')} style={{marginTop:'51px',backgroundColor:menu==='chat'?'darkgreen':'lightgreen',color:menu==='chat'?'white':'darkgreen'}}><i class='fas fa-comment-dots'></i> Read Chats<sup> {unread===0?'':unread}</sup></label>
-                    <label onClick={()=>set_menu('profile')} style={{backgroundColor:menu==='profile'?'darkgreen':'lightgreen',color:menu==='profile'?'white':'darkgreen'}}><i class='fas fa-user'></i> Update Profile</label>
-                    <label onClick={()=>set_menu('settings')} style={{backgroundColor:menu==='settings'?'darkgreen':'lightgreen',color:menu==='settings'?'white':'darkgreen'}}><i class='fas fa-cog'></i> Alter Settings</label>
-                    <label style={{marginBottom:'24px',marginTop:'auto'}} onClick=
-                    {()=>{localStorage.removeItem('logged_in');nav2('/');}} 
-                    ><i class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
+                    <app_title style={{display:'flex',gap:'10px',alignItems:'center',marginTop:'30px',paddingLeft:'30px'}}>
+                        <svg width="50" height="50" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" >
+                            <rect width="512" height="512" rx="120" fill="#0F172A"></rect>
+                            <path d="M100 150L150 360L256 210L362 360L412 150" fill="none" stroke="#22C55E" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>   
+                        <a style={{color:bgr==='black'?'white':'green',fontWeight:'bold',fontSize:'30px'}}>WhatsUpp</a>     
+                    </app_title>
+                    <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{background:menu==='chat'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-comment-dots'></i> Read Chats<sup> {unread===0?'':unread}</sup></label>
+                    <label onClick={()=>set_menu('profile')} style={{color:menu==='profile'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{background:menu==='profile'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}}  class='fas fa-user'></i> Update Profile</label>
+                    <label onClick={()=>set_menu('settings')} style={{color:menu==='settings'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{background:menu==='settings'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-cog'></i> Alter Settings</label>
+                    <label style={{marginBottom:'30px',marginTop:'auto',color:menu==='log_out'?bgr==='black'?'white':'#000000cc':'gray'}} onClick=
+                    {()=>{set_menu('log_out');localStorage.removeItem('logged_in');nav2('/');}} 
+                    ><i style={{background:menu==='log_out'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
                 </div>
                 <div className='main_body_section'>
                     <div className='chat_detail_section' style={{display:disp}} >
@@ -1672,10 +1677,10 @@ function Home()
                 </div>
             </div>
             <div className='phone_icons' style={{display:'none',backgroundColor:bgr==='black'?'black':'white'}}>
-                <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'lime':'green':'gray'}}><i class='fas fa-comment-dots'><sup> {unread===0?'':unread}</sup></i> Chats</label>
-                <label onClick={()=>set_menu('profile')} style={{color:menu==='profile'?bgr==='black'?'lime':'green':'gray'}}><i class='fas fa-user'></i> Profile</label>
-                <label onClick={()=>set_menu('settings')} style={{color:menu==='settings'?bgr==='black'?'lime':'green':'gray'}}><i class='fas fa-cog'></i> Settings</label>
-                <label onClick={()=>set_menu('people')} style={{color:menu==='people'?bgr==='black'?'lime':'green':'gray'}} id="people"><i class='fas fa-users'></i> People</label>
+                <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{padding:'10px',borderRadius:'50%',color:'white',background:menu==='chat'?'linear-gradient(180deg, green 70%, darkgreen)':'gray'}} class='fas fa-comment-dots'><sup> {unread===0?'':unread}</sup></i> Chats</label>
+                <label onClick={()=>set_menu('profile')} style={{color:menu==='profile'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{padding:'10px',borderRadius:'50%',color:'white',background:menu==='profile'?'linear-gradient(180deg, green 70%, darkgreen)':'gray'}} class='fas fa-user'></i> Profile</label>
+                <label onClick={()=>set_menu('settings')} style={{color:menu==='settings'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{padding:'10px',borderRadius:'50%',color:'white',background:menu==='settings'?'linear-gradient(180deg, green 70%, darkgreen)':'gray'}} class='fas fa-cog'></i> Settings</label>
+                <label onClick={()=>set_menu('people')} style={{color:menu==='people'?bgr==='black'?'white':'#000000cc':'gray'}} id="people"><i style={{padding:'10px 7px',borderRadius:'50%',color:'white',width:'auto',background:menu==='people'?'linear-gradient(180deg, green 70%, darkgreen)':'gray'}} class='fas fa-users'></i> People</label>
             </div>
         </div>
         <dialog style={{borderRadius:'10px'}} ref={dialogref}>{dialog_value}</dialog>
