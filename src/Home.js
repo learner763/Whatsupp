@@ -58,6 +58,7 @@ function Home()
     const [no_match_msg,set_no_match_msg]=useState('none')
     const [innerheight,set_innerheight]=useState(window.innerHeight)
     const [verified,set_verified]=useState(false)
+    const [chat_filter,set_chat_filter]=useState('all')
     const on_reload=useRef(false)
     const focus_input=useRef(false)
     const receiver_again=useRef('-');
@@ -505,6 +506,7 @@ function Home()
         let action_query=query(collection(db,'messages'),or(where('from','==',index),where('to','==',index)));
         let action=onSnapshot(action_query,(snapshot)=>
         {
+            console.log(on_reload.current)
             if(!on_reload.current)sent_once.current=snapshot.docs.map(doc => doc.id)
             let sent_messages=snapshot.docChanges().filter(change=>(change.doc.data().from===index? change.type==='added':change.type==='modified' && change.doc.data().neondb) && on_reload.current).map(function(change)
             {
@@ -650,20 +652,15 @@ function Home()
                 });  
                 set_msg_transfer(prev=>prev+1)
             }
-            if(delivered_messages.length>0)
-            {
-                setmessages(prev=>
-                {
-                    let previous=[...prev]
-                    let receiver_index=previous.findIndex(x=>x[0]===delivered_messages[0].from===index?delivered_messages[0].to:delivered_messages[0].from)
-                    let message_index=previous[receiver_index][1].findIndex(x=>x===`${delivered_messages[0].from===index?'✔':''} ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )
-                    if(message_index!==-1)previous[receiver_index][1][message_index]=`${delivered_messages[0].from===index?'✔✔':''} ${delivered_messages[0].text}     ${delivered_messages[0].createdAt.toDate().toISOString()}`
-                    return previous
-                })
-            }
             setmessages(prev=>
             {
                 let previous=[...prev]
+                if(delivered_messages.length>0)
+                {
+                    let receiver_index=previous.findIndex(x=>x[0]===delivered_messages[0].from===index?delivered_messages[0].to:delivered_messages[0].from)
+                    let message_index=previous[receiver_index][1].findIndex(x=>x===`${delivered_messages[0].from===index?'✔':''} ${delivered_messages[0].text}     ${delivered_messages[0].client_time}` )
+                    if(message_index!==-1)previous[receiver_index][1][message_index]=`${delivered_messages[0].from===index?'✔✔':''} ${delivered_messages[0].text}     ${delivered_messages[0].createdAt.toDate().toISOString()}`
+                }
                 for(let i=0;i<edited_messages.length;i++)
                 {
                     let stop=false
@@ -705,14 +702,23 @@ function Home()
                                 {
                                     if(unseen_messages[i].createdAt.toDate().toISOString()===previous[j][1][k].slice(previous[j][1][k].lastIndexOf(' ')+1,previous[j][1][k].length))
                                     {
-                                        if(receiver_again.current!==unseen_messages[i].from)
+                                        console.log(unseen_messages[i])
+                                        console.log(on_reload.current)
+                                        if(!on_reload.current)
                                         {
                                             previous[j][2]=previous[j][2]===undefined?0:previous[j][2]
                                             previous[j][2]+=1
                                         }
                                         else{
-                                            let msgref=doc(db,'messages',unseen_messages[i].id)
-                                            updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
+                                            if(receiver_again.current!==unseen_messages[i].from)
+                                            {
+                                                previous[j][2]=previous[j][2]===undefined?0:previous[j][2]
+                                                previous[j][2]+=1
+                                            }
+                                            else{
+                                                let msgref=doc(db,'messages',unseen_messages[i].id)
+                                                updateDoc(msgref,{seen:true,seenAt:serverTimestamp()})
+                                            }
                                         }
                                         stop=true
                                         break
@@ -729,6 +735,7 @@ function Home()
                     {
                         if(!read_by_me_once.current.includes(read_by_me_messages[i].id))
                         {
+                            read_by_me_once.current.push(read_by_me_messages[i].id)
                             let other_person_index=previous.findIndex(x=>x[0]===read_by_me_messages[i].from)
                             if(other_person_index!==-1 && previous[other_person_index][2]>0)previous[other_person_index][2]-=1
                         }
@@ -901,9 +908,10 @@ function Home()
                         return previous_attributes
                     })
                 }
+                console.log(previous)
+                if(!on_reload.current){set_msg_transfer(pre_value=>pre_value+1);on_reload.current=true}
                 return previous
             })
-            if(!on_reload.current){set_msg_transfer(pre_value=>pre_value+1);on_reload.current=true}
             if(flag1===true){set_loaded(true);}
         })
         return()=>
@@ -929,7 +937,7 @@ function Home()
         }
     },[innerwidth,menu])
 
-    useEffect(()=>
+    /*useEffect(()=>
     {
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
@@ -938,14 +946,15 @@ function Home()
         else if(innerwidth<=500){body_section.style.height=(window.innerHeight-40)+'px';main_body_section.style.height=(window.innerHeight-40)+'px';people_section.style.height=(window.innerHeight-40)+'px'}
         else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
     },[innerheight,innerwidth])
+    */
 
     useEffect(() => {
         let container=document.getElementsByClassName('chat_detail_section');
         if(container.length>0){container[0].scrollTop = container[0].scrollHeight;}
         set_text('')
-        document.getElementById('message').style.height='45px'
+        document.getElementById('message').style.height='46px'
         document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
-        document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='65px'
+        document.getElementsByClassName('chat_detail_section')[0].style.marginBottom='70px'
         focus_input.current.focus()
         set_edit('none')
         set_msg_value('')
@@ -957,14 +966,14 @@ function Home()
     {
         if(parseInt(getComputedStyle(document.getElementById('message')).height)<50)
         {
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=65+(msg_before_edit.length>0 || reply_to.length>0?50:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=70+(msg_before_edit.length>0 || reply_to.length>0?46:0)+'px'
         }
         else if(parseInt(getComputedStyle(document.getElementById('message')).height)>50 && parseInt(getComputedStyle(document.getElementById('message')).height)<70)
         {
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=90+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=88+(msg_before_edit.length>0 || reply_to.length>0?46:0)+'px'
         }
         else{
-            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=115+(msg_before_edit.length>0 || reply_to.length>0?45:0)+'px'
+            document.getElementsByClassName('chat_detail_section')[0].style.marginBottom=106+(msg_before_edit.length>0 || reply_to.length>0?46:0)+'px'
         }
     },[reply_to,msg_before_edit,message_text])
 
@@ -1282,20 +1291,19 @@ function Home()
             <label style={{color:'green',fontWeight:'bold',fontSize:'30px',margin:'auto 0px 30px 0px'}}>WhatsUpp</label>     
         </div>
         <div className='home' style={{display:loaded==true? 'flex':'none'}}>
-            <div className='top'>
-                <label><i class='fas fa-mobile-alt'></i> WhatsUpp</label>
-                <label><i class='fas fa-user'></i> {profile}</label>
+            <div className='top' style={{display:innerwidth<=1100 && disp!=='flex'?'flex':'none'}}>
+                <label> WhatsUpp</label>
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
                 <div className='desktop_icons'>
-                    <app_title style={{display:'flex',gap:'10px',alignItems:'center',marginTop:'30px',paddingLeft:'30px'}}>
+                    <app_title style={{display:'flex',gap:'10px',alignItems:'center',margin:'20px 0px 30px 0px',paddingLeft:'30px'}}>
                         <svg width="50" height="50" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" >
                             <rect width="512" height="512" rx="120" fill="#0F172A"></rect>
                             <path d="M100 150L150 360L256 210L362 360L412 150" fill="none" stroke="#22C55E" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>   
                         <a style={{color:bgr==='black'?'white':'green',fontWeight:'bold',fontSize:'30px'}}>WhatsUpp</a>     
                     </app_title>
-                    <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{background:menu==='chat'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-comment-dots'></i> Read Chats<sup> {unread===0?'':unread}</sup></label>
+                    <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{background:menu==='chat'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-comment-dots'></i> Read Chats {unread===0?'':`( ${unread} )`}</label>
                     <label onClick={()=>set_menu('profile')} style={{color:menu==='profile'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{background:menu==='profile'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}}  class='fas fa-user'></i> Update Profile</label>
                     <label onClick={()=>set_menu('settings')} style={{color:menu==='settings'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{background:menu==='settings'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-cog'></i> Alter Settings</label>
                     <label style={{marginBottom:'30px',marginTop:'auto',color:menu==='log_out'?bgr==='black'?'white':'#000000cc':'gray'}} onClick=
@@ -1303,14 +1311,15 @@ function Home()
                     ><i style={{background:menu==='log_out'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
                 </div>
                 <div className='main_body_section'>
-                    <div className='chat_detail_section' style={{display:disp}} >
-                        <label  id="profile_name" >
-                            <img src={receiver===up_user?profile_pic: profile_images[indices.indexOf(receiver)]}></img>
-                            <label style={{display:'flex',flexDirection:'column',gap:'5px'}}>
-                                <label style={{color:'white',fontWeight:'bold',fontSize:'18px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]===profile?`${profile}🟣`:info[indices.indexOf(receiver)*2] }</label> 
-                                <label style={{color:'white',fontWeight:'normal',fontSize:'17px',alignSelf:'flex-start'}}>{status[indices.indexOf(receiver)]}</label>
-                            </label>
+                    <label  id="profile_name" style={{display:disp}}>
+                        <i style={{marginLeft:'10px'}} onClick={()=>{setdisp('none');set_disp_chat('flex')}} className='fas fa-solid fa-arrow-left'></i>
+                        <img src={receiver===up_user?profile_pic: profile_images[indices.indexOf(receiver)]}></img>
+                        <label style={{display:'flex',flexDirection:'column',gap:'5px',margin:'10px 0px'}}>
+                            <label style={{color:'#000000cc',fontWeight:'500',fontSize:'18px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]===profile?`${profile}🟣`:info[indices.indexOf(receiver)*2] }</label> 
+                            <label style={{color:'#555',fontWeight:'normal',fontSize:'17px',alignSelf:'flex-start'}}>{status[indices.indexOf(receiver)]}</label>
                         </label>
+                    </label>
+                    <div className='chat_detail_section' style={{display:disp}} >
                         {messages.map((value,index)=>
                         {
                             if(receiver==messages[index][0])
@@ -1409,13 +1418,17 @@ function Home()
                         })}
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
-                        <label id="connect_msg" style={{border:bgr==='black'?'solid white':'solid darkgreen',color:bgr==='black'?'white':'darkgreen', display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fas fa-users"></i> Connect with people.</label>
+                        <a><aa><i className='fas fa-solid fa-search'></i><input id='search_chats' placeholder='Search chat with people  '></input></aa></a>
+                        <aaa>
+                            <label style={{cursor:'pointer',background: chat_filter==='all'?'linear-gradient(180deg,green 70%,darkgreen)':'white',color: chat_filter==='all'?'white':'gray',border:chat_filter==='all'?'1px solid green':'1px solid gray'}} onClick={()=>set_chat_filter('all')}>All</label>
+                            <label style={{cursor:'pointer',background: chat_filter==='unread'?'linear-gradient(180deg,green 70%,darkgreen)':'white',color: chat_filter==='unread'?'white':'gray',border:chat_filter==='unread'?'1px solid green':'1px solid gray'}} onClick={()=>set_chat_filter('unread')}>Unread</label>
+                        </aaa>
                         {messages.map((value,index)=>
                             {
                                 return(
                                     <div onClick={(e)=>{
                                         if(e.target.tagName!=='IMG'){set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}
-                                        }} className='chat_bar' key={index} style={{display:'flex',flexDirection:'row',alignItems:'center',marginBottom:index===messages.length-1?'15px':'0px'}} >
+                                        }} className='chat_bar' key={index} style={{display:chat_filter==='all'?'flex':value[2]>0?'flex':'none',flexDirection:'row',alignItems:'center',marginBottom:index===messages.length-1?'15px':'0px'}} >
                                         <img style={{flexShrink: '0',borderRadius:'50%',width:'50px',height:'50px',objectFit:'cover',margin:'0 10px',border:bgr!=='black'?up_user===value[0]?profile_pic==='dp.png'?'1px gray solid':'none':profile_images[indices.indexOf(value[0])]==='dp.png'?'1px gray solid':'none':'none'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
                                         <div style={{marginRight:'10px',display:'flex',flexDirection:'column',height:'60px',minWidth:'0'}}>    
                                             <div style={{height:'30px',fontWeight:'bold',alignItems:'center'}}>
@@ -1610,13 +1623,13 @@ function Home()
                     })}
                 </div>
             </div>
-            <div className='msg_div' style={{display:disp}}>
-                <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',backgroundColor:'darkgreen',color:'white'}}>
-                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'5px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');set_text('');document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='45px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
-                    <label style={{paddingBottom:'5px',paddingLeft:'5px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{msg_before_edit.length>0?'You : '+msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):reply_to.length>0?(reply_to.startsWith('✔')?'You':info[indices.indexOf(receiver)*2])+' : '+ reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):''}</label>
+            <div className='msg_div' style={{display:disp,background:reply_to.length>0 || msg_before_edit.length>0?'green':'white'}}>
+                <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',backgroundColor:'green',color:'white'}}>
+                    <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'11px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');set_text('');document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='46px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
+                    <label style={{paddingBottom:'5px',paddingLeft:'10px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}><label style={{fontWeight:'bold'}}>{msg_before_edit.length>0?'You : ':reply_to.length>0?reply_to.startsWith('✔')?'You : ':`${info[indices.indexOf(receiver)*2]} : `:''}</label><label>{reply_to.length>0?reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):msg_before_edit.length>0?msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):''}</label></label>
                 </span>
-                <div>
-                    <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",paddingLeft:'5px',height:'45px',maxHeight:'85px'}} placeholder='Type...'
+                <div style={{border:reply_to.length>0 || msg_before_edit.length>0?'1px solid green':'1px solid gray'}}>
+                    <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",height:'46px',maxHeight:'85px'}} placeholder='Type...'
                     onKeyDown={(e)=>
                     {
                         set_consecutive_keys(previous_keys=>
@@ -1643,7 +1656,7 @@ function Home()
                             {
                                 e.preventDefault()
                                 set_text('')
-                                document.getElementById('message').style.height='45px'
+                                document.getElementById('message').style.height='46px'
                                 document.getElementById('Send_Button').style.backgroundColor='#EEEEEE'
                                 edit_icon==='flex'?write_edit(message_text):Send(message_text)
                             }
@@ -1663,7 +1676,7 @@ function Home()
                         typing_status()
                     }
                     }></textarea>
-                    <button id="Send_Button" style={{color:'white',margin:'5px',borderRadius:'7px'}}
+                    <button id="Send_Button" style={{color:'white',margin:'10px',borderRadius:'7px'}}
                         onClick={()=>{
                         focus_input.current.focus()
                         if(message_text!='')
@@ -1672,12 +1685,12 @@ function Home()
                         if(edit_icon==='flex'){write_edit(message_text)}
                         set_text('')
                         set_consecutive_keys([])
-                        document.getElementById('message').style.height='45px'
+                        document.getElementById('message').style.height='46px'
                         document.getElementById('Send_Button').style.backgroundColor="#EEEEEE"}}} ><i className='fas fa-arrow-up'></i></button>
                 </div>
             </div>
-            <div className='phone_icons' style={{display:'none',backgroundColor:bgr==='black'?'black':'white'}}>
-                <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{padding:'10px',borderRadius:'50%',color:'white',background:menu==='chat'?'linear-gradient(180deg, green 70%, darkgreen)':'gray'}} class='fas fa-comment-dots'><sup> {unread===0?'':unread}</sup></i> Chats</label>
+            <div className='phone_icons' style={{display:innerwidth<=1100 && disp==='none'?'flex':'none' ,backgroundColor:bgr==='black'?'black':'white'}}>
+                <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{padding:'10px',borderRadius:'50%',color:'white',background:menu==='chat'?'linear-gradient(180deg, green 70%, darkgreen)':'gray',width:'auto'}} class='fas fa-comment-dots'><sup> {unread===0?'':unread}</sup></i> Chats</label>
                 <label onClick={()=>set_menu('profile')} style={{color:menu==='profile'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{padding:'10px',borderRadius:'50%',color:'white',background:menu==='profile'?'linear-gradient(180deg, green 70%, darkgreen)':'gray'}} class='fas fa-user'></i> Profile</label>
                 <label onClick={()=>set_menu('settings')} style={{color:menu==='settings'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{padding:'10px',borderRadius:'50%',color:'white',background:menu==='settings'?'linear-gradient(180deg, green 70%, darkgreen)':'gray'}} class='fas fa-cog'></i> Settings</label>
                 <label onClick={()=>set_menu('people')} style={{color:menu==='people'?bgr==='black'?'white':'#000000cc':'gray'}} id="people"><i style={{padding:'10px 7px',borderRadius:'50%',color:'white',width:'auto',background:menu==='people'?'linear-gradient(180deg, green 70%, darkgreen)':'gray'}} class='fas fa-users'></i> People</label>
