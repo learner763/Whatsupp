@@ -22,7 +22,7 @@ html{
     justify-self: center;
     align-self: center;
     color: green;
-    padding:15px 0px 10px 10px;
+    padding:15px 0px 15px 10px;
 }
 .top
 {
@@ -353,7 +353,7 @@ sup{
         display: flex;
     }
     .chats a{
-        top: 53px;
+        top: 58px;
     }
     #profile_name{
         border-radius: 0px;
@@ -402,7 +402,7 @@ sup{
     }
     .chats{
         margin-bottom: 78px;
-        margin-top: 108px;
+        margin-top: 113px;
     }
 }
 @media (max-width:500px) {
