@@ -146,14 +146,12 @@ html{
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    align-items: center;
     overflow: scroll;
-    margin: 31px 0px 2px 0px;
     scrollbar-width: none;
 }
 .profile_section label,.settings_section label{
     font-size: 18px;
-    font-weight: bolder;
+    font-weight: 500;
     align-self: flex-start;
 }
 .profile_section input,.settings_section input,.settings_section select{
@@ -183,9 +181,13 @@ html{
     width: auto;
     height: auto;
     border-radius: 20px;
-    background-color: darkgreen;
-    padding: 10px;
-    gap:20px;
+    background-color: white;
+    padding: 20px;
+}
+.profile_section i{
+    width: 18px;
+    margin-right: 10px;
+    text-align: start;
 }
 .profile_section button,.settings_section button{
     background-color: white;
@@ -231,6 +233,7 @@ html{
     height: 50px;
     object-fit: cover;
     flex-shrink: 0;
+    margin: 10px 0px;
 }
 #refresh_people{
     cursor: pointer;
@@ -403,6 +406,9 @@ sup{
     .chats{
         margin-bottom: 78px;
         margin-top: 113px;
+    }
+    .profile_section,.settings_section{
+        margin: 58px 0 78px 0;
     }
 }
 @media (max-width:500px) {

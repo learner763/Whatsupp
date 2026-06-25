@@ -34,7 +34,7 @@ function Home()
     const [change_pass,set_change_pass]=useState(false);
     const [pass,setpass]=useState('');
     const [bgr,setbg]=useState('white')
-    const [live_status,set_live_status]=useState(true)
+    const [live_status,set_live_status]=useState('true')
     const [disp,setdisp]=useState("none")
     const [receiver,update_receiver]=useState('-');
     const [messages,setmessages]=useState([]);
@@ -1313,9 +1313,9 @@ function Home()
                     <label  id="profile_name" style={{display:disp}}>
                         <i style={{marginLeft:'10px'}} onClick={()=>{setdisp('none');set_disp_chat('flex')}} className='fas fa-solid fa-arrow-left'></i>
                         <img src={receiver===up_user?profile_pic: profile_images[indices.indexOf(receiver)]}></img>
-                        <label style={{display:'flex',flexDirection:'column',gap:'5px',margin:'10px 0px'}}>
+                        <label style={{display:'flex',flexDirection:'column',gap:'5px',margin:'10px 0px',alignSelf:'flex-start'}}>
                             <label style={{color:'#000000cc',fontWeight:'500',fontSize:'18px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]===profile?`${profile}🟣`:info[indices.indexOf(receiver)*2] }</label> 
-                            <label style={{color:'#555',fontWeight:'normal',fontSize:'17px',alignSelf:'flex-start'}}>{status[indices.indexOf(receiver)]}</label>
+                            <label style={{color:'#555',fontWeight:'normal',fontSize:'17px',alignSelf:'flex-start'}}>{receiver===index?live_status==='true'?status[indices.indexOf(receiver)]:'':status[indices.indexOf(receiver)]}</label>
                         </label>
                     </label>
                     <div className='chat_detail_section' style={{display:disp}} >
@@ -1483,9 +1483,9 @@ function Home()
                     <div className='profile_section' style={{display:profile_section}} >
                         <div>
                             <img style={{flexShrink: '0',borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
-                            <div style={{display:'flex',flexDirection:'row',margin:'0',padding:'0',color:'white'}}>
+                            <div style={{display:'flex',flexDirection:'row',margin:'10px 0px 30px 0',padding:'0',gap:'30px'}}>
                             <label className='waiting_loader' style={{
-                                    display:updating_pic?'block':'none',width:'20px',height:'20px',borderRadius:'50%',border:'5px white solid',borderTop:'5px darkgreen solid'
+                                    display:updating_pic?'block':'none',width:'20px',height:'20px',borderRadius:'50%',border:'5px white solid',borderTop:'5px #000000cc solid'
                             }}></label>
                                 <input type="file" id='fileInput' hidden  
                                 onChange={(e)=>
@@ -1513,7 +1513,7 @@ function Home()
                                     }
                                 }
                                 }></input>
-                                <label onClick={()=>document.getElementById('fileInput').click()} style={{display:updating_pic?'none':'block',cursor:'pointer'}}>Edit</label>
+                                <label onClick={()=>document.getElementById('fileInput').click()} style={{display:updating_pic?'none':'block',cursor:'pointer',color:'#000000cc'}}>Change</label>
                                 <label onClick={(e)=>
                                     {
                                         set_updating_pic(true)
@@ -1528,59 +1528,36 @@ function Home()
                                             if(data.success){set_profile_pic('dp.png')}
                                         })
                                     }
-                                } style={{cursor:'pointer', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}>Remove</label>
+                                } style={{cursor:'pointer', color:'#000000cc', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}>Remove</label>
                                 
                             </div>
-                            <label style={{color:'white'}}>Email 🔑</label>
-                            <input onChange={(e)=>setup_user(e.target.value.replace(/[^a-zA-Z0-9_@.+]/g, ''))} disabled value={up_user} ></input>
-                            <label style={{color:'white'}}>Name 🏷️</label>
-                            <input onChange={(e)=>
-                                {
-                                    setup_name(e.target.value.replace(/[^a-zA-Z_]/g, ''))
-                                }} value={up_name} maxLength={15}>
-                            </input>
-                            <label style={{color:'white'}}>About 📝</label>
-                            <input onChange={(e)=>
-                                {
-                                if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
-                                setup_bio(e.target.value)
-                                }} value={up_bio} maxLength={25}>
-                            </input>
-                            <button onClick={()=>
-                                {
-                                    if( up_name.length>0 && up_bio.length>0 )
-                                    {update_info(up_user,up_name,up_bio)}
-                                }} id="save">Save Profile
-                            </button>
+                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-envelope'></i>Email</label>
+                            <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_user}</label>
+                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-user-circle'></i>Name <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
+                            <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_name}</label>
+                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-solid fa-address-card'></i>About <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
+                            <label style={{color:'#555',fontWeight:'normal'}}>{up_bio}</label>
                         </div>
                     </div>
                     <div className='settings_section' style={{display:settings_section}} >
                         <div>
                             <img style={{flexShrink: '0',borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
-                            <label style={{color:'white'}}>Password 🔒</label>
-                            <select value={change_pass} onChange={(e)=>set_change_pass(e.target.value)} >
-                                <option value='false'>Retain</option>
-                                <option value='true'>Change</option>
-                            </select>
-                            <input style={{display:change_pass==='true'?'block':'none'}} placeholder='Enter new password' maxLength={15} onChange={(e)=>setpass(e.target.value.replace(' ',''))} value={pass} type='password'></input>
-                            <label style={{color:'white'}}>Active Status 🟢</label>
-                            <select value={live_status} onChange={(e)=>set_live_status(e.target.value)} >
-                                <option value='true'>Show</option>
-                                <option value='false' >Hide</option>
-                            </select>
-                            <label style={{color:'white'}}>Theme 🎨</label>
-                            <select value={bgr} onChange={(e)=>setbg(e.target.value)} >
-                                <option value="white">Light</option>
-                                <option value="yellow">Yellow</option>
-                                <option value="black">Dark</option>
-                                <option value='#ffc0ef'>Pink</option>
-                            </select>
-                            <a href='https://whatsupp-feedback.vercel.app/' style={{color:'lime',textDecoration:'none'}}>🔗 Read Documentation</a>
-                            <button onClick={()=>
-                                {
-                                    update_settings(pass,bgr,nameatfirst,change_pass,live_status)
-                                }} id="save">Save Settings
-                            </button>
+                            <label style={{color:'#000000cc',marginBottom:'10px',marginTop:'30px',display:'flex',width:'-webkit-fill-available'}}>
+                                <i style={{width:'31px'}} className='fas fa-solid fa-signal'></i>
+                                Active Status 
+                                <label onClick={()=>{if(live_status==='true'){set_live_status('false')}else{set_live_status('true')}}} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:live_status==='true'?'green':'gray',cursor:'pointer',justifyContent:live_status==='true'?'end':'start',transition:'.5s ease-in-out'}}>
+                                    <label style={{borderRadius:'20px',height:'20px',width:'20px',background:'white',cursor:'pointer',transition:'.5s ease-in-out'}}></label>
+                                </label> 
+                            </label>
+                            <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{live_status==='true'?'Display':'Hide'}</label>
+                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i style={{width:'29px'}} className='fas fa-solid fa-sun'></i> Light Theme 
+                                <label onClick={()=>{if(bgr==='white'){setbg('black')}else{setbg('white')}}} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:bgr==='white'?'green':'gray',cursor:'pointer',justifyContent:bgr==='white'?'end':'start',transition:'.5s ease-in-out'}}>
+                                    <label style={{borderRadius:'20px',height:'20px',width:'20px',background:'white',cursor:'pointer',transition:'.5s ease-in-out'}}></label>
+                                </label>
+                            </label>
+                            <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{bgr==='white'?'ON':'OFF'}</label>
+                            <label style={{color:'red',marginBottom:'30px'}}><i style={{width:'28px'}} className='fas fa-solid fa-lock'></i>Change Password </label>
+                            <label onClick={()=>{localStorage.removeItem('logged_in');nav2('/')}} style={{color:'red'}}><i style={{width:'29px'}} className='fas fa-solid fa-sign-out-alt'></i>Log Out </label>
                         </div>
                     </div>
                 </div>
