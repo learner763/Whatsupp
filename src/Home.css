@@ -184,9 +184,8 @@ html{
     padding: 20px;
 }
 .profile_section i{
-    width: 24px;
+    font-size: 20px;
     margin-right: 5px;
-    text-align: start;
 }
 .profile_section button,.settings_section button{
     background-color: white;
