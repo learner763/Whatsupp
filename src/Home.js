@@ -1291,7 +1291,7 @@ function Home()
         </div>
         <div className='home' style={{display:loaded==true? 'flex':'none'}}>
             <div className='top' style={{display:innerwidth<=1100 && disp!=='flex'?'flex':'none',borderBottom:disp_chat==='none'?'1px gray solid':'none'}}>
-                <label> {disp_chat==='flex'?'WhatsUpp':profile_section==='flex'?'Profile':settings_section==='flex'?'Settings':people_section==='flex'?'People':''}</label>
+                <label> {disp_chat==='flex'?'WhatsUpp':profile_section==='flex'?'Profile':settings_section==='flex'?'Settings':'People'}</label>
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
                 <div className='desktop_icons'>
