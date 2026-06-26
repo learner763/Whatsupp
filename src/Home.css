@@ -124,6 +124,7 @@ html{
     margin-bottom: 0px;
     display: flex;
     width: -webkit-fill-available;
+    padding-bottom: 78px;
 }
 .userinfo i, .userinfo button, .userinfo span{
     font-weight: bold;
