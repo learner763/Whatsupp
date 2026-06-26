@@ -1531,11 +1531,11 @@ function Home()
                                 } style={{cursor:'pointer', color:'#000000cc', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}>Remove</label>
                                 
                             </div>
-                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available',alignItems:'center'}}><i className='fas fa-envelope'></i>Email</label>
+                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-envelope'></i>Email</label>
                             <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_user}</label>
-                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available',alignItems:'center'}}><i className='fas fa-user-circle'></i>Name <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
+                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-user-circle'></i>Name <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
                             <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_name}</label>
-                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available',alignItems:'center'}}><i className='fas fa-solid fa-address-card'></i>About <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
+                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-solid fa-address-card'></i>About <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
                             <label style={{color:'#555',fontWeight:'normal'}}>{up_bio}</label>
                         </div>
                     </div>
