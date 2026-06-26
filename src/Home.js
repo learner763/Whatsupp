@@ -942,8 +942,8 @@ function Home()
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
-        if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-149)+'px'}
-        else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-149)+'px'}
+        if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-227)+'px'}
+        else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-227)+'px'}
         else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-111)+'px'}
     },[innerheight,innerwidth])
 
@@ -1581,7 +1581,7 @@ function Home()
                         if (index < info.length / 2) {
                             w = w + 1; 
                             return (
-                                <div className='userinfo' key={index} style={{display:search_filter[index],marginBottom:info.length/2===index+1 && innerwidth<=1100 && search_value===''?'88px':'10px'}}> 
+                                <div className='userinfo' key={index} style={{display:search_filter[index]}}> 
                                     <div style={{display:search_filter[index]}}>
                                         <img src={up_user===indices[index]?profile_pic: profile_images[index]}></img>
                                         <span style={{display:'flex',flexDirection:'column',justifyContent:'center',gap:'10px',paddingRight:'10px',minWidth:'0'}}>
