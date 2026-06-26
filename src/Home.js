@@ -1311,7 +1311,7 @@ function Home()
                 </div>
                 <div className='main_body_section'>
                     <label  id="profile_name" style={{display:disp}}>
-                        <i style={{marginLeft:'10px'}} onClick={()=>{setdisp('none');set_disp_chat('flex');set_menu('chat')}} className='fas fa-solid fa-arrow-left'></i>
+                        <i style={{marginLeft:'10px'}} onClick={()=>{setdisp('none');set_disp_chat('flex');}} className='fas fa-solid fa-arrow-left'></i>
                         <img src={receiver===up_user?profile_pic: profile_images[indices.indexOf(receiver)]}></img>
                         <label style={{display:'flex',flexDirection:'column',gap:'5px',margin:'10px 0px',alignSelf:'flex-start'}}>
                             <label style={{color:'#000000cc',fontWeight:'500',fontSize:'18px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]===profile?`${profile}🟣`:info[indices.indexOf(receiver)*2] }</label> 
@@ -1561,7 +1561,7 @@ function Home()
                         </div>
                     </div>
                 </div>
-                <div className='people_section' style={{display:innerwidth>1100?'flex':menu==='people' && disp!=='flex'?'flex':'none'}} >
+                <div className='people_section' style={{display:innerwidth>1100?'flex':menu==='people'?'flex':'none'}} >
                     <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
                     <aa>
                         <aaa>
@@ -1590,6 +1590,7 @@ function Home()
                                         </span>
                                         <button onClick={()=>
                                             {
+                                                set_menu('chat')
                                                 update_receiver(indices[index])
                                                 receiver_again.current=indices[index]
                                                 set_seen(indices[index])
