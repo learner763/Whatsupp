@@ -109,7 +109,6 @@ html{
     flex-direction: column;
     scrollbar-width: none;
 }
-
 .userinfo{
     display: flex;
     flex-direction: column;
@@ -185,8 +184,9 @@ html{
     padding: 20px;
 }
 .profile_section i{
-    width: 18px;
-    margin-right: 10px;
+    width: 21px;
+    height: 21px;
+    margin-right: 5px;
     text-align: start;
 }
 .profile_section button,.settings_section button{

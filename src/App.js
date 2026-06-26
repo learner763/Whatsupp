@@ -446,7 +446,7 @@ function App() {
            WhatsUpp
           </label>
           <label style={{margin:'10px 0px',fontSize:'22px'}}>{welcome_msg}</label>
-          <label style={{alignSelf:'flex-start',margin:'10px'}}  ><i className='fas fa-envelope'></i> Email </label>
+          <label style={{alignSelf:'flex-start',margin:'10px'}}  ><i style={{marginRight:'3px'}} className='fas fa-envelope'></i> Email </label>
           <input
             style={{margin:'0 10px'}}
             type="text"
@@ -454,7 +454,7 @@ function App() {
             placeholder='you@domain.tld'
             onChange={(e) => setemail(e.target.value.replace(/[^a-zA-Z0-9_.@+]/g, ''))} 
           />
-          <label style={{alignSelf:'flex-start',margin:'20px 10px 10px 10px'}} ><i className='fas fa-lock' style={{width:'18px'}}></i> Password</label>
+          <label style={{alignSelf:'flex-start',margin:'20px 10px 10px 10px'}} ><i className='fas fa-lock' style={{width:'18px',marginRight:'3px'}}></i> Password</label>
           <div style={{border: '1px solid #000000cc',
           borderRadius: '20px',
           paddingRight: '10px',

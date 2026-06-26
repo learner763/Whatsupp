@@ -76,7 +76,7 @@ function Profile() {
            WhatsUpp
         </label>
         <label style={{margin: '10px 0px', fontSize: '22px',alignSelf:'center'}}>Create Profile</label>
-        <label ><i style={{width:'21px'}} className="fas fa-user-circle"></i> Profile Name </label>
+        <label ><i style={{width:'21px',marginRight:'3px'}} className="fas fa-user-circle"></i> Profile Name </label>
         <input
           type="text"
           value={name}
@@ -87,7 +87,7 @@ function Profile() {
             setname(e.target.value.replace(/[^a-zA-Z_]/g,''))} 
           }
         />
-        <label ><i style={{width:'21px'}} className="fas fa-solid fa-address-card"></i> About Me </label>
+        <label ><i style={{width:'21px',marginRight:'3px'}} className="fas fa-solid fa-address-card"></i> About Me </label>
         <textarea
           type="text"
           value={bio}

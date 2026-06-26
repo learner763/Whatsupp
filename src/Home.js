@@ -1531,18 +1531,18 @@ function Home()
                                 } style={{cursor:'pointer', color:'#000000cc', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}>Remove</label>
                                 
                             </div>
-                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-envelope'></i>Email</label>
+                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available',alignItems:'center'}}><i className='fas fa-envelope'></i>Email</label>
                             <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_user}</label>
-                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-user-circle'></i>Name <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
+                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available',alignItems:'center'}}><i className='fas fa-user-circle'></i>Name <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
                             <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_name}</label>
-                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-solid fa-address-card'></i>About <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
+                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available',alignItems:'center'}}><i className='fas fa-solid fa-address-card'></i>About <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
                             <label style={{color:'#555',fontWeight:'normal'}}>{up_bio}</label>
                         </div>
                     </div>
                     <div className='settings_section' style={{display:settings_section}} >
                         <div>
                             <img style={{flexShrink: '0',borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
-                            <label style={{color:'#000000cc',marginBottom:'10px',marginTop:'30px',display:'flex',width:'-webkit-fill-available'}}>
+                            <label style={{color:'#000000cc',marginTop:'30px',display:'flex',width:'-webkit-fill-available'}}>
                                 <i style={{width:'31px'}} className='fas fa-solid fa-signal'></i>
                                 Active Status 
                                 <label onClick={()=>{if(live_status==='true'){set_live_status('false')}else{set_live_status('true')}}} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:live_status==='true'?'green':'gray',cursor:'pointer',justifyContent:live_status==='true'?'end':'start',transition:'.5s ease-in-out'}}>
@@ -1550,7 +1550,7 @@ function Home()
                                 </label> 
                             </label>
                             <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{live_status==='true'?'Display':'Hide'}</label>
-                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i style={{width:'29px'}} className='fas fa-solid fa-sun'></i> Light Theme 
+                            <label style={{color:'#000000cc',display:'flex',width:'-webkit-fill-available'}}><i style={{width:'29px'}} className='fas fa-solid fa-sun'></i> Light Theme 
                                 <label onClick={()=>{if(bgr==='white'){setbg('black')}else{setbg('white')}}} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:bgr==='white'?'green':'gray',cursor:'pointer',justifyContent:bgr==='white'?'end':'start',transition:'.5s ease-in-out'}}>
                                     <label style={{borderRadius:'20px',height:'20px',width:'20px',background:'white',cursor:'pointer',transition:'.5s ease-in-out'}}></label>
                                 </label>
