@@ -67,8 +67,6 @@ html{
 .body_section{
     display:flex;    
     background-color: white;
-    height: auto !important;
-
 }
 .body_section div{
     height: 100vh;
@@ -103,14 +101,12 @@ html{
     border-width: 0px 1px 0px 0px;
     flex-direction: column;
     overflow-x: hidden;
-    height: auto !important;
 }
 .people_section
 {
     overflow-y: scroll;
     flex: .5 ;
     flex-direction: column;
-    height: auto !important;
 }
 .userinfo{
     display: flex;
