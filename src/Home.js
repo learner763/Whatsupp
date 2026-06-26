@@ -1513,7 +1513,7 @@ function Home()
                                     }
                                 }
                                 }></input>
-                                <label onClick={()=>document.getElementById('fileInput').click()} style={{display:updating_pic?'none':'block',cursor:'pointer',color:'#000000cc'}}><i className='fas fa-solid fa-cloud-upload-alt'></i></label>
+                                <label onClick={()=>document.getElementById('fileInput').click()} style={{display:updating_pic?'none':'block',cursor:'pointer',color:'#000000cc',margin:'0',width:'auto'}}><i className='fas fa-solid fa-cloud-upload-alt'></i></label>
                                 <label onClick={(e)=>
                                     {
                                         set_updating_pic(true)
@@ -1528,7 +1528,7 @@ function Home()
                                             if(data.success){set_profile_pic('dp.png')}
                                         })
                                     }
-                                } style={{cursor:'pointer', color:'#000000cc', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}><i className='fas fa-solid fa-trash-alt'></i></label>
+                                } style={{cursor:'pointer', color:'#000000cc', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}><i style={{margin:'0',width:'auto'}} className='fas fa-solid fa-trash-alt'></i></label>
                                 
                             </div>
                             <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-envelope'></i>Email</label>
@@ -1550,14 +1550,14 @@ function Home()
                                 </label> 
                             </label>
                             <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{live_status==='true'?'Display':'Hide'}</label>
-                            <label style={{color:'#000000cc',display:'flex',width:'-webkit-fill-available'}}><i style={{width:'29px'}} className='fas fa-solid fa-sun'></i> Light Theme 
+                            <label style={{color:'#000000cc',display:'flex',width:'-webkit-fill-available'}}><i style={{width:'29px',fontSize:'20px'}} className='fas fa-solid fa-sun'></i> Light Theme 
                                 <label onClick={()=>{if(bgr==='white'){setbg('black')}else{setbg('white')}}} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:bgr==='white'?'green':'gray',cursor:'pointer',justifyContent:bgr==='white'?'end':'start',transition:'.5s ease-in-out'}}>
                                     <label style={{borderRadius:'20px',height:'20px',width:'20px',background:'white',cursor:'pointer',transition:'.5s ease-in-out'}}></label>
                                 </label>
                             </label>
                             <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{bgr==='white'?'ON':'OFF'}</label>
-                            <label style={{color:'red',marginBottom:'30px'}}><i style={{width:'28px'}} className='fas fa-solid fa-lock'></i>Change Password </label>
-                            <label onClick={()=>{localStorage.removeItem('logged_in');nav2('/')}} style={{color:'red'}}><i style={{width:'29px'}} className='fas fa-solid fa-sign-out-alt'></i>Log Out </label>
+                            <label style={{color:'red',marginBottom:'30px'}}><i style={{width:'28px',fontSize:'20px'}} className='fas fa-solid fa-lock'></i>Change Password </label>
+                            <label onClick={()=>{localStorage.removeItem('logged_in');nav2('/')}} style={{color:'red'}}><i style={{width:'29px',fontSize:'20px'}} className='fas fa-solid fa-sign-out-alt'></i>Log Out </label>
                         </div>
                     </div>
                 </div>
