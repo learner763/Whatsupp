@@ -1536,7 +1536,7 @@ function Home()
                             <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-user-circle'></i>Name <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
                             <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_name}</label>
                             <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-solid fa-address-card'></i>About <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
-                            <label style={{color:'#555',fontWeight:'normal',overflowWrap:'anywhere',paddingRight:'20px'}}>{up_bio}</label>
+                            <label style={{color:'#555',fontWeight:'normal',overflowWrap:'anywhere',paddingRight:'20px',whiteSpace:'pre-line'}}>{up_bio}</label>
                         </div>
                     </div>
                     <div className='settings_section' style={{display:settings_section}} >

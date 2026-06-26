@@ -446,7 +446,7 @@ function App() {
            WhatsUpp
           </label>
           <label style={{margin:'10px 0px',fontSize:'22px'}}>{welcome_msg}</label>
-          <label style={{alignSelf:'flex-start',margin:'10px'}}  ><i style={{marginRight:'3px'}} className='fas fa-envelope'></i> Email </label>
+          <label style={{alignSelf:'flex-start',margin:'10px',display:'flex'}}  ><i style={{marginRight:'3px',fontSize:'20px',width:'24px'}} className='fas fa-envelope'></i> Email </label>
           <input
             style={{margin:'0 10px'}}
             type="text"
