@@ -1581,7 +1581,7 @@ function Home()
                         if (index < info.length / 2) {
                             w = w + 1; 
                             return (
-                                <div className='userinfo' key={index} style={{display:search_filter[index],marginTop:index===0?'149px':'10px',marginBottom:info.length/2===index+1?'88px':'10px'}}> 
+                                <div className='userinfo' key={index} style={{display:search_filter[index],marginTop:index===0?innerwidth<=1100?'149px':'111px':'10px',marginBottom:info.length/2===index+1?innerwidth<=1100?'88px':'10px':'10px'}}> 
                                     <div style={{display:search_filter[index]}}>
                                         <img src={up_user===indices[index]?profile_pic: profile_images[index]}></img>
                                         <span style={{display:'flex',flexDirection:'column',justifyContent:'center',gap:'10px',paddingRight:'10px',minWidth:'0'}}>
