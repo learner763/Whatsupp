@@ -937,7 +937,7 @@ function Home()
         }
     },[innerwidth,menu])
 
-    useEffect(()=>
+    /*useEffect(()=>
     {
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
@@ -945,7 +945,7 @@ function Home()
         if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-227)+'px'}
         else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-227)+'px'}
         else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-111)+'px'}
-    },[innerheight,innerwidth])
+    },[innerheight,innerwidth])*/
 
     useEffect(() => {
         let container=document.getElementsByClassName('chat_detail_section');
