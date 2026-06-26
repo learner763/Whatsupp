@@ -164,8 +164,8 @@ html{
 #youmayknow{
     font-size: 18px;
     padding-bottom: 15px;
-    top:20px;
-    position: fixed;
+    /*top:20px;
+    position: fixed;*/
     width: -webkit-fill-available;
     justify-content: center;
 }
@@ -182,8 +182,8 @@ html{
     display: flex;
     width: -webkit-fill-available;
     margin-bottom: 15px;
-    top: 56px;
-    position: fixed;
+    /*top: 56px;
+    position: fixed;*/
     flex-direction: column;
     align-items: center;
     padding: 0 10px;

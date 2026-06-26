@@ -1562,7 +1562,23 @@ function Home()
                     </div>
                 </div>
                 <div className='people_section' style={{display:innerwidth>1100?'flex':menu==='people'?'flex':'none'}} >
-                    
+                    /*
+                    <span id="youmayknow" style={{background:bgr,fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
+                    <aa style={{background:bgr}}>
+                        <aaa>
+                            <i style={{padding:'10px'}} class="fas fa-solid fa-search"></i>
+                            <input placeholder='Search for people' value={search_value} 
+                            onChange={(e)=>
+                                {
+                                    if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+                                    if(e.target.value.length>15){e.target.value=e.target.value.slice(0,15)}
+                                    set_search_value(e.target.value.replace(/[^a-zA-Z_]/g, ''))
+                                }}
+                            style={{width:'auto',placeSelf:'center',borderRadius:'20px',border:'none',fontSize:'16px',padding:'10px',color:'#000000cc'}}></input>
+                        </aaa>
+                    </aa>
+                    <span id='no_match' style={{display:no_match_msg, color:bgr==='black'?'#aaa':'#555',alignSelf:'center',fontWeight:'bold'}}>No match found</span>
+                    */
                     {info.map((a, index) => {
                         if (index < info.length / 2) {
                             w = w + 1; 
