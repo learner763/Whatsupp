@@ -186,6 +186,7 @@ html{
 .profile_section i{
     font-size: 20px;
     margin-right: 5px;
+    width: 24px;
 }
 .profile_section button,.settings_section button{
     background-color: white;

@@ -1513,7 +1513,7 @@ function Home()
                                     }
                                 }
                                 }></input>
-                                <label onClick={()=>document.getElementById('fileInput').click()} style={{display:updating_pic?'none':'block',cursor:'pointer',color:'#000000cc'}}>Change</label>
+                                <label onClick={()=>document.getElementById('fileInput').click()} style={{display:updating_pic?'none':'block',cursor:'pointer',color:'#000000cc'}}><i className='fas fa-solid fa-cloud-upload-alt'></i></label>
                                 <label onClick={(e)=>
                                     {
                                         set_updating_pic(true)
@@ -1528,7 +1528,7 @@ function Home()
                                             if(data.success){set_profile_pic('dp.png')}
                                         })
                                     }
-                                } style={{cursor:'pointer', color:'#000000cc', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}>Remove</label>
+                                } style={{cursor:'pointer', color:'#000000cc', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}><i className='fas fa-solid fa-trash-alt'></i></label>
                                 
                             </div>
                             <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-envelope'></i>Email</label>
