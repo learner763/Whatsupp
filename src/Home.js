@@ -1561,7 +1561,7 @@ function Home()
                         </div>
                     </div>
                 </div>
-                <div className='people_section' style={{display:innerwidth>1100?'flex':menu==='people'?'flex':'none'}} >
+                <div className='people_section' style={{display:innerwidth>1100?'flex':menu==='people' && disp!=='flex'?'flex':'none'}} >
                     <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
                     <aa>
                         <aaa>
