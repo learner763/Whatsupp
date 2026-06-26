@@ -112,34 +112,87 @@ html{
 .userinfo{
     display: flex;
     flex-direction: column;
-    color: white;
     flex-wrap: wrap;
     justify-content: center;
     align-items: start;
     margin-top: 10px;
     margin-bottom: 10px;
-    
 }
-.userinfo button{
-    background-color: lightgreen;
-    color: darkgreen;
-    cursor: pointer;
-    border: none;
-    border-radius: 10px;
-    font-family: sans-serif;
-    padding: 3px 5px;
+.userinfo div{
+    flex-direction: row;
+    height: auto;
+    border-radius: 20px;
+    padding: 10px;
+    margin-bottom: 0px;
+    display: flex;
+    width: -webkit-fill-available;
 }
 .userinfo i, .userinfo button, .userinfo span{
     font-weight: bold;
     font-size: 18px;
+}
+.userinfo button{
+    border: none;
+    cursor: pointer;
+    font-family: sans-serif;
+    background: none;
+    margin-left: auto;
+    padding:0;
+    align-self: center;
+}
+.userinfo i{
+    background: green;
+    color: white;
+    width: 20px;
+    padding: 10px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    margin-left: auto;
+}
+.userinfo img{
+    flex-shrink: 0;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+.people_section{
+    margin-top: 109px;
 }
 .people_section span ,.desktop_icons,.people_section{
     word-wrap: break-word;
     word-break: break-word;
 }
 #youmayknow{
-    font-size: 20px;
-    padding-top: 28px;
+    font-size: 18px;
+    margin-bottom: 15px;
+    top:20px;
+    position: fixed;
+}
+.people_section aaa{
+    display: flex;
+    border: 1px solid gray;
+    border-radius: 20px;
+    color: #000000cc;
+    width: auto;
+    align-items: center;
+    background: white;
+}
+.people_section aa{
+    display: flex;
+    width: -webkit-fill-available;
+    margin-bottom: 15px;
+    top: 56px;
+    position: fixed;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
+}
+#no_match{
+    padding-top: 0px;
+    position: fixed;
 }
 .profile_section,.settings_section{
     display: flex;
@@ -357,6 +410,12 @@ sup{
     .chats a{
         top: 58px;
     }
+    #youmayknow{
+        top: 58px;
+    }
+    .people_section aa{
+        top:94px;
+    }
     #profile_name{
         border-radius: 0px;
     }
@@ -408,6 +467,9 @@ sup{
     }
     .profile_section,.settings_section{
         margin: 58px 0 78px 0;
+    }
+    .people_section{
+        margin-top: 147px;
     }
 }
 @media (max-width:500px) {

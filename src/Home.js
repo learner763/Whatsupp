@@ -942,9 +942,9 @@ function Home()
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
-        if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
-        else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
-        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
+        if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-149)+'px'}
+        else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-149)+'px'}
+        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-111)+'px'}
     },[innerheight,innerwidth])
 
     useEffect(() => {
@@ -1290,7 +1290,7 @@ function Home()
             <label style={{color:'green',fontWeight:'bold',fontSize:'30px',margin:'auto 0px 30px 0px'}}>WhatsUpp</label>     
         </div>
         <div className='home' style={{display:loaded==true? 'flex':'none'}}>
-            <div className='top' style={{display:innerwidth<=1100 && disp!=='flex'?'flex':'none',borderBottom:disp_chat==='none'?'1px gray solid':'none'}}>
+            <div className='top' style={{display:innerwidth<=1100 && disp!=='flex'?'flex':'none',borderBottom:profile_section==='flex' || settings_section==='flex'?'1px gray solid':'none'}}>
                 <label> {disp_chat==='flex'?'WhatsUpp':profile_section==='flex'?'Profile':settings_section==='flex'?'Settings':'People'}</label>
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
@@ -1561,36 +1561,40 @@ function Home()
                         </div>
                     </div>
                 </div>
-                <div className='people_section' >
-                    <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'darkgreen'}}><i style={{marginTop:'2.5px'}} id="refresh_people" class="fas fa-sync"></i>People you may know!</span>
-                    <aa style={{display:'flex',justifyContent:'center',width:'100%',marginBottom:'10px'}}>
-                        <input placeholder='Search ...' value={search_value} 
-                        onChange={(e)=>
-                            {
-                                if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
-                                if(e.target.value.length>15){e.target.value=e.target.value.slice(0,15)}
-                                set_search_value(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
-                            }}
-                        style={{ display:'flex',width:'200px',justifySelf:'center',alignSelf:'center',borderRadius:'5px',border:'1px solid darkgreen',fontSize:'18px'}}></input>
-                        <button onClick={()=>set_search_value('')} style={{cursor:'pointer', fontSize:'18px',borderRadius:'5px',border:'1px solid darkgreen',backgroundColor:'darkgreen',color:'white'}}>Clear</button>
+                <div className='people_section' style={{display:innerwidth>1100?'flex':menu==='people'?'flex':'none'}} >
+                    <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
+                    <aa>
+                        <aaa>
+                            <i style={{padding:'10px'}} class="fas fa-solid fa-search"></i>
+                            <input placeholder='Search for people' value={search_value} 
+                            onChange={(e)=>
+                                {
+                                    if(e.target.value[0]===' '){e.target.value=e.target.value.substring(1)}
+                                    if(e.target.value.length>15){e.target.value=e.target.value.slice(0,15)}
+                                    set_search_value(e.target.value.replace(/[^a-zA-Z_]/g, ''))
+                                }}
+                            style={{width:'auto',placeSelf:'center',borderRadius:'20px',border:'none',fontSize:'16px',padding:'10px',color:'#000000cc'}}></input>
+                        </aaa>
                     </aa>
-                    <span style={{display:no_match_msg, color:bgr==='black'?'white':'darkgreen',justifyContent:'center',alignItems:'center',fontWeight:'bold'}}>No match for '{search_value}'</span>
+                    <span id='no_match' style={{display:no_match_msg, color:bgr==='black'?'#aaa':'#555',alignSelf:'center',fontWeight:'bold'}}>No match found</span>
                     {info.map((a, index) => {
                         if (index < info.length / 2) {
                             w = w + 1; 
                             return (
-                                <div className='userinfo' key={index} style={{display:search_filter[index]}}> 
-                                    <div style={{display:search_filter[index],flexDirection:'column',justifySelf:'center',alignSelf:'center',alignItems:'center',justifyContent:'space-evenly',width:'250px',height:'220px',backgroundColor:indices[index]===up_user?'forestgreen':'darkgreen',borderRadius:'20px',padding:'5px',marginBottom:info.length/2===index+1?'10px':'0px'}}>
-                                        <img style={{flexShrink: '0',borderRadius:'50%',width:'100px',height:'100px',objectFit:'cover'}} src={up_user===indices[index]?profile_pic: profile_images[index]}></img>
-                                        <span className='connect_people' >{info[index + w ]}{status[index]==='(Online)' || status[index]==='(Typing...)'?'🟢':''}</span> 
-                                        <span style={{fontWeight:'normal'}}>{info[index + w + 1]}</span>
+                                <div className='userinfo' key={index} style={{display:search_filter[index],marginBottom:info.length/2===index+1 && innerwidth<=1100?'88px':'10px'}}> 
+                                    <div style={{display:search_filter[index]}}>
+                                        <img src={up_user===indices[index]?profile_pic: profile_images[index]}></img>
+                                        <span style={{display:'flex',flexDirection:'column',justifyContent:'center',gap:'10px',paddingRight:'10px',minWidth:'0'}}>
+                                            <span style={{fontWeight:'500',color:bgr==='black'?'white':'#000000cc'}} className='connect_people' >{info[index + w ]}{status[index]==='(Online)' || status[index]==='(Typing...)'?'🟢':''}</span> 
+                                            <span style={{fontWeight:'normal',fontSize:'17px',color:bgr==='black'?'#aaa':'#555',textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap'}}>{info[index + w + 1]}</span>
+                                        </span>
                                         <button onClick={()=>
                                             {
                                                 update_receiver(indices[index])
                                                 receiver_again.current=indices[index]
                                                 set_seen(indices[index])
                                             }
-                                        } className='connect_buttons'><i className='fas fa-envelope'></i> Message</button>
+                                        } className='connect_buttons'><i className='fas fa-comment-dots'></i></button>
                                     </div>
                                 </div>
                             );
