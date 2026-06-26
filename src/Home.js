@@ -942,9 +942,9 @@ function Home()
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
-        if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-227)+'px'}
-        else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-227)+'px'}
-        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight-111)+'px'}
+        if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
+        else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
+        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
     },[innerheight,innerwidth])
 
     useEffect(() => {
@@ -1562,8 +1562,8 @@ function Home()
                     </div>
                 </div>
                 <div className='people_section' style={{display:innerwidth>1100?'flex':menu==='people'?'flex':'none'}} >
-                    <span id="youmayknow" style={{fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
-                    <aa>
+                    <span id="youmayknow" style={{background:bgr,fontWeight:'bold', display:'flex', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
+                    <aa style={{background:bgr}}>
                         <aaa>
                             <i style={{padding:'10px'}} class="fas fa-solid fa-search"></i>
                             <input placeholder='Search for people' value={search_value} 
@@ -1581,7 +1581,7 @@ function Home()
                         if (index < info.length / 2) {
                             w = w + 1; 
                             return (
-                                <div className='userinfo' key={index} style={{display:search_filter[index]}}> 
+                                <div className='userinfo' key={index} style={{display:search_filter[index],marginTop:index===0?'149px':'10px',marginBottom:info.length/2===index+1?'88px':'10px'}}> 
                                     <div style={{display:search_filter[index]}}>
                                         <img src={up_user===indices[index]?profile_pic: profile_images[index]}></img>
                                         <span style={{display:'flex',flexDirection:'column',justifyContent:'center',gap:'10px',paddingRight:'10px',minWidth:'0'}}>

@@ -107,6 +107,7 @@ html{
     overflow-y: scroll;
     flex: .5 ;
     flex-direction: column;
+    scrollbar-width: none;
 }
 .userinfo{
     display: flex;
@@ -114,8 +115,6 @@ html{
     flex-wrap: wrap;
     justify-content: center;
     align-items: start;
-    margin-top: 10px;
-    margin-bottom: 10px;
     height: auto !important;
 }
 .userinfo div{
@@ -158,9 +157,6 @@ html{
     object-fit: cover;
     margin-right: 10px;
 }
-.people_section{
-    margin-top: 111px;
-}
 .people_section span ,.desktop_icons,.people_section{
     word-wrap: break-word;
     word-break: break-word;
@@ -170,6 +166,8 @@ html{
     margin-bottom: 15px;
     top:20px;
     position: fixed;
+    width: -webkit-fill-available;
+    justify-content: center;
 }
 .people_section aaa{
     display: flex;
@@ -467,9 +465,6 @@ sup{
     }
     .profile_section,.settings_section{
         margin: 58px 0 78px 0;
-    }
-    .people_section{
-        margin-top: 149px;
     }
 }
 @media (max-width:500px) {
