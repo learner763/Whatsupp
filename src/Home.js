@@ -1290,7 +1290,7 @@ function Home()
             <label style={{color:'green',fontWeight:'bold',fontSize:'30px',margin:'auto 0px 30px 0px'}}>WhatsUpp</label>     
         </div>
         <div className='home' style={{display:loaded==true? 'flex':'none'}}>
-            <div className='top' style={{display:innerwidth<=1100 && disp!=='flex'?'flex':'none',borderBottom:profile_section==='flex' || settings_section==='flex'?'1px gray solid':'none'}}>
+            <div className='top' style={{display:innerwidth<=1100 && disp!=='flex' && menu!=='people'?'flex':'none',borderBottom:profile_section==='flex' || settings_section==='flex'?'1px gray solid':'none'}}>
                 <label> {disp_chat==='flex'?'WhatsUpp':profile_section==='flex'?'Profile':settings_section==='flex'?'Settings':'People'}</label>
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >

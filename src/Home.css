@@ -163,7 +163,7 @@ html{
 }
 #youmayknow{
     font-size: 18px;
-    margin-bottom: 15px;
+    padding-bottom: 15px;
     top:20px;
     position: fixed;
     width: -webkit-fill-available;
