@@ -117,6 +117,7 @@ html{
     justify-content: center;
     align-items: start;
     height: auto !important;
+    margin:10px 0px;
 }
 .userinfo div{
     flex-direction: row;
