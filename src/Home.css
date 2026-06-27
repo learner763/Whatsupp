@@ -21,7 +21,6 @@ html{
     font-size: 24px;
     justify-self: center;
     align-self: center;
-    color: green;
     padding:15px 0px 15px 10px;
 }
 .top
@@ -32,7 +31,6 @@ html{
     top: 0;
     flex-wrap: wrap;
     height: auto;
-    background-color: white;
 }
 #search_chats{
     padding: 10px;
@@ -235,7 +233,6 @@ html{
     width: auto;
     height: auto;
     border-radius: 20px;
-    background-color: white;
     padding: 10px 20px;
 }
 .profile_section i{

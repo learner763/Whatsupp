@@ -1290,8 +1290,8 @@ function Home()
             <label style={{color:'green',fontWeight:'bold',fontSize:'30px',margin:'auto 0px 30px 0px'}}>WhatsUpp</label>     
         </div>
         <div className='home' style={{display:loaded==true? 'flex':'none'}}>
-            <div className='top' style={{display:innerwidth<=1100 && disp!=='flex'?'flex':'none',borderBottom:profile_section==='flex' || settings_section==='flex'?'1px gray solid':'none'}}>
-                <label> {disp_chat==='flex'?'WhatsUpp':profile_section==='flex'?'Profile':settings_section==='flex'?'Settings':'People'}</label>
+            <div className='top' style={{background:bgr,display:innerwidth<=1100 && disp!=='flex'?'flex':'none',borderBottom:profile_section==='flex' || settings_section==='flex'?'1px gray solid':'none'}}>
+                <label style={{color:bgr==='white'?'green':'white'}}> {disp_chat==='flex'?'WhatsUpp':profile_section==='flex'?'Profile':settings_section==='flex'?'Settings':'People'}</label>
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
                 <div className='desktop_icons'>
@@ -1428,7 +1428,7 @@ function Home()
                                     <div onClick={(e)=>{
                                         if(e.target.tagName!=='IMG'){set_seen(value[0]);set_disp_chat('none');setdisp('flex');receiver_again.current=value[0];update_receiver(value[0]);}
                                         }} className='chat_bar' key={index} style={{display:chat_filter==='all'?'flex':value[2]>0?'flex':'none',flexDirection:'row',alignItems:'center',marginBottom:index===messages.length-1?'15px':'0px'}} >
-                                        <img style={{flexShrink: '0',borderRadius:'50%',width:'50px',height:'50px',objectFit:'cover',margin:'0 10px',border:bgr!=='black'?up_user===value[0]?profile_pic==='dp.png'?'1px gray solid':'none':profile_images[indices.indexOf(value[0])]==='dp.png'?'1px gray solid':'none':'none'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
+                                        <img style={{flexShrink: '0',borderRadius:'50%',width:'50px',height:'50px',objectFit:'cover',margin:'0 10px'}} src={value[0]===up_user?profile_pic: profile_images[indices.indexOf(value[0])]}></img>
                                         <div style={{marginRight:'10px',display:'flex',flexDirection:'column',height:'60px',minWidth:'0'}}>    
                                             <div style={{height:'30px',fontWeight:'bold',alignItems:'center'}}>
                                                 <span style={{color:bgr==='black'?'white':'black',fontWeight:'500'}}>{ info[indices.indexOf(value[0])*2]===profile?`${profile}🟣`:info[indices.indexOf(value[0])*2]}</span>
@@ -1481,7 +1481,7 @@ function Home()
                         }
                     </div>
                     <div className='profile_section' style={{display:profile_section}} >
-                        <div>
+                        <div style={{background:bgr}}>
                             <img style={{flexShrink: '0',borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
                             <div style={{display:'flex',flexDirection:'row',margin:'10px 0px 30px 0',padding:'0',gap:'30px'}}>
                             <label className='waiting_loader' style={{
@@ -1492,7 +1492,7 @@ function Home()
                                 {
                                     if(e.target.files[0].type.startsWith('image'))
                                     {
-                                        let form=new FormData()
+                                        let form=new FormData() 
                                         form.append('file',e.target.files[0])
                                         form.append('token',token)
                                         form.append('previous_dp',profile_pic)
@@ -1513,7 +1513,7 @@ function Home()
                                     }
                                 }
                                 }></input>
-                                <label onClick={()=>document.getElementById('fileInput').click()} style={{display:updating_pic?'none':'block',cursor:'pointer',color:'#000000cc',margin:'0',width:'auto'}}><i className='fas fa-solid fa-cloud-upload-alt'></i></label>
+                                <label onClick={()=>document.getElementById('fileInput').click()} style={{display:updating_pic?'none':'block',cursor:'pointer',color:bgr==='black'?'white':'#000000cc',margin:'0',width:'auto'}}><i className='fas fa-solid fa-cloud-upload-alt'></i></label>
                                 <label onClick={(e)=>
                                     {
                                         set_updating_pic(true)
@@ -1528,34 +1528,34 @@ function Home()
                                             if(data.success){set_profile_pic('dp.png')}
                                         })
                                     }
-                                } style={{cursor:'pointer', color:'#000000cc', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}><i style={{margin:'0',width:'auto'}} className='fas fa-solid fa-trash-alt'></i></label>
+                                } style={{cursor:'pointer', color:bgr==='black'?'white':'#000000cc', display:profile_pic!=='dp.png' && !updating_pic?'flex':'none'}}><i style={{margin:'0',width:'auto'}} className='fas fa-solid fa-trash-alt'></i></label>
                                 
                             </div>
-                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-envelope'></i>Email</label>
-                            <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_user}</label>
-                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-user-circle'></i>Name <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
-                            <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_name}</label>
-                            <label style={{color:'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-solid fa-address-card'></i>About <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
-                            <label style={{color:'#555',fontWeight:'normal',overflowWrap:'anywhere',paddingRight:'20px',whiteSpace:'pre-line'}}>{up_bio}</label>
+                            <label style={{color:bgr==='black'?'white':'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-envelope'></i>Email</label>
+                            <label style={{color:bgr==='black'?'#aaa':'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_user}</label>
+                            <label style={{color:bgr==='black'?'white':'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-user-circle'></i>Name <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
+                            <label style={{color:bgr==='black'?'#aaa':'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_name}</label>
+                            <label style={{color:bgr==='black'?'white':'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-solid fa-address-card'></i>About <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
+                            <label style={{color:bgr==='black'?'#aaa':'#555',fontWeight:'normal',overflowWrap:'anywhere',paddingRight:'20px',whiteSpace:'pre-line'}}>{up_bio}</label>
                         </div>
                     </div>
                     <div className='settings_section' style={{display:settings_section}} >
                         <div>
                             <img style={{flexShrink: '0',borderRadius:'50%',width:'150px',height:'150px',objectFit:'cover'}} src={profile_pic}></img>
-                            <label style={{color:'#000000cc',marginTop:'30px',display:'flex',width:'-webkit-fill-available'}}>
+                            <label style={{color:bgr==='black'?'white':'#000000cc',marginTop:'30px',display:'flex',width:'-webkit-fill-available'}}>
                                 <i style={{width:'31px'}} className='fas fa-solid fa-signal'></i>
                                 Active Status 
                                 <label onClick={()=>{if(live_status==='true'){set_live_status('false')}else{set_live_status('true')}}} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:live_status==='true'?'green':'gray',cursor:'pointer',justifyContent:live_status==='true'?'end':'start',transition:'.5s ease-in-out'}}>
                                     <label style={{borderRadius:'20px',height:'20px',width:'20px',background:'white',cursor:'pointer',transition:'.5s ease-in-out'}}></label>
                                 </label> 
                             </label>
-                            <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{live_status==='true'?'Display':'Hide'}</label>
-                            <label style={{color:'#000000cc',display:'flex',width:'-webkit-fill-available'}}><i style={{width:'29px',fontSize:'20px'}} className='fas fa-solid fa-sun'></i> Light Theme 
+                            <label style={{color:bgr==='black'?'#aaa':'#555',fontWeight:'normal',marginBottom:'30px'}}>{live_status==='true'?'Display':'Hide'}</label>
+                            <label style={{color:bgr==='black'?'white':'#000000cc',display:'flex',width:'-webkit-fill-available'}}><i style={{width:'29px',fontSize:'20px'}} className='fas fa-solid fa-sun'></i> Light Theme 
                                 <label onClick={()=>{if(bgr==='white'){setbg('black')}else{setbg('white')}}} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:bgr==='white'?'green':'gray',cursor:'pointer',justifyContent:bgr==='white'?'end':'start',transition:'.5s ease-in-out'}}>
                                     <label style={{borderRadius:'20px',height:'20px',width:'20px',background:'white',cursor:'pointer',transition:'.5s ease-in-out'}}></label>
                                 </label>
                             </label>
-                            <label style={{color:'#555',fontWeight:'normal',marginBottom:'30px'}}>{bgr==='white'?'ON':'OFF'}</label>
+                            <label style={{color:bgr==='black'?'#aaa':'#555',fontWeight:'normal',marginBottom:'30px'}}>{bgr==='white'?'ON':'OFF'}</label>
                             <label style={{color:'red',marginBottom:'30px'}}><i style={{width:'28px',fontSize:'20px'}} className='fas fa-solid fa-lock'></i>Change Password </label>
                             <label onClick={()=>{localStorage.removeItem('logged_in');nav2('/')}} style={{color:'red'}}><i style={{width:'29px',fontSize:'20px'}} className='fas fa-solid fa-sign-out-alt'></i>Log Out </label>
                         </div>
