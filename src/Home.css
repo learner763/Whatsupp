@@ -107,7 +107,7 @@ html{
     overflow-y: scroll;
     flex: .5 ;
     flex-direction: column;
-    scrollbar-width: none;
+    height: auto !important;
 }
 .userinfo{
     display: flex;
@@ -115,6 +115,7 @@ html{
     flex-wrap: wrap;
     justify-content: center;
     align-items: start;
+    height: auto !important;
 }
 .userinfo div{
     flex-direction: row;
@@ -124,7 +125,7 @@ html{
     margin-bottom: 0px;
     display: flex;
     width: -webkit-fill-available;
-    padding-bottom: 78px;
+    height: auto !important;
 }
 .userinfo i, .userinfo button, .userinfo span{
     font-weight: bold;
