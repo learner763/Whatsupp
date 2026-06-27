@@ -108,6 +108,7 @@ html{
     flex: .5 ;
     flex-direction: column;
     height: auto !important;
+    margin-bottom: 78px;
 }
 .userinfo{
     display: flex;
