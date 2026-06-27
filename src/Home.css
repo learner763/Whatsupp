@@ -108,6 +108,7 @@ html{
     flex: .5 ;
     flex-direction: column;
     height: auto !important;
+    margin-top: 111px;
 }
 .userinfo{
     display: flex;
@@ -169,6 +170,7 @@ html{
     position: fixed;
     width: -webkit-fill-available;
     justify-content: center;
+    display: flex;
 }
 .people_section aaa{
     display: flex;
@@ -469,6 +471,7 @@ sup{
     }
     .people_section{
         margin-bottom: 78px;
+        margin-top: 149px;
     }
 }
 @media (max-width:500px) {
