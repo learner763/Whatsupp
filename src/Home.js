@@ -1290,7 +1290,7 @@ function Home()
             <label style={{color:'green',fontWeight:'bold',fontSize:'30px',margin:'auto 0px 30px 0px'}}>WhatsUpp</label>     
         </div>
         <div className='home' style={{display:loaded==true? 'flex':'none'}}>
-            <div className='top' style={{display:innerwidth<=1100 && disp!=='flex' && menu!=='people'?'flex':'none',borderBottom:profile_section==='flex' || settings_section==='flex'?'1px gray solid':'none'}}>
+            <div className='top' style={{display:innerwidth<=1100 && disp!=='flex'?'flex':'none',borderBottom:profile_section==='flex' || settings_section==='flex'?'1px gray solid':'none'}}>
                 <label> {disp_chat==='flex'?'WhatsUpp':profile_section==='flex'?'Profile':settings_section==='flex'?'Settings':'People'}</label>
             </div>
             <div className='body_section' style={{backgroundColor:bgr}} >
@@ -1562,8 +1562,8 @@ function Home()
                     </div>
                 </div>
                 <div className='people_section' style={{display:innerwidth>1100?'flex':menu==='people'?'flex':'none'}} >
-                    <span id="youmayknow" style={{background:bgr,fontWeight:'bold', display:'none', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
-                    <aa style={{background:bgr,display:'none'}}>
+                    <span id="youmayknow" style={{background:bgr,fontWeight:'bold', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
+                    <aa style={{background:bgr}}>
                         <aaa>
                             <i style={{padding:'10px'}} class="fas fa-solid fa-search"></i>
                             <input placeholder='Search for people' value={search_value} 

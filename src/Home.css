@@ -108,7 +108,6 @@ html{
     flex: .5 ;
     flex-direction: column;
     height: auto !important;
-    margin-bottom: 78px;
 }
 .userinfo{
     display: flex;
@@ -467,6 +466,9 @@ sup{
     }
     .profile_section,.settings_section{
         margin: 58px 0 78px 0;
+    }
+    .people_section{
+        margin-bottom: 78px;
     }
 }
 @media (max-width:500px) {
