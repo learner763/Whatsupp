@@ -943,8 +943,8 @@ function Home()
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
         if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
-        else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
-        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.height=(window.innerHeight)+'px'}
+        else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.maxHeight=(window.innerHeight-78)+'px'}
+        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';people_section.style.maxHeight=(window.innerHeight-78)+'px'}
     },[innerheight,innerwidth])
 
     useEffect(() => {
