@@ -1417,7 +1417,7 @@ function Home()
                         })}
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
-                        <a><aa><i className='fas fa-solid fa-search'></i><input id='search_chats' placeholder='Search chat with people  '></input></aa></a>
+                        <a style={{background:bgr}}><aa><i className='fas fa-solid fa-search'></i><input id='search_chats' placeholder='Search chat with people  '></input></aa></a>
                         <aaa>
                             <label style={{cursor:'pointer',background: chat_filter==='all'?'linear-gradient(180deg,green 70%,darkgreen)':'white',color: chat_filter==='all'?'white':'gray',border:chat_filter==='all'?'1px solid green':'1px solid gray'}} onClick={()=>set_chat_filter('all')}>All</label>
                             <label style={{cursor:'pointer',background: chat_filter==='unread'?'linear-gradient(180deg,green 70%,darkgreen)':'white',color: chat_filter==='unread'?'white':'gray',border:chat_filter==='unread'?'1px solid green':'1px solid gray'}} onClick={()=>set_chat_filter('unread')}>Unread {unread===0?'':unread}</label>

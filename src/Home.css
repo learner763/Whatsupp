@@ -43,7 +43,6 @@ html{
     font-family: sans-serif;
 }
 .chats a{
-    background: white;
     position: fixed;
     top: 20px;
     width: 50%;
@@ -73,8 +72,6 @@ html{
 }
 .desktop_icons{
     flex: .5 ;
-    border: darkgreen solid ;
-    border-width: 0px 1px 0px 0px;
     flex-direction: column;
     overflow-y: scroll;
     height: 100%;
@@ -95,8 +92,6 @@ html{
 .main_body_section
 {
     flex: 1 ;
-    border: darkgreen solid ;
-    border-width: 0px 1px 0px 0px;
     flex-direction: column;
     overflow-x: hidden;
 }
