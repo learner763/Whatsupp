@@ -60,6 +60,9 @@ html{
 .chats aa i{
     color: black;
 }
+input::placeholder{
+    opacity: 1;
+}
 .body_section{
     display:flex;    
     background-color: white;
