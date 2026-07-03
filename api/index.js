@@ -292,7 +292,12 @@ app.post("/save_info", (req, res) => {
 
 app.post("/save_settings",async (req, res) => {
     const { token,password,change, bg } = req.body;
-    pool.query("update public.users set bg=$1 where token=$2", [bg,token])
+    if(bg)
+    {
+        let bg_results=await pool.query("update public.users set bg=$1 where token=$2", [bg,token])
+        if(bg_results.rowCount===1){return res.json({success:true});}
+    }
+    /*
     if(change && password!=='')
     {
         let hashed_password=await bcrypt.hash(String(password),10)
@@ -306,6 +311,7 @@ app.post("/save_settings",async (req, res) => {
     else{
         return res.json({success:true});
     }
+    */
 });
 
 app.post("/forpass",async (req, res) => {

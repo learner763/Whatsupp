@@ -1545,13 +1545,40 @@ function Home()
                             <label style={{color:bgr==='black'?'white':'#000000cc',marginTop:'30px',display:'flex',width:'-webkit-fill-available'}}>
                                 <i style={{width:'31px'}} className='fas fa-solid fa-signal'></i>
                                 Active Status 
-                                <label onClick={()=>{if(live_status==='true'){set_live_status('false')}else{set_live_status('true')}}} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:live_status==='true'?'green':'gray',cursor:'pointer',justifyContent:live_status==='true'?'end':'start',transition:'.5s ease-in-out'}}>
+                                <label onClick={async ()=>{
+                                    if(live_status==='true')
+                                    {
+                                        let online_status=ref(real_time_db,`online_status/${nameatfirst}`)
+                                        await update(online_status,{display:'false'})
+                                        set_live_status('false')}
+                                    else
+                                    {
+                                        let online_status=ref(real_time_db,`online_status/${nameatfirst}`)
+                                        await update(online_status,{display:'true'})
+                                        set_live_status('true')
+                                    }
+                                }} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:live_status==='true'?'green':'gray',cursor:'pointer',justifyContent:live_status==='true'?'end':'start',transition:'.5s ease-in-out'}}>
                                     <label style={{borderRadius:'20px',height:'20px',width:'20px',background:'white',cursor:'pointer',transition:'.5s ease-in-out'}}></label>
                                 </label> 
                             </label>
                             <label style={{color:bgr==='black'?'#aaa':'#555',fontWeight:'normal',marginBottom:'30px'}}>{live_status==='true'?'Display':'Hide'}</label>
                             <label style={{color:bgr==='black'?'white':'#000000cc',display:'flex',width:'-webkit-fill-available'}}><i style={{width:'29px',fontSize:'20px'}} className='fas fa-solid fa-sun'></i> Light Theme 
-                                <label onClick={()=>{if(bgr==='white'){setbg('black')}else{setbg('white')}}} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:bgr==='white'?'green':'gray',cursor:'pointer',justifyContent:bgr==='white'?'end':'start',transition:'.5s ease-in-out'}}>
+                                <label onClick={()=>{
+                                    fetch('/save_settings', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({ token: token,bg: bgr==='white'?'black':'white' }),
+                                    })
+                                    .then(response => response.json())
+                                    .then(data=>
+                                    {
+                                        if(bgr==='white')
+                                        {setbg('black')}
+                                        else{setbg('white')}
+                                    })
+                                    }} style={{display:'flex',borderRadius:'20px',height:'20px',width:'40px',padding:'5px',marginLeft:'auto',background:bgr==='white'?'green':'gray',cursor:'pointer',justifyContent:bgr==='white'?'end':'start',transition:'.5s ease-in-out'}}>
                                     <label style={{borderRadius:'20px',height:'20px',width:'20px',background:'white',cursor:'pointer',transition:'.5s ease-in-out'}}></label>
                                 </label>
                             </label>
@@ -1678,7 +1705,6 @@ function Home()
             </div>
         </div>
         <dialog style={{borderRadius:'10px'}} ref={dialogref}>{dialog_value}</dialog>
-
         </>
     );
 }
