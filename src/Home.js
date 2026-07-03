@@ -1266,16 +1266,34 @@ function Home()
             if(e.target.tagName==='IMG' && e.target.src.slice(e.target.src.lastIndexOf('/')+1,e.target.src.length)!=='dp.png')
             {
                 set_dialog_value(
-                    <img onLoad={dialogref.current.showModal()} style={{width:'280px',height:'280px',objectFit:'cover',flexShrink:'0'}} src={e.target.src}></img>
+                    <img style={{width:'280px',height:'280px',objectFit:'cover',flexShrink:'0'}} src={e.target.src}></img>
                 )
+                dialogref.current.showModal()
                 document.getElementsByTagName('dialog')[0].style.scrollbarWidth='none'
             }
             else{
-                if(dialogref.current?.open)
+                if(dialogref.current?.open && document.getElementsByTagName('dialog')[0].innerHTML.startsWith('<img'))
                 {
                     set_dialog_value('')
                     dialogref.current.close()
                 }
+            }
+            if(e.target.id==='name')
+            {
+                set_dialog_value(
+                    <div style={{display:'flex',flexDirection:'column',gap:'20px'}}>
+                        <label style={{fontSize:'18px',fontWeight:'500',color:bgr==='black'?'white':'black'}}>Update Name</label>
+                        <input style={{fontSize:'18px',color:bgr==='black'?'white':'black'}}></input>
+                        <div style={{display:'flex',width:innerwidth<=500?'-webkit-fill-available':'462px',gap:'10px'}}>
+                            <button style={{flex:1}}>Save</button>
+                            <button style={{flex:1}} onClick={()=> {
+                                set_dialog_value('')
+                                dialogref.current.close()
+                            }}>Cancel</button>
+                        </div>
+                    </div>
+                )
+                dialogref.current.showModal()
             }
         })
     },[profile_images])
@@ -1417,7 +1435,7 @@ function Home()
                         })}
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
-                        <a style={{background:bgr}}><aa><i className='fas fa-solid fa-search'></i><input id='search_chats' placeholder='Search chat with people  '></input></aa></a>
+                        <a style={{background:bgr}}><aa style={{background:bgr==='white'?'#dfdfdf':'#555'}}><i className='fas fa-solid fa-search'></i><input style={{background:bgr==='white'?'#dfdfdf':'#555'}} id='search_chats' placeholder='Search chat with people  '></input></aa></a>
                         <aaa>
                             <label style={{cursor:'pointer',background: chat_filter==='all'?'linear-gradient(180deg,green 70%,darkgreen)':'white',color: chat_filter==='all'?'white':'gray',border:chat_filter==='all'?'1px solid green':'1px solid gray'}} onClick={()=>set_chat_filter('all')}>All</label>
                             <label style={{cursor:'pointer',background: chat_filter==='unread'?'linear-gradient(180deg,green 70%,darkgreen)':'white',color: chat_filter==='unread'?'white':'gray',border:chat_filter==='unread'?'1px solid green':'1px solid gray'}} onClick={()=>set_chat_filter('unread')}>Unread {unread===0?'':unread}</label>
@@ -1533,9 +1551,10 @@ function Home()
                             </div>
                             <label style={{color:bgr==='black'?'white':'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-envelope'></i>Email</label>
                             <label style={{color:bgr==='black'?'#aaa':'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_user}</label>
-                            <label style={{color:bgr==='black'?'white':'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-user-circle'></i>Name <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
+                            <label style={{color:bgr==='black'?'white':'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-user-circle'></i>Name <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}}
+                            id='name' className='fas fa-solid fa-pen'></i></label>
                             <label style={{color:bgr==='black'?'#aaa':'#555',fontWeight:'normal',marginBottom:'30px'}}>{up_name}</label>
-                            <label style={{color:bgr==='black'?'white':'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-solid fa-address-card'></i>About <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} className='fas fa-solid fa-pen'></i></label>
+                            <label style={{color:bgr==='black'?'white':'#000000cc',marginBottom:'10px',display:'flex',width:'-webkit-fill-available'}}><i className='fas fa-solid fa-address-card'></i>About <i style={{marginRight:'0',marginLeft:'auto',width:'auto'}} id='about' className='fas fa-solid fa-pen'></i></label>
                             <label style={{color:bgr==='black'?'#aaa':'#555',fontWeight:'normal',overflowWrap:'anywhere',paddingRight:'20px',whiteSpace:'pre-line'}}>{up_bio}</label>
                         </div>
                     </div>
@@ -1591,7 +1610,7 @@ function Home()
                 <div className='people_section' style={{display:innerwidth>1100?'flex':menu==='people'?'flex':'none'}} >
                     <span id="youmayknow" style={{background:bgr,fontWeight:'bold', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
                     <aa style={{background:bgr}}>
-                        <aaa>
+                        <aaa style={{background:bgr==='white'?'#dfdfdf':'#555'}}>
                             <i style={{padding:'10px'}} class="fas fa-solid fa-search"></i>
                             <input placeholder='Search for people' value={search_value} 
                             onChange={(e)=>
@@ -1600,7 +1619,7 @@ function Home()
                                     if(e.target.value.length>15){e.target.value=e.target.value.slice(0,15)}
                                     set_search_value(e.target.value.replace(/[^a-zA-Z_]/g, ''))
                                 }}
-                            style={{width:'auto',placeSelf:'center',borderRadius:'20px',border:'none',fontSize:'16px',padding:'10px',color:'#000000cc'}}></input>
+                            style={{background:bgr==='white'?'#dfdfdf':'#555',width:innerwidth>500?'auto':'-webkit-fill-available',placeSelf:'center',borderRadius:'20px',border:'none',fontSize:'16px',padding:'10px',color:'#000000cc'}}></input>
                         </aaa>
                     </aa>
                     <span id='no_match' style={{display:no_match_msg, color:bgr==='black'?'#aaa':'#555',alignSelf:'center',fontWeight:'bold'}}>No match found</span>
@@ -1704,7 +1723,7 @@ function Home()
                 <label onClick={()=>set_menu('people')} style={{color:menu==='people'?bgr==='black'?'white':'#000000cc':'gray'}} id="people"><i style={{padding:'10px 7px',borderRadius:'50%',color:'white',width:'auto',background:menu==='people'?'linear-gradient(180deg, green 70%, darkgreen)':'gray'}} class='fas fa-users'></i> People</label>
             </div>
         </div>
-        <dialog style={{borderRadius:'10px'}} ref={dialogref}>{dialog_value}</dialog>
+        <dialog style={{border:'2px gray solid',borderBottomWidth:innerwidth<=500?'0px':'2px',borderRadius:innerwidth>500?'20px':'40px 40px 0 0',top:innerwidth<=500?'auto':'revert',width:innerwidth<=500?'-webkit-fill-available':'fit-content'}} ref={dialogref}>{dialog_value}</dialog>
         </>
     );
 }

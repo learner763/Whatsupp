@@ -54,7 +54,6 @@ html{
     border-radius: 20px;
     gap: 10px;
     padding: 0 10px;
-    border: 1px gray solid;
     padding-right: 0px;
     display: flex;
 }
@@ -168,7 +167,6 @@ html{
 }
 .people_section aaa{
     display: flex;
-    border: 1px solid gray;
     border-radius: 20px;
     color: #000000cc;
     width: auto;
@@ -374,6 +372,12 @@ dialog button{
     font-size: 16px;
     cursor:pointer;
 }
+dialog input{
+    width:440px;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px gray solid;
+}
 sup{
     display: inline-block;
 }
@@ -468,8 +472,12 @@ sup{
     }
 }
 @media (max-width:500px) {
-    .msg_div div,.msg_div span,.msg_div textarea,.msg_div {
+    .msg_div div,.msg_div span,.msg_div textarea,.msg_div,dialog input,.people_section aaa {
         width: -webkit-fill-available;
+    }
+    .chats aa{
+        width: -webkit-fill-available;
+        margin: 0px 10px;
     }
     
 }
