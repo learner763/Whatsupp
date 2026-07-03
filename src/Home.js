@@ -1435,7 +1435,7 @@ function Home()
                         })}
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
-                        <a style={{background:bgr}}><aa style={{background:bgr==='white'?'#dfdfdf':'#555'}}><i className='fas fa-solid fa-search'></i><input style={{background:bgr==='white'?'#dfdfdf':'#555'}} id='search_chats' placeholder='Search chat with people  '></input></aa></a>
+                        <a style={{background:bgr}}><aa style={{background:bgr==='white'?'#dfdfdf':'#555'}}><i style={{color:bgr==='white'?'#000000cc':'white'}} className='fas fa-solid fa-search'></i><input style={{background:bgr==='white'?'#dfdfdf':'#555',color:bgr==='white'?'#000000cc':'white'}} id='search_chats' placeholder='Search chat with people  '></input></aa></a>
                         <aaa>
                             <label style={{cursor:'pointer',background: chat_filter==='all'?'linear-gradient(180deg,green 70%,darkgreen)':'white',color: chat_filter==='all'?'white':'gray',border:chat_filter==='all'?'1px solid green':'1px solid gray'}} onClick={()=>set_chat_filter('all')}>All</label>
                             <label style={{cursor:'pointer',background: chat_filter==='unread'?'linear-gradient(180deg,green 70%,darkgreen)':'white',color: chat_filter==='unread'?'white':'gray',border:chat_filter==='unread'?'1px solid green':'1px solid gray'}} onClick={()=>set_chat_filter('unread')}>Unread {unread===0?'':unread}</label>
@@ -1611,7 +1611,7 @@ function Home()
                     <span id="youmayknow" style={{background:bgr,fontWeight:'bold', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
                     <aa style={{background:bgr}}>
                         <aaa style={{background:bgr==='white'?'#dfdfdf':'#555'}}>
-                            <i style={{padding:'10px'}} class="fas fa-solid fa-search"></i>
+                            <i style={{color:bgr==='white'?'#000000cc':'white',padding:'10px'}} class="fas fa-solid fa-search"></i>
                             <input placeholder='Search for people' value={search_value} 
                             onChange={(e)=>
                                 {
@@ -1619,7 +1619,7 @@ function Home()
                                     if(e.target.value.length>15){e.target.value=e.target.value.slice(0,15)}
                                     set_search_value(e.target.value.replace(/[^a-zA-Z_]/g, ''))
                                 }}
-                            style={{background:bgr==='white'?'#dfdfdf':'#555',width:innerwidth>500?'auto':'-webkit-fill-available',placeSelf:'center',borderRadius:'20px',border:'none',fontSize:'16px',padding:'10px',color:'#000000cc'}}></input>
+                            style={{background:bgr==='white'?'#dfdfdf':'#555',width:innerwidth>500?'auto':'-webkit-fill-available',placeSelf:'center',borderRadius:'20px',border:'none',fontSize:'16px',padding:'10px',color:bgr==='white'?'#000000cc':'white'}}></input>
                         </aaa>
                     </aa>
                     <span id='no_match' style={{display:no_match_msg, color:bgr==='black'?'#aaa':'#555',alignSelf:'center',fontWeight:'bold'}}>No match found</span>
