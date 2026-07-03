@@ -39,7 +39,6 @@ html{
     width: -webkit-fill-available;
     align-self: center;
     font-size: 16px;
-    color: #000000cc;
     font-family: sans-serif;
 }
 .chats a{
@@ -61,7 +60,7 @@ html{
     color: black;
 }
 input::placeholder{
-    opacity: 1;
+    opacity: 1 !important;
 }
 .body_section{
     display:flex;    
