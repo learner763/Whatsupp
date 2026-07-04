@@ -1368,8 +1368,8 @@ function Home()
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'18px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
-                                                <span style={{paddingRight:'10px',minWidth:'100px',maxWidth:innerwidth>500?'370px':'270px'}}>{find_url( text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),''))}</span>
-                                                <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto',display:'flex',alignItems:'end'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':(<d style={{marginRight:'5px'}}>{msg_attributes[index][ind].edit_info}</d>)} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()} {
+                                                <span style={{paddingRight:'10px',minWidth:'auto',maxWidth:innerwidth>500?'370px':'270px'}}>{find_url( text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),''))}</span>
+                                                <span style={{paddingLeft:'10px',fontSize:'10px',marginLeft:'auto',marginTop:'auto',display:'flex',alignItems:'end'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':(<d style={{marginRight:'5px'}}>{msg_attributes[index][ind].edit_info}</d>)} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()} {
                                                     text.startsWith('✔✔')?
                                                     (
                                                     <>
@@ -1423,8 +1423,8 @@ function Home()
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'18px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
-                                                <span style={{minWidth:'100px', maxWidth:innerwidth>500?'370px':'270px',paddingRight:'10px'}}>{find_url(text.slice(0,text.lastIndexOf(' ')))}</span>
-                                                <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
+                                                <span style={{minWidth:'auto', maxWidth:innerwidth>500?'370px':'270px',paddingRight:'10px'}}>{find_url(text.slice(0,text.lastIndexOf(' ')))}</span>
+                                                <span style={{paddingLeft:'10px',fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:bgr==='black'?'darkorchid':'rebeccapurple',color:'white',borderRadius:'10px',padding:'5px 10px'}}>{text}</span>) 
                                         )
