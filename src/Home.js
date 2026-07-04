@@ -1406,7 +1406,7 @@ function Home()
                                                     )}</span>
                                             </span>):
                                             text.startsWith(' ')?
-                                            (<span style={{whiteSpace:'pre-line',marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:bgr==='black'?'darkorchid':'purple',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
+                                            (<span style={{whiteSpace:'pre-line',marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:bgr==='black'?'darkorchid':'rebeccapurple',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
                                                 <select id='options2' value={selectval} onChange={(e)=>
                                                     { 
                                                     if(e.target.value==="Reply"){reply_msg(receiver,text);}
