@@ -1354,13 +1354,13 @@ function Home()
                                                     else if(e.target.value==="Reply"){set_edit('none');set_msg_value('');reply_msg(receiver,text);}
                                                     else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
                                                     set_selectval('Select')}}
-                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'auto',
-                                                            border:'none',background:'none'
+                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'16px',height:'8px',
+                                                            border:'none',background:'white',borderRadius:'50%'
                                                         }}>
-                                                    <option value='Select'>📋 Select</option>
-                                                    <option value='Edit'>✏️ Edit</option>
-                                                    <option value='Delete'>🗑️ Delete</option>
-                                                    <option value='Reply'>💬 Reply</option>
+                                                    <option value='Select'></option>
+                                                    <option value='Edit'>Edit</option>
+                                                    <option value='Delete'>Delete</option>
+                                                    <option value='Reply'>Reply</option>
                                                     <option value='seen'>{!msg_attributes[index]?.[ind]?.seen_info?'👁️ > ❌':msg_attributes[index]?.[ind]?.seen_info}</option>
                                                 </select>
                                                 <span onClick={()=> find_qouted_msg(text)}
@@ -1412,11 +1412,11 @@ function Home()
                                                     if(e.target.value==="Reply"){reply_msg(receiver,text);}
                                                     else{set_reply('none');set_reply_to('')}
                                                     set_selectval('Select')}}
-                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'auto',
-                                                            border:'none',background:'none'
+                                                        style={{marginBottom:'auto',marginLeft:'auto',width:'16px',height:'8px',
+                                                            border:'none',background:'white',borderRadius:'50%'
                                                         }}>
-                                                    <option value='Select'>📋 Select</option>
-                                                    <option value='Reply'>💬 Reply</option>
+                                                    <option value='Select'></option>
+                                                    <option value='Reply'>Reply</option>
                                                 </select>
                                                 <span onClick={()=> find_qouted_msg(text)}
                                                     style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?'none':msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'10px',backgroundColor:'mediumpurple'}}>
