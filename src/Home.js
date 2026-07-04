@@ -1346,7 +1346,7 @@ function Home()
                                         {value[1].map((text,ind)=>
                                         (
                                             text.startsWith('✔')?
-                                            (<span style={{whiteSpace:'pre-line',marginRight:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'green',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
+                                            (<span style={{whiteSpace:'pre-line',marginRight:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'green',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px 10px',fontSize:'18px'}}>
                                                 <select id='options1' value={selectval} onChange={(e)=>
                                                     { 
                                                     if(e.target.value==='Delete'){set_edit('none'); set_msg_value('');set_reply('none');set_reply_to('');delete_msg(receiver,text);}
@@ -1364,11 +1364,11 @@ function Home()
                                                     <option value='seen'>{!msg_attributes[index]?.[ind]?.seen_info?'👁️ > ❌':msg_attributes[index]?.[ind]?.seen_info}</option>
                                                 </select>
                                                 <span onClick={()=> find_qouted_msg(text)}
-                                                    style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?"none":msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'forestgreen',border:'1px white solid'}}>
+                                                    style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?"none":msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'10px',backgroundColor:'#18b018'}}>
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'18px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
-                                                <span style={{minWidth:'100px',maxWidth:innerwidth>500?'370px':'270px'}}>{find_url( text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),''))}</span>
+                                                <span style={{paddingRight:'10px',minWidth:'100px',maxWidth:innerwidth>500?'370px':'270px'}}>{find_url( text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),''))}</span>
                                                 <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto',display:'flex',alignItems:'end'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':(<d style={{marginRight:'5px'}}>{msg_attributes[index][ind].edit_info}</d>)} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()} {
                                                     text.startsWith('✔✔')?
                                                     (
@@ -1406,7 +1406,7 @@ function Home()
                                                     )}</span>
                                             </span>):
                                             text.startsWith(' ')?
-                                            (<span style={{whiteSpace:'pre-line',marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:bgr==='black'?'darkorchid':'rebeccapurple',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
+                                            (<span style={{whiteSpace:'pre-line',marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:bgr==='black'?'darkorchid':'rebeccapurple',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px 10px',fontSize:'18px'}}>
                                                 <select id='options2' value={selectval} onChange={(e)=>
                                                     { 
                                                     if(e.target.value==="Reply"){reply_msg(receiver,text);}
@@ -1419,14 +1419,14 @@ function Home()
                                                     <option value='Reply'>💬 Reply</option>
                                                 </select>
                                                 <span onClick={()=> find_qouted_msg(text)}
-                                                    style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?'none':msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'5px',backgroundColor:'mediumpurple',border:'1px white solid'}}>
+                                                    style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?'none':msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'10px',backgroundColor:'mediumpurple'}}>
                                                     <span style={{fontWeight:'bold'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[1]?'':msg_attributes[index][ind].reply_info[1]}</span>
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'18px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
-                                                <span style={{minWidth:'100px', maxWidth:innerwidth>500?'370px':'270px'}}>{find_url(text.slice(0,text.lastIndexOf(' ')))}</span>
+                                                <span style={{minWidth:'100px', maxWidth:innerwidth>500?'370px':'270px',paddingRight:'10px'}}>{find_url(text.slice(0,text.lastIndexOf(' ')))}</span>
                                                 <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
-                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'darkorchid',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
+                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:bgr==='black'?'darkorchid':'rebeccapurple',color:'white',borderRadius:'10px',padding:'5px 10px'}}>{text}</span>) 
                                         )
                                         )}
                                     </div>
