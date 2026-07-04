@@ -1355,7 +1355,7 @@ function Home()
                                                     else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
                                                     set_selectval('Select')}}
                                                         style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'auto',
-                                                            border:'none',background:'darkgreen'
+                                                            border:'none',background:'none'
                                                         }}>
                                                     <option value='Select'>📋 Select</option>
                                                     <option value='Edit'>✏️ Edit</option>
@@ -1406,7 +1406,7 @@ function Home()
                                                     )}</span>
                                             </span>):
                                             text.startsWith(' ')?
-                                            (<span style={{whiteSpace:'pre-line',marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'darkorchid',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
+                                            (<span style={{whiteSpace:'pre-line',marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:bgr==='black'?'darkorchid':'purple',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
                                                 <select id='options2' value={selectval} onChange={(e)=>
                                                     { 
                                                     if(e.target.value==="Reply"){reply_msg(receiver,text);}
