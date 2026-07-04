@@ -764,7 +764,7 @@ function Home()
                                     {
                                         let previous_attributes=[...pre_attributes]
                                         if(!previous_attributes[j][k]){previous_attributes[j][k]={}}
-                                        previous_attributes[j][k].seen_info=new Date(read_messages[i].seenAt.toDate().toISOString()).getDate()===new Date().getDate()?"👁️"+' '+'>'+' '+new Date(read_messages[i].seenAt.toDate().toISOString()).toLocaleTimeString():"👁️"+' '+'>'+' '+new Date(read_messages[i].seenAt.toDate().toISOString()).toLocaleDateString()
+                                        previous_attributes[j][k].seen_info=new Date(read_messages[i].seenAt.toDate().toISOString()).getDate()===new Date().getDate()?"Seen"+' '+':'+' '+new Date(read_messages[i].seenAt.toDate().toISOString()).toLocaleTimeString():"Seen"+' '+':'+' '+new Date(read_messages[i].seenAt.toDate().toISOString()).toLocaleDateString()
                                         return previous_attributes
                                     })
                                     stop=true
@@ -1361,7 +1361,7 @@ function Home()
                                                     <option value='Edit'>Edit</option>
                                                     <option value='Delete'>Delete</option>
                                                     <option value='Reply'>Reply</option>
-                                                    <option value='seen'>{!msg_attributes[index]?.[ind]?.seen_info?'👁️ > ❌':msg_attributes[index]?.[ind]?.seen_info}</option>
+                                                    <option value='seen'>{!msg_attributes[index]?.[ind]?.seen_info?'Not Seen':msg_attributes[index]?.[ind]?.seen_info}</option>
                                                 </select>
                                                 <span onClick={()=> find_qouted_msg(text)}
                                                     style={{cursor:'pointer',display:!msg_attributes[index]?.[ind]?.reply_info?.[0]?"none":msg_attributes[index][ind].reply_info[0],width:'260px',flexDirection:'column',padding:'5px',borderRadius:'10px',backgroundColor:'#18b018'}}>
@@ -1369,7 +1369,7 @@ function Home()
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'18px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
                                                 <span style={{paddingRight:'15px',minWidth:'auto',maxWidth:innerwidth>500?'370px':'270px'}}>{find_url( text.slice(0,text.lastIndexOf(' ')).replace(text.slice(0,text.indexOf(' ')),''))}</span>
-                                                <span style={{paddingLeft:'10px',fontSize:'10px',marginLeft:'auto',marginTop:'auto',display:'flex',alignItems:'end'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':(<d style={{marginRight:'5px'}}>{msg_attributes[index][ind].edit_info}</d>)} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()} {
+                                                <span style={{paddingLeft:'15px',fontSize:'10px',marginLeft:'auto',marginTop:'auto',display:'flex',alignItems:'end'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':(<d style={{marginRight:'5px'}}>{msg_attributes[index][ind].edit_info}</d>)} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()} {
                                                     text.startsWith('✔✔')?
                                                     (
                                                     <>
@@ -1424,7 +1424,7 @@ function Home()
                                                     <span style={{textOverflow:'ellipsis',overflowX:'hidden',whiteSpace:'nowrap',fontSize:'18px'}}>{!msg_attributes[index]?.[ind]?.reply_info?.[2]?'':msg_attributes[index][ind].reply_info[2]}</span>
                                                 </span>
                                                 <span style={{minWidth:'auto', maxWidth:innerwidth>500?'370px':'270px',paddingRight:'15px'}}>{find_url(text.slice(0,text.lastIndexOf(' ')))}</span>
-                                                <span style={{paddingLeft:'10px',fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
+                                                <span style={{paddingLeft:'15px',fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
                                             (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:bgr==='black'?'darkorchid':'rebeccapurple',color:'white',borderRadius:'10px',padding:'5px 10px'}}>{text}</span>) 
                                         )
