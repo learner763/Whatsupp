@@ -1346,7 +1346,7 @@ function Home()
                                         {value[1].map((text,ind)=>
                                         (
                                             text.startsWith('✔')?
-                                            (<span style={{whiteSpace:'pre-line',marginRight:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'darkgreen',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
+                                            (<span style={{whiteSpace:'pre-line',marginRight:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-end',backgroundColor:'green',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
                                                 <select id='options1' value={selectval} onChange={(e)=>
                                                     { 
                                                     if(e.target.value==='Delete'){set_edit('none'); set_msg_value('');set_reply('none');set_reply_to('');delete_msg(receiver,text);}
@@ -1355,7 +1355,7 @@ function Home()
                                                     else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
                                                     set_selectval('Select')}}
                                                         style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'auto',
-                                                            border:'none',backgroundColor:'darkgreen',color:'white'
+                                                            border:'none'
                                                         }}>
                                                     <option value='Select'>📋 Select</option>
                                                     <option value='Edit'>✏️ Edit</option>
@@ -1406,14 +1406,14 @@ function Home()
                                                     )}</span>
                                             </span>):
                                             text.startsWith(' ')?
-                                            (<span style={{whiteSpace:'pre-line',marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'rebeccapurple',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
+                                            (<span style={{whiteSpace:'pre-line',marginLeft:'10px',display:'flex',flexDirection:'column', overflowWrap:'break-word',marginTop:'10px', alignSelf:'flex-start',backgroundColor:'darkorchid',color:'white',borderRadius:'10px',maxWidth:'370px',padding:'5px',fontSize:'18px'}}>
                                                 <select id='options2' value={selectval} onChange={(e)=>
                                                     { 
                                                     if(e.target.value==="Reply"){reply_msg(receiver,text);}
                                                     else{set_reply('none');set_reply_to('')}
                                                     set_selectval('Select')}}
                                                         style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'auto',
-                                                            border:'none',backgroundColor:'rebeccapurple',color:'white'
+                                                            border:'none'
                                                         }}>
                                                     <option value='Select'>📋 Select</option>
                                                     <option value='Reply'>💬 Reply</option>
@@ -1426,7 +1426,7 @@ function Home()
                                                 <span style={{minWidth:'100px', maxWidth:innerwidth>500?'370px':'270px'}}>{find_url(text.slice(0,text.lastIndexOf(' ')))}</span>
                                                 <span style={{fontSize:'10px',marginLeft:'auto',marginTop:'auto'}}>{!msg_attributes[index]?.[ind]?.edit_info?'':msg_attributes[index][ind].edit_info} {new Date(text.slice(text.lastIndexOf(' ')+1,text.length)).toLocaleTimeString()}</span>
                                             </span>):
-                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'rebeccapurple',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
+                                            (<span style={{alignSelf:'center', marginTop:'10px',backgroundColor:'darkorchid',color:'white',borderRadius:'10px',padding:'5px'}}>{text}</span>) 
                                         )
                                         )}
                                     </div>
