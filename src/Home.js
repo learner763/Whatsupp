@@ -1355,7 +1355,7 @@ function Home()
                                                     else{set_edit('none');set_msg_value('');set_reply('none');set_reply_to('');}
                                                     set_selectval('Select')}}
                                                         style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'auto',
-                                                            border:'none'
+                                                            border:'none',background:'darkgreen'
                                                         }}>
                                                     <option value='Select'>📋 Select</option>
                                                     <option value='Edit'>✏️ Edit</option>
@@ -1413,7 +1413,7 @@ function Home()
                                                     else{set_reply('none');set_reply_to('')}
                                                     set_selectval('Select')}}
                                                         style={{marginBottom:'auto',marginLeft:'auto',width:'20px',height:'auto',
-                                                            border:'none'
+                                                            border:'none',background:'none'
                                                         }}>
                                                     <option value='Select'>📋 Select</option>
                                                     <option value='Reply'>💬 Reply</option>
