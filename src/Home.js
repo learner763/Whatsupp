@@ -1328,12 +1328,12 @@ function Home()
                     ><i style={{background:menu==='log_out'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
                 </div>
                 <div className='main_body_section'>
-                    <label  id="profile_name" style={{display:disp}}>
-                        <i style={{marginLeft:'10px'}} onClick={()=>{setdisp('none');set_disp_chat('flex');}} className='fas fa-solid fa-arrow-left'></i>
+                    <label  id="profile_name" style={{display:disp,background:bgr}}>
+                        <i style={{marginLeft:'10px',color:bgr==='black'?'white':'#000000cc'}} onClick={()=>{setdisp('none');set_disp_chat('flex');}} className='fas fa-solid fa-arrow-left'></i>
                         <img src={receiver===up_user?profile_pic: profile_images[indices.indexOf(receiver)]}></img>
-                        <label style={{display:'flex',flexDirection:'column',gap:'5px',margin:'10px 0px',alignSelf:'flex-start'}}>
-                            <label style={{color:'#000000cc',fontWeight:'500',fontSize:'18px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]===profile?`${profile}🟣`:info[indices.indexOf(receiver)*2] }</label> 
-                            <label style={{color:'#555',fontWeight:'normal',fontSize:'17px',alignSelf:'flex-start'}}>{receiver===index?live_status==='true'?status[indices.indexOf(receiver)]:'':status[indices.indexOf(receiver)]}</label>
+                        <label style={{display:'flex',flexDirection:'column',gap:'5px',margin:'10px 0px',alignSelf:'flex-start',height:'50px',justifyContent:'center'}}>
+                            <label style={{color:bgr==='black'?'white':'#000000cc',fontWeight:'500',fontSize:'18px',alignSelf:'flex-start'}}>{info[indices.indexOf(receiver)*2]===profile?`${profile}🟣`:info[indices.indexOf(receiver)*2] }</label> 
+                            <label style={{color:bgr==='black'?'#aaa':'#555',fontWeight:'normal',fontSize:'17px',alignSelf:'flex-start',visibility:status[indices.indexOf(receiver)]===''?'hidden':'visible'}}>{receiver===index?live_status==='true'?status[indices.indexOf(receiver)]:'':status[indices.indexOf(receiver)]}</label>
                         </label>
                     </label>
                     <div className='chat_detail_section' style={{display:disp}} >
@@ -1435,7 +1435,7 @@ function Home()
                         })}
                     </div>
                     <div className='chats' style={{display:disp_chat}}>
-                        <a style={{background:bgr}}><aa style={{background:bgr==='white'?'#dfdfdf':'#555666'}}><i style={{color:bgr==='white'?'#000000cc':'white'}} className='fas fa-solid fa-search'></i><input style={{background:bgr==='white'?'#dfdfdf':'#555666',color:bgr==='white'?'#000000cc':'white'}} id='search_chats' placeholder='Search chat with people  '></input></aa></a>
+                        <a ><aa style={{background:bgr==='white'?'#dfdfdf':'#333'}}><i style={{color:bgr==='white'?'#000000cc':'white'}} className='fas fa-solid fa-search'></i><input style={{background:bgr==='white'?'#dfdfdf':'#333',color:bgr==='white'?'#000000cc':'white'}} id='search_chats' placeholder='Search chat with people  '></input></aa></a>
                         <aaa>
                             <label style={{cursor:'pointer',background: chat_filter==='all'?'linear-gradient(180deg,green 70%,darkgreen)':'white',color: chat_filter==='all'?'white':'gray',border:chat_filter==='all'?'1px solid green':'1px solid gray'}} onClick={()=>set_chat_filter('all')}>All</label>
                             <label style={{cursor:'pointer',background: chat_filter==='unread'?'linear-gradient(180deg,green 70%,darkgreen)':'white',color: chat_filter==='unread'?'white':'gray',border:chat_filter==='unread'?'1px solid green':'1px solid gray'}} onClick={()=>set_chat_filter('unread')}>Unread {unread===0?'':unread}</label>
@@ -1608,9 +1608,9 @@ function Home()
                     </div>
                 </div>
                 <div className='people_section' style={{display:innerwidth>1100?'flex':menu==='people'?'flex':'none'}} >
-                    <span id="youmayknow" style={{background:bgr,fontWeight:'bold', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
-                    <aa style={{background:bgr}}>
-                        <aaa style={{background:bgr==='white'?'#dfdfdf':'#555666'}}>
+                    <span id="youmayknow" style={{fontWeight:'bold', justifySelf:'center', alignSelf:'center',color:bgr==='black'?'white':'#000000cc'}}><i style={{marginRight:'5px'}} id="refresh_people" class="fas fa-sync fa-alt"></i> You may know!</span>
+                    <aa >
+                        <aaa style={{background:bgr==='white'?'#dfdfdf':'#333'}}>
                             <i style={{color:bgr==='white'?'#000000cc':'white',padding:'10px'}} class="fas fa-solid fa-search"></i>
                             <input placeholder='Search for people' value={search_value} 
                             onChange={(e)=>
@@ -1619,7 +1619,7 @@ function Home()
                                     if(e.target.value.length>15){e.target.value=e.target.value.slice(0,15)}
                                     set_search_value(e.target.value.replace(/[^a-zA-Z_]/g, ''))
                                 }}
-                            style={{background:bgr==='white'?'#dfdfdf':'#555666',width:innerwidth>500?'auto':'-webkit-fill-available',placeSelf:'center',borderRadius:'20px',border:'none',fontSize:'16px',padding:'10px',color:bgr==='white'?'#000000cc':'white'}}></input>
+                            style={{background:bgr==='white'?'#dfdfdf':'#333',width:innerwidth>500?'auto':'-webkit-fill-available',placeSelf:'center',borderRadius:'20px',border:'none',fontSize:'16px',padding:'10px',color:bgr==='white'?'#000000cc':'white'}}></input>
                         </aaa>
                     </aa>
                     <span id='no_match' style={{display:no_match_msg, color:bgr==='black'?'#aaa':'#555',alignSelf:'center',fontWeight:'bold'}}>No match found</span>
@@ -1655,8 +1655,8 @@ function Home()
                     <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'11px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');set_text('');document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='46px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
                     <label style={{paddingBottom:'5px',paddingLeft:'10px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}><label style={{fontWeight:'bold'}}>{msg_before_edit.length>0?'You : ':reply_to.length>0?reply_to.startsWith('✔')?'You : ':`${info[indices.indexOf(receiver)*2]} : `:''}</label><label>{reply_to.length>0?reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):msg_before_edit.length>0?msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):''}</label></label>
                 </span>
-                <div style={{border:reply_to.length>0 || msg_before_edit.length>0?'1px solid green':'1px solid gray'}}>
-                    <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",height:'46px',maxHeight:'85px'}} placeholder='Type...'
+                <div style={{border:reply_to.length>0 || msg_before_edit.length>0?'1px solid green':'1px solid gray',background:bgr==='black'?'#333':'white'}}>
+                    <textarea id="message" ref={focus_input} value={message_text} style={{ scrollbarWidth:'none',resize:"none",height:'46px',maxHeight:'85px',background:bgr==='black'?'#333':'white',color:bgr==='black'?'white':'#000000cc'}} placeholder='Type...'
                     onKeyDown={(e)=>
                     {
                         set_consecutive_keys(previous_keys=>
