@@ -942,9 +942,10 @@ function Home()
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
+        let profile_name=document.getElementById('profile_name')
         if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';}
         else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';}
-        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';}
+        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';profile_name.style.width=(parseInt(getComputedStyle(main_body_section).width))+'px'}
     },[innerheight,innerwidth])
 
     useEffect(() => {
@@ -1041,6 +1042,9 @@ function Home()
             set_innerwidth(window.innerWidth);
             set_innerheight(window.innerHeight);
         })
+        let main_body_section=document.querySelector('.main_body_section')
+        let profile_name=document.getElementById('profile_name')
+        profile_name.style.width=parseInt(getComputedStyle(main_body_section).width)+'px'
         fetch('/user_data',{
             method:'POST',
             headers:{
@@ -1323,7 +1327,7 @@ function Home()
                     <label onClick={()=>set_menu('chat')} style={{color:menu==='chat'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{background:menu==='chat'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-comment-dots'></i> Read Chats {unread===0?'':`( ${unread} )`}</label>
                     <label onClick={()=>set_menu('profile')} style={{color:menu==='profile'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{background:menu==='profile'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px',width:'18px',textAlign:'center'}}  class='fas fa-user'></i> Update Profile</label>
                     <label onClick={()=>set_menu('settings')} style={{color:menu==='settings'?bgr==='black'?'white':'#000000cc':'gray'}}><i style={{background:menu==='settings'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-cog'></i> Alter Settings</label>
-                    <label style={{marginBottom:'30px',marginTop:'auto',color:menu==='log_out'?bgr==='black'?'white':'#000000cc':'gray'}} onClick=
+                    <label style={{marginBottom:'20px',marginTop:'auto',color:menu==='log_out'?bgr==='black'?'white':'#000000cc':'gray'}} onClick=
                     {()=>{set_menu('log_out');localStorage.removeItem('logged_in');nav2('/');}} 
                     ><i style={{background:menu==='log_out'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
                 </div>
