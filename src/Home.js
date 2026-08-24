@@ -1332,7 +1332,7 @@ function Home()
                     ><i style={{background:menu==='log_out'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
                 </div>
                 <div className='main_body_section'>
-                    <label  id="profile_name" style={{display:disp,background:bgr,width:innerwidth>1100?parseInt(getComputedStyle(document.querySelector('.main_body_section')).width)+'px':'100%'}}>
+                    <label  id="profile_name" style={{display:disp,background:bgr,width:innerwidth>1100?parseInt(getComputedStyle(document.getElementsByClassName('main_body_section')[0]).width)+'px':'100%'}}>
                         <i style={{marginLeft:'10px',color:bgr==='black'?'white':'#000000cc'}} onClick={()=>{setdisp('none');set_disp_chat('flex');}} className='fas fa-solid fa-arrow-left'></i>
                         <img src={receiver===up_user?profile_pic: profile_images[indices.indexOf(receiver)]}></img>
                         <label style={{display:'flex',flexDirection:'column',gap:'5px',margin:'10px 0px',alignSelf:'flex-start',height:'50px',justifyContent:'center'}}>
