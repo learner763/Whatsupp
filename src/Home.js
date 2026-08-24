@@ -942,10 +942,9 @@ function Home()
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
-        let profile_name=document.getElementById('profile_name')
         if(innerwidth<=1100 && innerwidth>500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';}
         else if(innerwidth<=500){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';}
-        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';profile_name.style.width=(parseInt(getComputedStyle(main_body_section).width))+'px'}
+        else if(innerwidth>1100){body_section.style.height=(window.innerHeight)+'px';main_body_section.style.height=(window.innerHeight)+'px';}
     },[innerheight,innerwidth])
 
     useEffect(() => {
@@ -1042,9 +1041,6 @@ function Home()
             set_innerwidth(window.innerWidth);
             set_innerheight(window.innerHeight);
         })
-        let main_body_section=document.querySelector('.main_body_section')
-        let profile_name=document.getElementById('profile_name')
-        profile_name.style.width=parseInt(getComputedStyle(main_body_section).width)+'px'
         fetch('/user_data',{
             method:'POST',
             headers:{
