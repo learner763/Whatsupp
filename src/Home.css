@@ -441,9 +441,6 @@ sup{
     #profile_name,.chats a{
         width: 100%;
     }
-    #profile_name{
-        width: 100% !important;
-    }
     .msg_div{
         position: fixed;
     }
