@@ -1650,7 +1650,7 @@ function Home()
                     })}
                 </div>
             </div>
-            <div className='msg_div' style={{display:disp,background:reply_to.length>0 || msg_before_edit.length>0?'green':'white'}}>
+            <div className='msg_div' style={{display:disp,background:reply_to.length>0 || msg_before_edit.length>0?'green':'white',left:innerwidth>1100?(parseInt(getComputedStyle(document.getElementsByClassName('main_body_section')[0]).width)/2)-216+270+'px':'auto'}}>
                 <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',backgroundColor:'green',color:'white'}}>
                     <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'11px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');set_text('');document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='46px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
                     <label style={{paddingBottom:'5px',paddingLeft:'10px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}><label style={{fontWeight:'bold'}}>{msg_before_edit.length>0?'You : ':reply_to.length>0?reply_to.startsWith('✔')?'You : ':`${info[indices.indexOf(receiver)*2]} : `:''}</label><label>{reply_to.length>0?reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):msg_before_edit.length>0?msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):''}</label></label>
