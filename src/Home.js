@@ -74,6 +74,7 @@ function Home()
     const [updating_pic,set_updating_pic]=useState(false)
     const [consecutive_keys,set_consecutive_keys]=useState([])
     const [menu,set_menu]=useState('chat')
+    const [main_body_section_width,set_main_body_section_width]=useState('')
     let w=-1;
 
     async function set_seen(user)
@@ -939,6 +940,10 @@ function Home()
 
     useEffect(()=>
     {
+        if(document.getElementsByClassName('main_body_section')[0])
+        {
+            set_main_body_section_width(parseFloat( getComputedStyle(document.getElementsByClassName('main_body_section')[0]).width))
+        }
         let body_section=document.querySelector('.body_section')
         let main_body_section=document.querySelector('.main_body_section')
         let people_section=document.querySelector('.people_section')
@@ -1328,7 +1333,7 @@ function Home()
                     ><i style={{background:menu==='log_out'?'linear-gradient(180deg,green 70%,darkgreen)':'gray',color:'white',borderRadius:'50%',padding:'10px'}} class='fas fa-solid fa-sign-out-alt'></i> Log Out</label>
                 </div>
                 <div className='main_body_section'>
-                    <label  id="profile_name" style={{display:disp,background:bgr,width:innerwidth>1100 && document.getElementsByClassName('main_body_section')[0]?parseFloat(getComputedStyle(document.getElementsByClassName('main_body_section')[0]).width)+'px':'100%'}}>
+                    <label  id="profile_name" style={{display:disp,background:bgr,width:innerwidth>1100 && document.getElementsByClassName('main_body_section')[0]?main_body_section_width+'px':'100%'}}>
                         <i style={{marginLeft:'10px',color:bgr==='black'?'white':'#000000cc'}} onClick={()=>{setdisp('none');set_disp_chat('flex');}} className='fas fa-solid fa-arrow-left'></i>
                         <img src={receiver===up_user?profile_pic: profile_images[indices.indexOf(receiver)]}></img>
                         <label style={{display:'flex',flexDirection:'column',gap:'5px',margin:'10px 0px',alignSelf:'flex-start',height:'50px',justifyContent:'center'}}>
@@ -1650,7 +1655,7 @@ function Home()
                     })}
                 </div>
             </div>
-            <div className='msg_div' style={{display:disp,background:reply_to.length>0 || msg_before_edit.length>0?'green':'white',left:innerwidth>1100 && document.getElementsByClassName('main_body_section')[0]?(parseFloat(getComputedStyle(document.getElementsByClassName('main_body_section')[0]).width)/2)-221.11+270+'px':'auto'}}>
+            <div className='msg_div' style={{display:disp,background:reply_to.length>0 || msg_before_edit.length>0?'green':'white',left:innerwidth>1100 && document.getElementsByClassName('main_body_section')[0]?(main_body_section_width/2)-221.11+270+'px':'auto'}}>
                 <span style={{display:reply_to.length>0 || msg_before_edit.length>0?'flex':'none',flexDirection:'column',backgroundColor:'green',color:'white'}}>
                     <label style={{marginLeft:'auto',cursor:'pointer',paddingRight:'11px',fontWeight:'bold',paddingTop:'5px'}} onClick={()=>{if(reply_icon==="flex"){set_reply('none');set_reply_to('')}if(edit_icon==="flex"){set_msg_value('');set_edit('none');set_text('');document.getElementById('Send_Button').style.backgroundColor='#EEEEEE';document.getElementById('message').style.height='46px'}}}>{reply_to.length>0?<i className='fas fa-solid fa-reply'></i>:msg_before_edit.length>0?<i className='fas fa-solid fa-pen'></i>:''}<i className="fas fa-times"></i></label>
                     <label style={{paddingBottom:'5px',paddingLeft:'10px',overflowX:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}><label style={{fontWeight:'bold'}}>{msg_before_edit.length>0?'You : ':reply_to.length>0?reply_to.startsWith('✔')?'You : ':`${info[indices.indexOf(receiver)*2]} : `:''}</label><label>{reply_to.length>0?reply_to.slice(reply_to.indexOf(' ')+1,reply_to.lastIndexOf(' ')-4):msg_before_edit.length>0?msg_before_edit.slice(msg_before_edit.indexOf(' ')+1,msg_before_edit.lastIndexOf(' ')-4):''}</label></label>
